@@ -6,7 +6,7 @@ module.exports = {
       .then(results => {
         allProcessesByProduct = results.rows
       })
-    return res.json(ProcessesByProduct)
+    return res.json(allProcessesByProduct)
   },
 
   async insertProcessesByProduct(req, res) {
@@ -16,7 +16,7 @@ module.exports = {
       (id_produto, id_processo1, id_processo2, id_processo3, id_processo4, id_processo5, id_processo6, id_processo7, id_processo8, id_processo9, id_processo10, data_criacao)
       values(${productID}, ${process1ID}, ${process2ID}, ${process3ID}, ${process4ID}, ${process5ID}, ${process6ID}, ${process7ID}, ${process8ID}, ${process9ID}, ${process10ID},  
       '${datetime.toISOString().slice(0, 10)}')`)
-        .then(results => { insertProcessesByProduct = results.rows })
+      .then(results => { insertProcessesByProduct = results.rows })
     return res.json(insertProcessesByProduct).status(200)
   }
 };
