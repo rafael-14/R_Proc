@@ -1,12 +1,12 @@
 const connectionPG = require('../database/');
 
 module.exports = {
-  async selectAll(req, res) {
+  async selectAllProducts(req, res) {
     await connectionPG.query(`SELECT * FROM produto`)
       .then(results => {
-        listaEmpresa = results.rows
+        allProducts = results.rows
       })
-    return res.json(listaEmpresa)
+    return res.json(allProducts)
   },
 
   async insertProduct(req, res) {
@@ -14,7 +14,6 @@ module.exports = {
     let insertProduct, datetime = new Date
     await connectionPG.query(`insert into produto(nome,ativo,data_criacao) values('${name}',true, '${datetime.toISOString().slice(0, 10)}')`)
       .then(results => { insertProduct = results.rows })
-    console.log("4")
     return res.json(insertProduct).status(200)
   }
 };
