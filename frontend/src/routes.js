@@ -1,11 +1,13 @@
 import React from "react";
-import {BrowserRouter as Router, Route,} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home'
 
-function Rotas(){
-    return(
+function Rotas() {
+    return (
         <Router>
-            <Route path='/' exact component={Home}/>
+            <Routes>
+                <Route path='/' exact element={<Home />} />
+            </Routes>
         </Router>
     );
 };
