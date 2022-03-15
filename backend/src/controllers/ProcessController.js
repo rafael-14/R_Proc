@@ -1,19 +1,19 @@
-const connectionPG = require('../database');
+const Process = require('../models/Process')
 
 module.exports = {
   async selectAllProcesses(req, res) {
-    await connectionPG.query(`SELECT * FROM processo`)
-      .then(results => {
-        allProcesses = results.rows
-      })
-    return res.json(allProcesses)
+    return res.json(await Process.find())
   },
 
   async insertProcess(req, res) {
     let { name } = req.body;
-    let insertProcess, datetime = new Date
-    await connectionPG.query(`insert into processo(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
-      .then(results => { insertProcess = results.rows })
-    return res.json(insertProcess).status(200)
+    let datetime = new Date
+    let status = 500
+    let insertProcess = await Process.findOne({nome:name})
+    if (!insertProcess) {
+      status = 200
+      insertProcess = await Process.create({nome:name, ativo: true, data_criacao:datetime.toISOString().slice(0, 10)})
+    }
+    return res.json(insertProcess).status(status)
   }
 };
