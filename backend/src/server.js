@@ -1,4 +1,4 @@
-//npm instal express pg bcrypt pg-hstore sequelize nodemon routes path cors cookie-parser concurrently
+//npm instal express pg bcrypt pg-hstore sequelize nodemon routes path cors cookie-parser concurrently mongoose
 //npm install -g create-react-app
 //rodar no powershell: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 const express = require('express');
@@ -7,10 +7,19 @@ const app = express();
 const routes = require('./routes');
 const port = 5000 //|| process.env.PORT  
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 app.use(cors())
 app.use(cookieParser())
 
+mongoose.connect('mongodb://localhost:27017/R_Proc', {
+    useUnifiedTopology:true,
+    useNewUrlParser:true
+}, function (err){
+    if (err) {
+        console.log(err)
+    }
+})
 
 require('./database');
 
