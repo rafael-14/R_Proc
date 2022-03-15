@@ -1,19 +1,19 @@
-const Product = require('../models/Product')
+const connectionPG = require('../database');
 
 module.exports = {
   async selectAllProducts(req, res) {
-    return res.json(await Product.find())
+    await connectionPG.query(`SELECT * FROM produto`)
+      .then(results => {
+        allProducts = results.rows
+      })
+    return res.json(allProducts)
   },
 
   async insertProduct(req, res) {
     let { name } = req.body;
-    let datetime = new Date
-    let status = 500
-    let insertProduct = await Product.findOne({nome:name})
-    if (!insertProduct) {
-      status = 200
-      insertProduct = await Product.create({nome:name, ativo: true, data_criacao:datetime.toISOString().slice(0, 10)})
-    }
-    return res.json(insertProduct).status(status)
+    let insertProduct, datetime = new Date
+    await connectionPG.query(`insert into produto(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
+      .then(results => { insertProduct = results.rows })
+    return res.json(insertProduct).status(200)
   }
 };

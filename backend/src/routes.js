@@ -1,7 +1,7 @@
 const express = require('express');
 const ProductController = require('./controllers/ProductController');
 const ProcessController = require('./controllers/ProcessController');
-const ProcessesByProductController = require('./controllers/ProcessesByProduct')
+const ProcessesByProductController = require('./controllers/ProcessesByProductController')
 const routes = express.Router();
 
 routes.get('/api/select_products', ProductController.selectAllProducts);

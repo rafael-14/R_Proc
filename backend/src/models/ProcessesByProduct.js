@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const DataSchema = new mongoose.Schema({
-    id_produto:BigInt,
-    id_processo:BigInt,
+    id_produto:Number,
+    id_processo:Number,
     ativo:Boolean,
     data_criacao:Date,
     data_inativacao:Date
