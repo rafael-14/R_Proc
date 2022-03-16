@@ -61,7 +61,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme()
 
-export default function Dashboard() {
+export default function Dashboard(props) {
+
+  let Componente = props.componente;
 
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
@@ -72,7 +74,7 @@ export default function Dashboard() {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" style={{ background: '#FF7A40'}} open={open}>
+        <AppBar position="absolute" style={{ background: '#E8927C'}} open={open}>
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
@@ -90,7 +92,7 @@ export default function Dashboard() {
             >
               <MenuIcon />
             </IconButton>
-            <Button style={{ color:'inherit', hover: '#FFFFFF'}}  href="/"><strong>RC Sys</strong></Button>
+            <Button style={{ color:'inherit', hover: '#FFFFFF'}}  href="/"><strong>R_Proc</strong></Button>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -110,6 +112,7 @@ export default function Dashboard() {
           <List>{mainListItems}</List>
           <Divider />
         </Drawer>
+        <Componente />
       </Box>
     </ThemeProvider>
     

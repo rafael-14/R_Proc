@@ -1,10 +1,13 @@
 import React from 'react';
 import Dashboard from './Dashboard'
+import Tables from './Tables';
 
 function Home() {
   return (
     <div>
-      <Dashboard/>
+      <Dashboard 
+        componente={Tables}
+      />
     </div>
   );
 };
