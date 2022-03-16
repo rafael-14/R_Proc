@@ -2,11 +2,23 @@ const connectionPG = require('../database');
 
 module.exports = {
   async selectAllProcessesByProduct(req, res) {
-    await connectionPG.query(`SELECT * FROM processos_por_produto`)
+    let allProcessesByProduct
+    await connectionPG.query(`select * from processos_por_produto
+    `)
       .then(results => {
         allProcessesByProduct = results.rows
       })
     return res.json(allProcessesByProduct)
+  },
+
+  async selectProcessesByProduct(req, res) {
+    let {id} = req.params;
+    let processesByProduct
+    await connectionPG.query(`SELECT * FROM processos_por_produto where id_produto = ${id}`)
+      .then(results => {
+        processesByProduct = results.rows
+      })
+    return res.json(processesByProduct)
   },
 
   async insertProcessesByProduct(req, res) {

@@ -10,7 +10,13 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import { Button, styled, Switch, tableCellClasses, TextField, Autocomplete, TableContainer, Chip } from "@mui/material";
+import {
+    Button, styled, Switch, tableCellClasses, TextField, Autocomplete,
+    TableContainer, Chip, Collapse,
+    IconButton, Typography
+} from "@mui/material";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CreateIcon from '@mui/icons-material/Create';
 
 const CssTextField = styled(TextField)({
@@ -39,6 +45,67 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
+function Row(props) {
+
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
+    let [processesByProduct, setProcessesByProduct] = useState([])
+    
+    useEffect(() => {
+        async function loadProcessesByProduct() {
+            let response = await api.put(`/api/select_processes_by_product/`)
+            setProcessesByProduct(response.data)
+        }
+        loadProcessesByProduct()
+    },[])
+
+    return (
+        <>
+            <TableRow >
+                <TableCell width="1%">
+                    <IconButton
+                        size="small"
+                        onClick={() => setOpen(!open)}
+                    >
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
+                <TableCell align="center" width="99%">
+                    {row.nome}
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Box sx={{ margin: 1 }}>
+                            <Typography variant="h6">
+                                Processos
+                            </Typography>
+                            <Table size="small" aria-label="purchases">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>qqqqqq</TableCell>
+                                        <TableCell>Customer</TableCell>
+                                        <TableCell align="right">Amount</TableCell>
+                                        <TableCell align="right">Total price ($)</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    
+                                        <StyledTableRow key={row.id}>
+                                            <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
+                                        </StyledTableRow>
+                                </TableBody>
+                            </Table>
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </>
+    )
+}
+
 
 export default function Tables() {
 
@@ -52,44 +119,44 @@ export default function Tables() {
         }
         loadProducts()
 
-        async function loadProcesses(){
+        async function loadProcesses() {
             let response = await api.get('/api/select_processes')
             setProcesses(response.data)
         }
         loadProcesses()
+
+        
     }, [])
 
-
     return (
-        <><Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
-            <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Paper>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TableContainer sx={{ maxHeight: 440 }}>
-                                <Table size="medium" stickyHeader>
-                                    <TableHead>
-                                        <StyledTableRow>
-                                            <StyledTableCell align="center">Produto</StyledTableCell>
-                                            <StyledTableCell align="center">Ordem dos Processos</StyledTableCell>
-                                        </StyledTableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {products.map((row) => (
-                                            <StyledTableRow key={row.id}>
-                                                <StyledTableCell align="center">{row.nome}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.nome}</StyledTableCell>
+        <>
+            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+                <Toolbar />
+                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                    <Paper>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <TableContainer /*sx={{ maxHeight: 440 }}*/ >
+                                    <Table size="medium" stickyHeader >
+                                        <TableHead>
+                                            <StyledTableRow>
+                                                <StyledTableCell width="1%" />
+                                                <StyledTableCell align="center" width="99%">Produto</StyledTableCell>
                                             </StyledTableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                        </TableHead>
+                                        <TableBody>
+                                            {products.map((row) => (
+                                                <Row key={row.id} row={row} />
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Paper>
-            </Container>
-        </Box><Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+                    </Paper>
+                </Container>
+            </Box>
+            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                     <Paper>
@@ -117,14 +184,8 @@ export default function Tables() {
                         </Grid>
                     </Paper>
                 </Container>
-            </Box></>
-
-
-
-
-
-
-
-
+            </Box>
+        </>
     );
 }
+

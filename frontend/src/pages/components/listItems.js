@@ -11,7 +11,7 @@ export const mainListItems = (
       <ListItemIcon >
         <ApartmentIcon style={{ color: '#000000' }} />
       </ListItemIcon>
-      <ListItemText primary="Empresas" primaryTypographyProps={{ color: '#000000' }} />
+      <ListItemText primary="Teste" primaryTypographyProps={{ color: '#000000' }} />
     </ListItem>
   </div>
 );
