@@ -118,14 +118,14 @@ export default function Tables() {
 
     const theme = createTheme({
         palette: {
-          primary: {
-            main: '#FF7A40'
-          },
-          secondary: {
-            main: '#000000'
-          }
+            primary: {
+                main: '#FF7A40'
+            },
+            secondary: {
+                main: '#000000'
+            }
         }
-      })
+    })
 
     let [products, setProducts] = useState([])
     let [processes, setProcesses] = useState([])
@@ -150,9 +150,13 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
                     <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
-                        <div class="d-flex justify-content-between">
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="space-between"
+                        >
                             <Autocomplete
                                 disablePortal
                                 options={products.map((row) => row.nome)}
@@ -160,8 +164,8 @@ export default function Tables() {
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                             />
                             <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar_produto'>Novo</Button>
-                        </div>
-                        <br/>
+                        </Grid>
+                        <br />
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <TableContainer /*sx={{ maxHeight: 440 }}*/ >
