@@ -1,11 +1,39 @@
 import React, { useState } from "react";
 import api from '../../services/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel,
   Container, Grid, Paper, Box, TextField, Toolbar
 } from "@mui/material";
 
 export default function Register() {
+
+  async function handleNotificationSuccess(processName) {
+    toast.success(`Processo: ${processName} Cadastrado com Sucesso!`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      onClose: () => !manyRegisters ? window.location.href = "/processos" : setProcessName(''),
+    })
+  }
+
+  async function handleNotificationError(errorMessage) {
+    toast.error(errorMessage, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+    }
+    )
+  }
 
   const theme = createTheme({
     palette: {
@@ -30,15 +58,15 @@ export default function Register() {
       try {
         let response = await api.post('/api/insert_process', data)
         if (response.status === 200) {
-          alert("Processo Cadastrado com Sucesso!")
-          window.location.href="/"
+          handleNotificationSuccess(processName)
         }
       } catch (e) {
-        alert("Erro ao Cadastrar Processo!")
+        let errorMessage = "Erro ao Cadastrar Processo!"
+        handleNotificationError(errorMessage)
       }
     } else {
       let errorMessage = "Preencha o Nome do Processo Corretamente!"
-      alert(errorMessage)
+      handleNotificationError(errorMessage)
     }
   }
 
@@ -53,6 +81,7 @@ export default function Register() {
         }}
       >
         <Toolbar />
+        <ToastContainer />
         <Container maxWidth="lg" sx={{ mt: 2 }}>
           <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
             <Grid >

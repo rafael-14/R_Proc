@@ -1,11 +1,39 @@
 import React, { useState } from "react";
 import api from '../../services/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel,
   Container, Grid, Paper, Box, TextField, Toolbar
 } from "@mui/material";
 
 export default function Register() {
+
+  async function handleNotificationSuccess(productName) {
+    toast.success(`Produto: ${productName} Cadastrado com Sucesso!`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      onClose: () => !manyRegisters ? window.location.href = "/" : setProductName(''),
+    })
+  }
+
+  async function handleNotificationError(errorMessage) {
+    toast.error(errorMessage, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+    }
+    )
+  }
 
   const theme = createTheme({
     palette: {
@@ -30,15 +58,15 @@ export default function Register() {
       try {
         let response = await api.post('/api/insert_product', data)
         if (response.status === 200) {
-          alert("Produto Cadastrado com Sucesso!")
-          window.location.href="/"
+          handleNotificationSuccess(productName)
         }
       } catch (e) {
-        alert("Erro ao Cadastrar Produto!")
+        let errorMessage = "Erro ao Cadastrar Produto!"
+        handleNotificationError(errorMessage)
       }
     } else {
       let errorMessage = "Preencha o Nome do Produto Corretamente!"
-      alert(errorMessage)
+      handleNotificationError(errorMessage)
     }
   }
 
@@ -53,6 +81,7 @@ export default function Register() {
         }}
       >
         <Toolbar />
+        <ToastContainer />
         <Container maxWidth="lg" sx={{ mt: 2 }}>
           <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
             <Grid >
