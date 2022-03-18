@@ -84,17 +84,30 @@ function Row(props) {
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>qqqqqq</TableCell>
-                                        <TableCell>Customer</TableCell>
-                                        <TableCell align="right">Amount</TableCell>
-                                        <TableCell align="right">Total price ($)</TableCell>
+                                        {row.nome_processo1 ? <TableCell align="center">Processo 1</TableCell> : null}
+                                        {row.nome_processo2 ? <TableCell align="center">Processo 2</TableCell> : null}
+                                        {row.nome_processo3 ? <TableCell align="center">Processo 3</TableCell> : null}
+                                        {row.nome_processo4 ? <TableCell align="center">Processo 4</TableCell> : null}
+                                        {row.nome_processo5 ? <TableCell align="center">Processo 5</TableCell> : null}
+                                        {row.nome_processo6 ? <TableCell align="center">Processo 6</TableCell> : null}
+                                        {row.nome_processo7 ? <TableCell align="center">Processo 7</TableCell> : null}
+                                        {row.nome_processo8 ? <TableCell align="center">Processo 8</TableCell> : null}
+                                        {row.nome_processo9 ? <TableCell align="center">Processo 9</TableCell> : null}
+                                        {row.nome_processo10 ? <TableCell align="center">Processo 10</TableCell> : null}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    
                                         <StyledTableRow key={row.id}>
                                             <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
                                             <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo3}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo4}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo5}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo6}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo7}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo8}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo9}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.nome_processo10}</StyledTableCell>
                                         </StyledTableRow>
                                 </TableBody>
                             </Table>
@@ -156,7 +169,7 @@ export default function Tables() {
                     </Paper>
                 </Container>
             </Box>
-            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+            {/*<Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                     <Paper>
@@ -184,7 +197,7 @@ export default function Tables() {
                         </Grid>
                     </Paper>
                 </Container>
-            </Box>
+                                            </Box>*/}
         </>
     );
 }
