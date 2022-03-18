@@ -2,7 +2,7 @@ const connectionPG = require('../database');
 
 module.exports = {
   async selectAllProcesses(req, res) {
-    await connectionPG.query(`SELECT * FROM processo`)
+    await connectionPG.query(`SELECT * FROM processo order by id`)
       .then(results => {
         allProcesses = results.rows
       })

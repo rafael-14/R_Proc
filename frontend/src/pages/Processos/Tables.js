@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete,Table,
+    Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, Collapse, createTheme,
     IconButton, Typography, ThemeProvider
@@ -109,21 +109,22 @@ export default function Tables() {
     })
 
     let [products, setProducts] = useState([])
+    let [processes, setProcesses] = useState([])
 
     useEffect(() => {
-        async function loadProducts() {
-            let response = await api.get('/api/select_products')
-            setProducts(response.data)
+        async function loadProcesses() {
+            let response = await api.get('/api/select_processes')
+            setProcesses(response.data)
         }
-        loadProducts()
+        loadProcesses()
     }, [])
 
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
-                    <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
+                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                    <Paper>
                         <Grid
                             container
                             direction="row"
@@ -131,26 +132,29 @@ export default function Tables() {
                         >
                             <Autocomplete
                                 disablePortal
-                                options={products.map((row) => row.nome)}
+                                options={processes.map((row) => row.nome)}
                                 sx={{ width: 500 }}
-                                renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
+                                renderInput={(params) => <TextField color="secondary" {...params} label="Processos" />}
                             />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar_produto'>Novo</Button>
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar_processo'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <TableContainer /*sx={{ maxHeight: 440 }}*/ >
-                                    <Table size="medium" stickyHeader >
+                                <TableContainer sx={{ maxHeight: 440 }}>
+                                    <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <StyledTableRow>
-                                                <StyledTableCell width="1%" />
-                                                <StyledTableCell align="center" width="99%">Produtos</StyledTableCell>
+                                                <StyledTableCell align="center">Processos</StyledTableCell>
+                                                <StyledTableCell align="center">Código</StyledTableCell>
                                             </StyledTableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {products.map((row) => (
-                                                <Row key={row.id} row={row} />
+                                            {processes.map((row) => (
+                                                <StyledTableRow key={row.id}>
+                                                    <StyledTableCell align="center">{row.nome}</StyledTableCell>
+                                                    <StyledTableCell align="center">{row.id}</StyledTableCell>
+                                                </StyledTableRow>
                                             ))}
                                         </TableBody>
                                     </Table>
@@ -160,7 +164,7 @@ export default function Tables() {
                     </Paper>
                 </Container>
             </Box>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
 

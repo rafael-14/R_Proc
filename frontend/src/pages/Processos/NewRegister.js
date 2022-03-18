@@ -18,26 +18,26 @@ export default function Register() {
     }
   })
 
-  let [productName, setProductName] = useState(null)
+  let [processName, setProcessName] = useState(null)
   let [manyRegisters, setManyRegisters] = useState(false)
 
-  async function handleNewProduct() {
-    if (productName !== null) {
-      productName = productName.trim()
+  async function handleNewProcess() {
+    if (processName !== null) {
+      processName = processName.trim()
     }
-    if (productName !== null && productName !== "") {
-      let data = {name: productName}
+    if (processName !== null && processName !== "") {
+      let data = {name: processName}
       try {
-        let response = await api.post('/api/insert_product', data)
+        let response = await api.post('/api/insert_process', data)
         if (response.status === 200) {
-          alert("Produto Cadastrado com Sucesso!")
+          alert("Processo Cadastrado com Sucesso!")
           window.location.href="/"
         }
       } catch (e) {
-        alert("Erro ao Cadastrar Produto!")
+        alert("Erro ao Cadastrar Processo!")
       }
     } else {
-      let errorMessage = "Preencha o Nome do Produto Corretamente!"
+      let errorMessage = "Preencha o Nome do Processo Corretamente!"
       alert(errorMessage)
     }
   }
@@ -60,11 +60,11 @@ export default function Register() {
                 <Grid item xs={12} >
                   <TextField
                     required
-                    label="Produto"
+                    label="Processo"
                     fullWidth
                     color="secondary"
-                    value={productName}
-                    onChange={e => setProductName(e.target.value)}
+                    value={processName}
+                    onChange={e => setProcessName(e.target.value)}
                   />
                 </Grid>
               </Grid>
@@ -78,7 +78,7 @@ export default function Register() {
                 />
               </FormGroup>
               <br />
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProduct()}>
+              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProcess()}>
                 Salvar
               </Button>
               <Button
@@ -88,7 +88,7 @@ export default function Register() {
                   color: "#FFFFFF",
                   marginInlineStart: 15
                 }}
-                href="/"
+                href="/processos"
               >
                 Cancelar
               </Button>

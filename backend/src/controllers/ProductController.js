@@ -13,7 +13,9 @@ module.exports = {
     left join processo proc4 on proc4.id = ppp.id_processo4 left join processo proc5 on proc5.id = ppp.id_processo5
     left join processo proc6 on proc6.id = ppp.id_processo6 left join processo proc7 on proc7.id = ppp.id_processo7
     left join processo proc8 on proc8.id = ppp.id_processo8 left join processo proc9 on proc9.id = ppp.id_processo9
-    left join processo proc10 on proc10.id = ppp.id_processo10`)
+    left join processo proc10 on proc10.id = ppp.id_processo10
+    
+    order by prod.id`)
       .then(results => {
         allProducts = results.rows
       })
