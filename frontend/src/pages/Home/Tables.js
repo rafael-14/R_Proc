@@ -12,18 +12,12 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import {
     Button, styled, Switch, tableCellClasses, TextField, Autocomplete,
-    TableContainer, Chip, Collapse,
-    IconButton, Typography
+    TableContainer, Chip, Collapse, createTheme,
+    IconButton, Typography, ThemeProvider
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CreateIcon from '@mui/icons-material/Create';
-
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#000000'
-    },
-})
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -50,14 +44,14 @@ function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
     let [processesByProduct, setProcessesByProduct] = useState([])
-    
+
     useEffect(() => {
         async function loadProcessesByProduct() {
             let response = await api.put(`/api/select_processes_by_product/`)
             setProcessesByProduct(response.data)
         }
         loadProcessesByProduct()
-    },[])
+    }, [])
 
     return (
         <>
@@ -97,18 +91,18 @@ function Row(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                        <StyledTableRow key={row.id}>
-                                            <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo3}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo4}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo5}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo6}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo7}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo8}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo9}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.nome_processo10}</StyledTableCell>
-                                        </StyledTableRow>
+                                    <StyledTableRow key={row.id}>
+                                        <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo3}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo4}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo5}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo6}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo7}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo8}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo9}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.nome_processo10}</StyledTableCell>
+                                    </StyledTableRow>
                                 </TableBody>
                             </Table>
                         </Box>
@@ -121,6 +115,17 @@ function Row(props) {
 
 
 export default function Tables() {
+
+    const theme = createTheme({
+        palette: {
+          primary: {
+            main: '#FF7A40'
+          },
+          secondary: {
+            main: '#000000'
+          }
+        }
+      })
 
     let [products, setProducts] = useState([])
     let [processes, setProcesses] = useState([])
@@ -138,15 +143,25 @@ export default function Tables() {
         }
         loadProcesses()
 
-        
+
     }, [])
 
     return (
-        <>
+        <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                    <Paper>
+                    <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
+                        <div class="d-flex justify-content-between">
+                            <Autocomplete
+                                disablePortal
+                                options={products.map((row) => row.nome)}
+                                sx={{ width: 500 }}
+                                renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
+                            />
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar_produto'>Novo</Button>
+                        </div>
+                        <br/>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <TableContainer /*sx={{ maxHeight: 440 }}*/ >
@@ -198,7 +213,7 @@ export default function Tables() {
                     </Paper>
                 </Container>
                                             </Box>*/}
-        </>
+        </ThemeProvider>
     );
 }
 

@@ -1,15 +1,20 @@
 import React from 'react';
 import Dashboard from './Dashboard'
+import NewRegister from './NewRegister'
 import Tables from './Tables';
 
-function Home() {
+export function Home() {
   return (
     <div>
-      <Dashboard 
-        componente={Tables}
-      />
+      <Dashboard componente={Tables}/>
     </div>
   );
 };
 
-export default Home;
+export function CadastrarProduto() {
+  return (
+    <div>
+      <Dashboard componente={NewRegister}/>
+    </div>
+  );
+};
