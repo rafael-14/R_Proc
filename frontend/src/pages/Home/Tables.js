@@ -43,15 +43,6 @@ function Row(props) {
 
     const { row } = props;
     const [open, setOpen] = React.useState(false);
-    let [processesByProduct, setProcessesByProduct] = useState([])
-
-    useEffect(() => {
-        async function loadProcessesByProduct() {
-            let response = await api.put(`/api/select_processes_by_product/`)
-            setProcessesByProduct(response.data)
-        }
-        loadProcessesByProduct()
-    }, [])
 
     return (
         <>
