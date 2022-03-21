@@ -13,7 +13,7 @@ module.exports = {
     let { name } = req.body;
     let insertProcess, datetime = new Date
     let status = 500
-    await connectionPG.query(`insert into processo(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
+    await connectionPG.query(`select * from processo where nome ilike '${name}'`)
       .then(results => { insertProcess = results.rows })
     if (!insertProcess[0]) {
       await connectionPG.query(`insert into processo(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
