@@ -21,5 +21,27 @@ module.exports = {
       status = 200
     }
     return res.status(status).json(insertProcess)
+  },
+
+  async findProcess(req, res) {
+    let {id} = req.params;
+    let processFound
+    await connectionPG.query(`select * from processo where id = ${id}`)
+      .then(results => processFound = results.rows)
+    return res.json(processFound)
+  },
+
+  async updateProcess(req, res) {
+    let {id} = req.params
+    let { name } = req.body
+    let updatedProcess, status = 500
+    await connectionPG.query(`select * from processo where nome ilike '${name}'`)
+      .then(results => updatedProcess = results.rows)
+    if (!updatedProcess[0]){
+      await connectionPG.query(`update processo set nome='${name}' where id = ${id}`)
+        .then(results => updatedProcess = results.rows)
+      status = 200
+    }
+    return res.status(status).json(updatedProcess)
   }
 };

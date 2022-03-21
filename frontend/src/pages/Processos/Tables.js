@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -28,72 +29,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0
     }
 }));
-
-function Row(props) {
-
-    const { row } = props;
-    const [open, setOpen] = React.useState(false);
-
-    return (
-        <>
-            <TableRow >
-                <TableCell width="1%">
-                    <IconButton
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
-                <TableCell align="center" width="99%">
-                    {row.nome}
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6">
-                                Processos
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        {row.nome_processo1 ? <TableCell align="center">Processo 1</TableCell> : null}
-                                        {row.nome_processo2 ? <TableCell align="center">Processo 2</TableCell> : null}
-                                        {row.nome_processo3 ? <TableCell align="center">Processo 3</TableCell> : null}
-                                        {row.nome_processo4 ? <TableCell align="center">Processo 4</TableCell> : null}
-                                        {row.nome_processo5 ? <TableCell align="center">Processo 5</TableCell> : null}
-                                        {row.nome_processo6 ? <TableCell align="center">Processo 6</TableCell> : null}
-                                        {row.nome_processo7 ? <TableCell align="center">Processo 7</TableCell> : null}
-                                        {row.nome_processo8 ? <TableCell align="center">Processo 8</TableCell> : null}
-                                        {row.nome_processo9 ? <TableCell align="center">Processo 9</TableCell> : null}
-                                        {row.nome_processo10 ? <TableCell align="center">Processo 10</TableCell> : null}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <StyledTableRow key={row.id}>
-                                        <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo3}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo4}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo5}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo6}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo7}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo8}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo9}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo10}</StyledTableCell>
-                                    </StyledTableRow>
-                                </TableBody>
-                            </Table>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </>
-    )
-}
-
 
 export default function Tables() {
 
@@ -147,6 +82,7 @@ export default function Tables() {
                                             <StyledTableRow>
                                                 <StyledTableCell align="center">Processos</StyledTableCell>
                                                 <StyledTableCell align="center">Código</StyledTableCell>
+                                                <StyledTableCell />
                                             </StyledTableRow>
                                         </TableHead>
                                         <TableBody>
@@ -154,6 +90,18 @@ export default function Tables() {
                                                 <StyledTableRow key={row.id}>
                                                     <StyledTableCell align="center">{row.nome}</StyledTableCell>
                                                     <StyledTableCell align="center">{row.id}</StyledTableCell>
+                                                    <StyledTableCell align="right" width="1%">
+                                                        <abbr title="Editar">
+                                                            <Button
+                                                                align="right"
+                                                                style={{ color: '#000000' }}
+                                                                onClick={() => window.location.href = "/editar/processo/" + row.id}
+                                                                size="small"
+                                                            >
+                                                                <CreateIcon />
+                                                            </Button>
+                                                        </abbr>
+                                                    </StyledTableCell>
                                                 </StyledTableRow>
                                             ))}
                                         </TableBody>

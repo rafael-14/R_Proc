@@ -7,9 +7,12 @@ const routes = express.Router();
 routes.get('/api/select/products', ProductController.selectAllProducts);
 routes.get('/api/select/product/:id', ProductController.findProduct);
 routes.post('/api/insert/product', ProductController.insertProduct);
+routes.put('/api/update/product/:id', ProductController.updateProduct);
 
 routes.get('/api/select/processes', ProcessController.selectAllProcesses);
+routes.get('/api/select/process/:id', ProcessController.findProcess);
 routes.post('/api/insert/process', ProcessController.insertProcess);
+routes.put('/api/update/process/:id', ProcessController.updateProcess);
 
 //routes.get('/api/select_processes_by_product', ProcessesByProductController.selectAllProcessesByProduct);
 //routes.put('/api/select_processes_by_product/:id', ProcessesByProductController.selectProcessesByProduct);

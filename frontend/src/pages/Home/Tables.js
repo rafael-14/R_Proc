@@ -38,7 +38,7 @@ function Row(props) {
     return (
         <>
             <TableRow >
-                <TableCell width="1%">
+                <TableCell align="left" width="1%">
                     <IconButton
                         size="small"
                         onClick={() => setOpen(!open)}
@@ -46,10 +46,10 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center" width="99%">
+                <TableCell align="center" width="98%">
                     {row.nome}
                 </TableCell>
-                <TableCell>
+                <TableCell align="right" width="1%">
                     <abbr title="Editar">
                         <Button
                             style={{ color: '#000000' }}

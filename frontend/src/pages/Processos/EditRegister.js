@@ -12,8 +12,8 @@ export default function Register() {
 
   const { id } = useParams();
 
-  async function handleNotificationSuccess(productName) {
-    toast.success(`Produto: ${productName} Cadastrado com Sucesso!`, {
+  async function handleNotificationSuccess(processName) {
+    toast.success(`Processo: ${processName} Cadastrado com Sucesso!`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -21,7 +21,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => window.location.href = "/",
+      onClose: () => window.location.href = "/processos",
     })
   }
 
@@ -34,7 +34,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => errorMessage.startsWith('Prod') ? window.location.href = "/" : document.getElementById('productName').focus(),
+      onClose: () => errorMessage.startsWith('Proc') ? window.location.href = "/processos" : document.getElementById('processName').focus(),
     }
     )
   }
@@ -50,33 +50,33 @@ export default function Register() {
     }
   })
 
-  let [productName, setProductName] = useState("")
+  let [processName, setProcessName] = useState("")
 
   useEffect(() => {
-    async function handleProductName() {
-      let response = await api.get(`/api/select/product/${id}`)
-      setProductName(response.data[0].nome)
+    async function handleProcessName() {
+      let response = await api.get(`/api/select/process/${id}`)
+      setProcessName(response.data[0].nome)
     }
-    handleProductName()
+    handleProcessName()
   }, [])
 
-  async function handleNewProduct() {
-    if (productName !== null) {
-      productName = productName.trim()
+  async function handleNewProcess() {
+    if (processName !== null) {
+      processName = processName.trim()
     }
-    if (productName !== null && productName !== "") {
-      let data = {name: productName}
+    if (processName !== null && processName !== "") {
+      let data = {name: processName}
       try {
-        let response = await api.put(`/api/update/product/${id}`, data)
+        let response = await api.put(`/api/update/process/${id}`, data)
         if (response.status === 200) {
-          handleNotificationSuccess(productName)
+          handleNotificationSuccess(processName)
         }
       } catch (e) {
-        let errorMessage = "Produto Já Cadastrado!"
+        let errorMessage = "Processo Já Cadastrado!"
         handleNotificationError(errorMessage)
       }
     } else {
-      let errorMessage = "Preencha o Nome do Produto Corretamente!"
+      let errorMessage = "Preencha o Nome do Processo Corretamente!"
       handleNotificationError(errorMessage)
     }
   }
@@ -99,19 +99,19 @@ export default function Register() {
               <Grid container spacing={3}>
                 <Grid item xs={12} >
                   <TextField
-                    id="productName"
+                    id="processName"
                     required
-                    label="Produto"
+                    label="Processo"
                     fullWidth
                     color="secondary"
-                    value={productName}
-                    onChange={e => setProductName(e.target.value)}
+                    value={processName}
+                    onChange={e => setProcessName(e.target.value)}
                   />
                 </Grid>
               </Grid>
               
               <br />
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProduct()}>
+              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProcess()}>
                 Salvar
               </Button>
               <Button
@@ -121,7 +121,7 @@ export default function Register() {
                   color: "#FFFFFF",
                   marginInlineStart: 15
                 }}
-                href="/"
+                href="/processos"
               >
                 Cancelar
               </Button>

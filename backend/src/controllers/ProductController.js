@@ -37,10 +37,24 @@ module.exports = {
   },
 
   async findProduct(req, res) {
-    let {id} = req.params;
+    let { id } = req.params;
     let productFound
     await connectionPG.query(`select * from produto where id = ${id}`)
       .then(results => productFound = results.rows)
     return res.json(productFound)
+  },
+
+  async updateProduct(req, res) {
+    let { id } = req.params
+    let { name } = req.body
+    let updatedProduct, status = 500
+    await connectionPG.query(`select * from produto where nome ilike '${name}'`)
+      .then(results => updatedProduct = results.rows)
+    if (!updatedProduct[0]) {
+      await connectionPG.query(`update produto set nome='${name}' where id = ${id}`)
+        .then(results => updatedProduct = results.rows)
+      status = 200
+    }
+    return res.status(status).json(updatedProduct)
   }
 };
