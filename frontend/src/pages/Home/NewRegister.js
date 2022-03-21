@@ -46,7 +46,7 @@ export default function Register() {
     }
   })
 
-  let [productName, setProductName] = useState(null)
+  let [productName, setProductName] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
 
   async function handleNewProduct() {
@@ -61,7 +61,7 @@ export default function Register() {
           handleNotificationSuccess(productName)
         }
       } catch (e) {
-        let errorMessage = "Erro ao Cadastrar Produto!"
+        let errorMessage = "Produto Já Cadastrado!"
         handleNotificationError(errorMessage)
       }
     } else {

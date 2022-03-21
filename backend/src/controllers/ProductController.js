@@ -25,8 +25,14 @@ module.exports = {
   async insertProduct(req, res) {
     let { name } = req.body;
     let insertProduct, datetime = new Date
-    await connectionPG.query(`insert into produto(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
+    let status = 500
+    await connectionPG.query(`select * from produto where nome ilike '${name}'`)
       .then(results => { insertProduct = results.rows })
-    return res.json(insertProduct).status(200)
+    if (!insertProduct[0]) {
+      await connectionPG.query(`insert into produto(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
+        .then(results => { insertProduct = results.rows })
+      status = 200
+    }
+    return res.status(status).json(insertProduct)
   }
 };

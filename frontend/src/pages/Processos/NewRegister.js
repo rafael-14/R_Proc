@@ -61,7 +61,7 @@ export default function Register() {
           handleNotificationSuccess(processName)
         }
       } catch (e) {
-        let errorMessage = "Erro ao Cadastrar Processo!"
+        let errorMessage = "Processo Já Cadastrado!"
         handleNotificationError(errorMessage)
       }
     } else {
