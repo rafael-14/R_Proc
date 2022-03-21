@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
+import { ToastContainer, toast } from 'react-toastify';
 import {
     Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, Collapse, createTheme,
-    IconButton, Typography, ThemeProvider
+    IconButton, Typography, ThemeProvider, Chip, Switch
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -32,13 +33,47 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Row(props) {
 
+    async function handleNotificationSuccess(nome) {
+        toast.success(`Produto: ${nome} Ativado com Sucesso!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+
+    async function handleNotificationError(nome) {
+        toast.error(`Produto: ${nome} Inativado com Sucesso!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+
     const { row } = props;
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+
+    async function handleInactivation(id, nome) {
+        await api.put(`/api/inactivate/product/${id}`)
+        handleNotificationError(nome)
+    }
+    async function handleActivation(id, nome) {
+        await api.put(`/api/activate/product/${id}`)
+        handleNotificationSuccess(nome)
+    }
 
     return (
         <>
+            <ToastContainer />
             <TableRow >
-                <TableCell align="left" width="1%">
+                <TableCell align="left" >
                     <IconButton
                         size="small"
                         onClick={() => setOpen(!open)}
@@ -46,19 +81,30 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center" width="98%">
+                <TableCell align="center" >
                     {row.nome}
                 </TableCell>
-                <TableCell align="right" width="1%">
-                    <abbr title="Editar">
-                        <Button
-                            style={{ color: '#000000' }}
-                            onClick={() => window.location.href = "/editar/produto/" + row.id}
-                            size="small"
-                        >
-                            <CreateIcon />
-                        </Button>
-                    </abbr>
+                <TableCell align="right" ><Chip size="small" label={row.ativo === true ? "Ativa" : "Inativa"} color={row.ativo === true ? "success" : "error"} /></TableCell>
+                <TableCell align="right" >
+                    <span>
+                        <abbr title="Editar">
+                            <Button
+                                style={{ color: '#000000' }}
+                                onClick={() => window.location.href = "/editar/produto/" + row.id}
+                                size="small"
+                            >
+                                <CreateIcon />
+                            </Button>
+                        </abbr>
+
+                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
+                            <Switch
+                                color="success"
+                                onClick={() => { row.ativo ? handleInactivation(row.id, row.nome) : handleActivation(row.id, row.nome) }}
+                                defaultChecked={row.ativo ? true : false}
+                            />
+                        </abbr>
+                    </span>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -156,9 +202,10 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader >
                                         <TableHead>
                                             <StyledTableRow>
-                                                <StyledTableCell width="1%" />
-                                                <StyledTableCell align="center" width="99%">Produtos</StyledTableCell>
-                                                <StyledTableCell />
+                                                <StyledTableCell align="left" />
+                                                <StyledTableCell align="center" >Produtos</StyledTableCell>
+                                                <StyledTableCell align="right" >Situação</StyledTableCell>
+                                                <StyledTableCell align="right" />
                                             </StyledTableRow>
                                         </TableHead>
                                         <TableBody>

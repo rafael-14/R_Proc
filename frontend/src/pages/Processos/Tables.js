@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
+import { ToastContainer, toast } from 'react-toastify';
 import {
     Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
-    Box, Toolbar, TableContainer, Collapse, createTheme,
-    IconButton, Typography, ThemeProvider
+    Box, Toolbar, TableContainer, Switch, createTheme,
+    ThemeProvider, Chip
 } from "@mui/material";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,7 +42,39 @@ export default function Tables() {
         }
     })
 
-    let [products, setProducts] = useState([])
+    async function handleNotificationSuccess(nome) {
+        toast.success(`Processo: ${nome} Ativado com Sucesso!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+
+    async function handleNotificationError(nome) {
+        toast.error(`Processo: ${nome} Inativado com Sucesso!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+
+    async function handleInactivation(id, nome) {
+        await api.put(`/api/inactivate/process/${id}`)
+        handleNotificationError(nome)
+    }
+    async function handleActivation(id, nome) {
+        await api.put(`/api/activate/process/${id}`)
+        handleNotificationSuccess(nome)
+    }
+
     let [processes, setProcesses] = useState([])
 
     useEffect(() => {
@@ -58,6 +89,7 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
+                <ToastContainer />
                 <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
                     <Paper>
                         <Grid
@@ -82,6 +114,7 @@ export default function Tables() {
                                             <StyledTableRow>
                                                 <StyledTableCell align="center">Processos</StyledTableCell>
                                                 <StyledTableCell align="center">Código</StyledTableCell>
+                                                <StyledTableCell align="right">Situação</StyledTableCell>
                                                 <StyledTableCell />
                                             </StyledTableRow>
                                         </TableHead>
@@ -90,7 +123,8 @@ export default function Tables() {
                                                 <StyledTableRow key={row.id}>
                                                     <StyledTableCell align="center">{row.nome}</StyledTableCell>
                                                     <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                                    <StyledTableCell align="right" width="1%">
+                                                    <StyledTableCell align="right"><Chip size="small" label={row.ativo === true ? "Ativa" : "Inativa"} color={row.ativo === true ? "success" : "error"} /></StyledTableCell>
+                                                    <StyledTableCell align="right">
                                                         <abbr title="Editar">
                                                             <Button
                                                                 align="right"
@@ -100,6 +134,14 @@ export default function Tables() {
                                                             >
                                                                 <CreateIcon />
                                                             </Button>
+                                                        </abbr>
+
+                                                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
+                                                            <Switch
+                                                                color="success"
+                                                                onClick={() => { row.ativo ? handleInactivation(row.id, row.nome) : handleActivation(row.id, row.nome) }}
+                                                                defaultChecked={row.ativo ? true : false}
+                                                            />
                                                         </abbr>
                                                     </StyledTableCell>
                                                 </StyledTableRow>

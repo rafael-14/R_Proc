@@ -56,5 +56,21 @@ module.exports = {
       status = 200
     }
     return res.status(status).json(updatedProduct)
+  },
+
+  async activateProduct(req,res) {
+    let {id} = req.params;
+    let activatedProduct;
+    await connectionPG.query(`update produto set ativo=true, data_inativacao=null where id=${id}`)
+      .then(results => activatedProduct = results.rows)
+    return res.status(200).json(activatedProduct)
+  },
+
+  async inactivateProduct(req,res) {
+    let {id} = req.params;
+    let inactivatedProduct, datetime = new Date;
+    await connectionPG.query(`update produto set ativo=false, data_inativacao='${datetime.toISOString().slice(0, 10)}' where id=${id}`)
+      .then(results => inactivatedProduct = results.rows)
+    return res.status(200).json(inactivatedProduct)
   }
 };
