@@ -113,7 +113,7 @@ export default function Tables() {
 
     useEffect(() => {
         async function loadProcesses() {
-            let response = await api.get('/api/select_processes')
+            let response = await api.get('/api/select/processes')
             setProcesses(response.data)
         }
         loadProcesses()
@@ -136,7 +136,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Processos" />}
                             />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar_processo'>Novo</Button>
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/processo'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>

@@ -56,7 +56,7 @@ export default function Register() {
     if (productName !== null && productName !== "") {
       let data = {name: productName}
       try {
-        let response = await api.post('/api/insert_product', data)
+        let response = await api.post('/api/insert/product', data)
         if (response.status === 200) {
           handleNotificationSuccess(productName)
         }

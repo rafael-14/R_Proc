@@ -4,11 +4,12 @@ const ProcessController = require('./controllers/ProcessController');
 const ProcessesByProductController = require('./controllers/ProcessesByProductController')
 const routes = express.Router();
 
-routes.get('/api/select_products', ProductController.selectAllProducts);
-routes.post('/api/insert_product', ProductController.insertProduct);
+routes.get('/api/select/products', ProductController.selectAllProducts);
+routes.get('/api/select/product/:id', ProductController.findProduct);
+routes.post('/api/insert/product', ProductController.insertProduct);
 
-routes.get('/api/select_processes', ProcessController.selectAllProcesses);
-routes.post('/api/insert_process', ProcessController.insertProcess);
+routes.get('/api/select/processes', ProcessController.selectAllProcesses);
+routes.post('/api/insert/process', ProcessController.insertProcess);
 
 //routes.get('/api/select_processes_by_product', ProcessesByProductController.selectAllProcessesByProduct);
 //routes.put('/api/select_processes_by_product/:id', ProcessesByProductController.selectProcessesByProduct);

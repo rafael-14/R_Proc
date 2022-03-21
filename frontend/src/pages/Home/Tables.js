@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete,Table,
+    Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, Collapse, createTheme,
     IconButton, Typography, ThemeProvider
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -47,6 +48,17 @@ function Row(props) {
                 </TableCell>
                 <TableCell align="center" width="99%">
                     {row.nome}
+                </TableCell>
+                <TableCell>
+                    <abbr title="Editar">
+                        <Button
+                            style={{ color: '#000000' }}
+                            onClick={() => window.location.href = "/editar/produto/" + row.id}
+                            size="small"
+                        >
+                            <CreateIcon />
+                        </Button>
+                    </abbr>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -112,7 +124,7 @@ export default function Tables() {
 
     useEffect(() => {
         async function loadProducts() {
-            let response = await api.get('/api/select_products')
+            let response = await api.get('/api/select/products')
             setProducts(response.data)
         }
         loadProducts()
@@ -135,7 +147,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                             />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar_produto'>Novo</Button>
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produto'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>
@@ -146,6 +158,7 @@ export default function Tables() {
                                             <StyledTableRow>
                                                 <StyledTableCell width="1%" />
                                                 <StyledTableCell align="center" width="99%">Produtos</StyledTableCell>
+                                                <StyledTableCell />
                                             </StyledTableRow>
                                         </TableHead>
                                         <TableBody>

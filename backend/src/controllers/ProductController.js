@@ -34,5 +34,13 @@ module.exports = {
       status = 200
     }
     return res.status(status).json(insertProduct)
+  },
+
+  async findProduct(req, res) {
+    let {id} = req.params;
+    let productFound
+    await connectionPG.query(`select * from produto where id = ${id}`)
+      .then(results => productFound = results.rows)
+    return res.json(productFound)
   }
 };

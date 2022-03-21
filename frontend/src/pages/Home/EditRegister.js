@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useParams } from "react-router-dom";
 import {
-  Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel,
+  Button, createTheme, ThemeProvider,
   Container, Grid, Paper, Box, TextField, Toolbar
 } from "@mui/material";
 
 export default function Register() {
 
-  async function handleNotificationSuccess(processName) {
-    toast.success(`Processo: ${processName} Cadastrado com Sucesso!`, {
+  const { id } = useParams();
+
+  async function handleNotificationSuccess(productName) {
+    toast.success(`Produto: ${productName} Cadastrado com Sucesso!`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -18,7 +21,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/processos" : setProcessName(''),
+      onClose: () => window.location.href = "/",
     })
   }
 
@@ -31,6 +34,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
+      onClose: () => errorMessage.startsWith('Prod') ? window.location.href = "/" : document.getElementById('productName').focus(),
     }
     )
   }
@@ -46,26 +50,34 @@ export default function Register() {
     }
   })
 
-  let [processName, setProcessName] = useState("")
-  let [manyRegisters, setManyRegisters] = useState(false)
+  let [productName, setProductName] = useState("")
 
-  async function handleNewProcess() {
-    if (processName !== null) {
-      processName = processName.trim()
+  useEffect(() => {
+    async function handleProductName() {
+      let response = await api.get(`/api/select/product/${id}`)
+      setProductName(response.data[0].nome)
     }
-    if (processName !== null && processName !== "") {
-      let data = {name: processName}
+    handleProductName()
+  }, [])
+
+  async function handleNewProduct() {
+    if (productName !== null) {
+      productName = productName.trim()
+    }
+    if (productName !== null && productName !== "") {
+      let data = {name: productName}
       try {
-        let response = await api.post('/api/insert/process', data)
+        let response = await api.post('/api/insert/product', data)
         if (response.status === 200) {
-          handleNotificationSuccess(processName)
+          handleNotificationSuccess(productName)
         }
       } catch (e) {
-        let errorMessage = "Processo Já Cadastrado!"
+        let errorMessage = "Produto Já Cadastrado!"
         handleNotificationError(errorMessage)
       }
     } else {
-      let errorMessage = "Preencha o Nome do Processo Corretamente!"
+      let errorMessage = "Preencha o Nome do Produto Corretamente!"
+      setProductName("")
       handleNotificationError(errorMessage)
     }
   }
@@ -88,26 +100,19 @@ export default function Register() {
               <Grid container spacing={3}>
                 <Grid item xs={12} >
                   <TextField
+                    id="productName"
                     required
-                    label="Processo"
+                    label="Produto"
                     fullWidth
                     color="secondary"
-                    value={processName}
-                    onChange={e => setProcessName(e.target.value)}
+                    value={productName}
+                    onChange={e => setProductName(e.target.value)}
                   />
                 </Grid>
               </Grid>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Switch
-                    checked={manyRegisters}
-                    onChange={() => setManyRegisters(!manyRegisters)}
-                  />}
-                  label="Cadastrar Vários"
-                />
-              </FormGroup>
+              
               <br />
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProcess()}>
+              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProduct()}>
                 Salvar
               </Button>
               <Button
@@ -117,7 +122,7 @@ export default function Register() {
                   color: "#FFFFFF",
                   marginInlineStart: 15
                 }}
-                href="/processos"
+                href="/"
               >
                 Cancelar
               </Button>
