@@ -123,7 +123,7 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
                     <Paper>
                         <Grid
                             container
@@ -141,7 +141,7 @@ export default function Tables() {
                         <br />
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <TableContainer sx={{ maxHeight: 440 }}>
+                                <TableContainer>
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <StyledTableRow>
