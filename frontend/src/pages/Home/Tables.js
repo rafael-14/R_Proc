@@ -33,41 +33,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Row(props) {
 
-    async function handleNotificationSuccess(nome) {
-        toast.success(`Produto: ${nome} Ativado com Sucesso!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-        })
-    }
-
-    async function handleNotificationError(nome) {
-        toast.error(`Produto: ${nome} Inativado com Sucesso!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-        })
-    }
-
     const { row } = props;
     const [open, setOpen] = useState(false);
-
-    async function handleInactivation(id, nome) {
-        await api.put(`/api/inactivate/product/${id}`)
-        handleNotificationError(nome)
-    }
-    async function handleActivation(id, nome) {
-        await api.put(`/api/activate/product/${id}`)
-        handleNotificationSuccess(nome)
-    }
 
     return (
         <>
@@ -100,7 +67,7 @@ function Row(props) {
                         <abbr title={row.ativo ? "Inativar" : "Ativar"}>
                             <Switch
                                 color="success"
-                                onClick={() => { row.ativo ? handleInactivation(row.id, row.nome) : handleActivation(row.id, row.nome) }}
+                                onClick={() => { row.ativo ? props.handleInactivation(row.id, row.nome) : props.handleActivation(row.id, row.nome) }}
                                 defaultChecked={row.ativo ? true : false}
                             />
                         </abbr>
@@ -155,6 +122,39 @@ function Row(props) {
 
 export default function Tables() {
 
+    async function handleNotificationSuccess(nome) {
+        toast.success(`Produto: ${nome} Ativado com Sucesso!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+    async function handleNotificationError(nome) {
+        toast.error(`Produto: ${nome} Inativado com Sucesso!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+    const [responseSituation, setResponseSituation] = useState(null)
+    const handleInactivation = async (id, nome) => {
+        setResponseSituation(await api.put(`/api/inactivate/product/${id}`))
+        handleNotificationError(nome)
+      }
+
+    const handleActivation = async (id, nome) => {
+        setResponseSituation(await api.put(`/api/activate/product/${id}`))
+        handleNotificationSuccess(nome)
+    }
+
     const theme = createTheme({
         palette: {
             primary: {
@@ -174,7 +174,7 @@ export default function Tables() {
             setProducts(response.data)
         }
         loadProducts()
-    }, [])
+    }, [responseSituation])
 
     return (
         <ThemeProvider theme={theme}>
@@ -210,7 +210,7 @@ export default function Tables() {
                                         </TableHead>
                                         <TableBody>
                                             {products.map((row) => (
-                                                <Row key={row.id} row={row} />
+                                                <Row key={row.id} row={row} handleInactivation={handleInactivation} handleActivation={handleActivation}/>
                                             ))}
                                         </TableBody>
                                     </Table>

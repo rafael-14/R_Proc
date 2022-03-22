@@ -65,13 +65,13 @@ export default function Tables() {
             progress: undefined,
         })
     }
-
+    const [responseSituation, setResponseSituation] = useState(null)
     async function handleInactivation(id, nome) {
-        await api.put(`/api/inactivate/process/${id}`)
+        setResponseSituation(await api.put(`/api/inactivate/process/${id}`))
         handleNotificationError(nome)
     }
     async function handleActivation(id, nome) {
-        await api.put(`/api/activate/process/${id}`)
+        setResponseSituation(await api.put(`/api/activate/process/${id}`))
         handleNotificationSuccess(nome)
     }
 
@@ -83,7 +83,7 @@ export default function Tables() {
             setProcesses(response.data)
         }
         loadProcesses()
-    }, [])
+    }, [responseSituation])
 
     return (
         <ThemeProvider theme={theme}>
