@@ -170,8 +170,8 @@ export default function Tables() {
 
     useEffect(() => {
         async function loadProducts() {
-            let response = await api.get('/api/select/products')
-            setProducts(response.data)
+            //let response = await api.get('/api/select/products')
+            //setProducts(response.data)
         }
         loadProducts()
     }, [responseSituation])
