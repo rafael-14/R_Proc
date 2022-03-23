@@ -110,26 +110,32 @@ export default function Register() {
         if (selectedProcesses[i].id == id){
           insert = false
           selectedProcesses.splice(i,1)
-          console.log("aqui:"+selectedProcesses)
         } 
       }
       if (insert) {
         setSelectedProcesses([...selectedProcesses, { id }])
       }
-      console.log(selectedProcesses)
     }
   }
   let [fabricationOrder, setFabricationOrder] = useState([])
-
-
-  //selectedProcesses.map(selectedProcesses => selectedProcesses.id === id)
-  //console.log(selectedProcesses[1].id)
-  //console.log(selectedProcesses.indexOf(row))
-  //if (row in selectedProcesses){
-  //alert()
-  //setSelectedProcesses(selectedProcesses.splice())
-  //} setSelectedProcesses([...selectedProcesses, { id }])
-
+  async function handleFabricationOrder() {
+    if (fabricationOrder.length == 0) {
+      setFabricationOrder(selectedProcesses)
+    } else {
+      //console.log(selectedProcesses)
+      //console.log(selectedProcesses.length)
+      //let x
+      for (let i = 0; i < selectedProcesses.length; i++) {
+        //x = selectedProcesses[i].id
+        //console.log(x)
+        //setFabricationOrder([...fabricationOrder, {id:x}])
+        console.log(selectedProcesses[i])
+        setFabricationOrder([...fabricationOrder, selectedProcesses[i]])
+        console.log(fabricationOrder)
+      } 
+    }
+    setSelectedProcesses([])
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -205,7 +211,7 @@ export default function Register() {
                 </Grid>
                 <Grid item>
                   <Grid container direction="column" alignItems="center">
-                    <Button sx={{ my: 0.5 }} size="small" variant="outlined" onClick={() => setFabricationOrder(selectedProcesses)}>&gt;</Button>
+                    <Button sx={{ my: 0.5 }} size="small" variant="outlined" onClick={() => handleFabricationOrder()}>&gt;</Button>
                     <Button sx={{ my: 0.5 }} size="small" variant="outlined">&lt;</Button>
                     <Button sx={{ my: 0.5 }} size="small" variant="outlined">&lt;&lt;</Button>
                   </Grid>
@@ -246,7 +252,8 @@ export default function Register() {
                   color: "#FFFFFF",
                   marginInlineStart: 15
                 }}
-                href="/"
+                //href="/"
+                onClick={() => console.log(fabricationOrder)}
               >
                 Cancelar
               </Button>
