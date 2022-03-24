@@ -46,7 +46,7 @@ export default function Register() {
     }
   })
 
-  let [processName, setProcessName] = useState("")
+  let [processName, setProcessName] = useState(null)
   let [manyRegisters, setManyRegisters] = useState(false)
 
   async function handleNewProcess() {
@@ -56,12 +56,12 @@ export default function Register() {
     if (processName !== null && processName !== "") {
       let data = {name: processName}
       try {
-        let response = await api.post('/api/insert/process', data)
+        let response = await api.post('/api/insert_process', data)
         if (response.status === 200) {
           handleNotificationSuccess(processName)
         }
       } catch (e) {
-        let errorMessage = "Processo Já Cadastrado!"
+        let errorMessage = "Erro ao Cadastrar Processo!"
         handleNotificationError(errorMessage)
       }
     } else {

@@ -25,52 +25,8 @@ module.exports = {
   async insertProduct(req, res) {
     let { name } = req.body;
     let insertProduct, datetime = new Date
-    let status = 500
-    await connectionPG.query(`select * from produto where nome ilike '${name}'`)
+    await connectionPG.query(`insert into produto(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
       .then(results => { insertProduct = results.rows })
-    if (!insertProduct[0]) {
-      await connectionPG.query(`insert into produto(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
-        .then(results => { insertProduct = results.rows })
-      status = 200
-    }
-    return res.status(status).json(insertProduct)
-  },
-
-  async findProduct(req, res) {
-    let { id } = req.params;
-    let productFound
-    await connectionPG.query(`select * from produto where id = ${id}`)
-      .then(results => productFound = results.rows)
-    return res.json(productFound)
-  },
-
-  async updateProduct(req, res) {
-    let { id } = req.params
-    let { name } = req.body
-    let updatedProduct, status = 500
-    await connectionPG.query(`select * from produto where nome ilike '${name}'`)
-      .then(results => updatedProduct = results.rows)
-    if (!updatedProduct[0]) {
-      await connectionPG.query(`update produto set nome='${name}' where id = ${id}`)
-        .then(results => updatedProduct = results.rows)
-      status = 200
-    }
-    return res.status(status).json(updatedProduct)
-  },
-
-  async activateProduct(req,res) {
-    let {id} = req.params;
-    let activatedProduct;
-    await connectionPG.query(`update produto set ativo=true, data_inativacao=null where id=${id}`)
-      .then(results => activatedProduct = results.rows)
-    return res.status(200).json(activatedProduct)
-  },
-
-  async inactivateProduct(req,res) {
-    let {id} = req.params;
-    let inactivatedProduct, datetime = new Date;
-    await connectionPG.query(`update produto set ativo=false, data_inativacao='${datetime.toISOString().slice(0, 10)}' where id=${id}`)
-      .then(results => inactivatedProduct = results.rows)
-    return res.status(200).json(inactivatedProduct)
+    return res.json(insertProduct).status(200)
   }
 };

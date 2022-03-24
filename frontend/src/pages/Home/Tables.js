@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
-import { ToastContainer, toast } from 'react-toastify';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete, Table,
+    Button, styled, tableCellClasses, TextField, Autocomplete,Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, Collapse, createTheme,
-    IconButton, Typography, ThemeProvider, Chip, Switch
+    IconButton, Typography, ThemeProvider
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -34,13 +32,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Row(props) {
 
     const { row } = props;
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = React.useState(false);
 
     return (
         <>
-            <ToastContainer />
             <TableRow >
-                <TableCell align="left" >
+                <TableCell width="1%">
                     <IconButton
                         size="small"
                         onClick={() => setOpen(!open)}
@@ -48,30 +45,8 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center" >
+                <TableCell align="center" width="99%">
                     {row.nome}
-                </TableCell>
-                <TableCell align="right" ><Chip size="small" label={row.ativo === true ? "Ativa" : "Inativa"} color={row.ativo === true ? "success" : "error"} /></TableCell>
-                <TableCell align="right" >
-                    <span>
-                        <abbr title="Editar">
-                            <Button
-                                style={{ color: '#000000' }}
-                                onClick={() => window.location.href = "/editar/produto/" + row.id}
-                                size="small"
-                            >
-                                <CreateIcon />
-                            </Button>
-                        </abbr>
-
-                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
-                            <Switch
-                                color="success"
-                                onClick={() => { row.ativo ? props.handleInactivation(row.id, row.nome) : props.handleActivation(row.id, row.nome) }}
-                                defaultChecked={row.ativo ? true : false}
-                            />
-                        </abbr>
-                    </span>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -122,39 +97,6 @@ function Row(props) {
 
 export default function Tables() {
 
-    async function handleNotificationSuccess(nome) {
-        toast.success(`Produto: ${nome} Ativado com Sucesso!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-        })
-    }
-    async function handleNotificationError(nome) {
-        toast.error(`Produto: ${nome} Inativado com Sucesso!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-        })
-    }
-    const [responseSituation, setResponseSituation] = useState(null)
-    const handleInactivation = async (id, nome) => {
-        setResponseSituation(await api.put(`/api/inactivate/product/${id}`))
-        handleNotificationError(nome)
-      }
-
-    const handleActivation = async (id, nome) => {
-        setResponseSituation(await api.put(`/api/activate/product/${id}`))
-        handleNotificationSuccess(nome)
-    }
-
     const theme = createTheme({
         palette: {
             primary: {
@@ -170,11 +112,11 @@ export default function Tables() {
 
     useEffect(() => {
         async function loadProducts() {
-            //let response = await api.get('/api/select/products')
-            //setProducts(response.data)
+            let response = await api.get('/api/select_products')
+            setProducts(response.data)
         }
         loadProducts()
-    }, [responseSituation])
+    }, [])
 
     return (
         <ThemeProvider theme={theme}>
@@ -193,7 +135,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                             />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produto'>Novo</Button>
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar_produto'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>
@@ -202,15 +144,13 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader >
                                         <TableHead>
                                             <StyledTableRow>
-                                                <StyledTableCell align="left" />
-                                                <StyledTableCell align="center" >Produtos</StyledTableCell>
-                                                <StyledTableCell align="right" >Situação</StyledTableCell>
-                                                <StyledTableCell align="right" />
+                                                <StyledTableCell width="1%" />
+                                                <StyledTableCell align="center" width="99%">Produtos</StyledTableCell>
                                             </StyledTableRow>
                                         </TableHead>
                                         <TableBody>
                                             {products.map((row) => (
-                                                <Row key={row.id} row={row} handleInactivation={handleInactivation} handleActivation={handleActivation}/>
+                                                <Row key={row.id} row={row} />
                                             ))}
                                         </TableBody>
                                     </Table>

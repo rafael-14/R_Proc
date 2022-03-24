@@ -100,6 +100,9 @@ export default function Register() {
     loadProcesses()
   }, [])
 
+//  useEffect(() => {
+//  }, [])
+
   let [selectedProcesses, setSelectedProcesses] = useState([])
   async function handleSelectedProcesses(id) {
     let insert = true;
