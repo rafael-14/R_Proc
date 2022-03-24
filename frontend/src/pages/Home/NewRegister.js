@@ -100,8 +100,8 @@ export default function Register() {
     loadProcesses()
   }, [])
 
-//  useEffect(() => {
-//  }, [])
+  //  useEffect(() => {
+  //  }, [])
 
   let [selectedProcesses, setSelectedProcesses] = useState([])
   async function handleSelectedProcesses(id) {
@@ -110,10 +110,10 @@ export default function Register() {
       setSelectedProcesses([{ id }])
     } else {
       for (let i = 0; i < selectedProcesses.length; i++) {
-        if (selectedProcesses[i].id == id){
+        if (selectedProcesses[i].id == id) {
           insert = false
-          selectedProcesses.splice(i,1)
-        } 
+          selectedProcesses.splice(i, 1)
+        }
       }
       if (insert) {
         setSelectedProcesses([...selectedProcesses, { id }])
@@ -135,7 +135,7 @@ export default function Register() {
         console.log(selectedProcesses[i])
         setFabricationOrder([...fabricationOrder, selectedProcesses[i]])
         console.log(fabricationOrder)
-      } 
+      }
     }
     setSelectedProcesses([])
   }

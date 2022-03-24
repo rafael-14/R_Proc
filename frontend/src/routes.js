@@ -8,9 +8,9 @@ function Rotas() {
         <Router>
             <Routes>
                 <Route path='/' exact element={<Home />} />
-                <Route path='/cadastrar_produto' exact element={<CadastrarProduto />} />
+                <Route path='/cadastrar/produto' exact element={<CadastrarProduto />} />
                 <Route path='/processos' exact element={<ListarProcessos />} />
-                <Route path='/cadastrar_processo' exact element={<CadastrarProcessos />} />
+                <Route path='/cadastrar/processo' exact element={<CadastrarProcessos />} />
             </Routes>
         </Router>
     );
