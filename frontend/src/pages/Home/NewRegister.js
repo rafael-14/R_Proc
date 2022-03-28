@@ -125,17 +125,7 @@ export default function Register() {
     if (fabricationOrder.length == 0) {
       setFabricationOrder(selectedProcesses)
     } else {
-      //console.log(selectedProcesses)
-      //console.log(selectedProcesses.length)
-      //let x
-      for (let i = 0; i < selectedProcesses.length; i++) {
-        //x = selectedProcesses[i].id
-        //console.log(x)
-        //setFabricationOrder([...fabricationOrder, {id:x}])
-        console.log(selectedProcesses[i])
-        setFabricationOrder([...fabricationOrder, selectedProcesses[i]])
-        console.log(fabricationOrder)
-      }
+      setFabricationOrder([...fabricationOrder, ...selectedProcesses])
     }
     setSelectedProcesses([])
   }
@@ -189,9 +179,6 @@ export default function Register() {
                           <StyledTableCell align="center">
                             <Checkbox
                               color="secondary"
-                            //checked="true"
-                            //checked={isItemSelected}
-                            //inputProps={{'aria-labelledby': labelId,}}
                             />
                             Processos
                           </StyledTableCell>
@@ -205,7 +192,9 @@ export default function Register() {
                               <Checkbox color="secondary" onClick={() => handleSelectedProcesses(row.id)} />
                               {row.nome}
                             </StyledTableCell>
-                            <StyledTableCell align="right"><Chip size="small" label={row.ativo === true ? "Ativa" : "Inativa"} color={row.ativo === true ? "success" : "error"} /></StyledTableCell>
+                            <StyledTableCell align="right">
+                              <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
+                            </StyledTableCell>
                           </StyledTableRow>
                         ))}
                       </TableBody>
