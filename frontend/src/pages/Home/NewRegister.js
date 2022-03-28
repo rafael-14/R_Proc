@@ -31,12 +31,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Row(props) {
 
   const { row } = props;
+  let [checked, setChecked] = useState(false)
+
+  async function setDirectlyFabricationOrder(id) {
+    props.setFabricationOrder([...props.fabricationOrder, {id}])
+  }
 
   return (
     <>
       <TableRow key={row.id}>
-        <TableCell align="center" >
-          <Checkbox color="secondary" onClick={() => props.handleSelectedProcesses(row.id)} />
+        <TableCell 
+          align="center"
+          onClick={() => { props.handleSelectedProcesses(row.id); setChecked(!checked) }}
+          onDoubleClick={() => setDirectlyFabricationOrder(row.id)}
+          //onDoubleClick={() => console.log(row.id)}    let idCompany = companies.find(companies => companies.nome === employeeCompany)
+        >
+          <Checkbox color="secondary" checked={checked} id="checkbox"/>
           {row.nome}
         </TableCell>
         <TableCell align="right">
@@ -119,13 +129,11 @@ export default function Register() {
     loadProcesses()
   }, [])
 
-  //  useEffect(() => {
-  //  }, [])
-
   let [selectedProcesses, setSelectedProcesses] = useState([])
   async function handleSelectedProcesses(id) {
     let insert = true;
     if (selectedProcesses.length == 0) {
+      console.log([{ id }])
       setSelectedProcesses([{ id }])
     } else {
       for (let i = 0; i < selectedProcesses.length; i++) {
@@ -206,7 +214,7 @@ export default function Register() {
                       </TableHead>
                       <TableBody>
                         {processes.map((row) => (
-                          <Row key={row.id} row={row} handleSelectedProcesses={handleSelectedProcesses}/>
+                          <Row key={row.id} row={row} handleSelectedProcesses={handleSelectedProcesses} setFabricationOrder={setFabricationOrder} fabricationOrder={fabricationOrder}/>
                         ))}
                       </TableBody>
                     </Table>
@@ -214,7 +222,16 @@ export default function Register() {
                 </Grid>
                 <Grid item>
                   <Grid container direction="column" alignItems="center">
-                    <Button sx={{ my: 0.5 }} size="small" variant="outlined" onClick={() => handleFabricationOrder()}>&gt;</Button>
+                    <Button
+                      sx={{ my: 0.5 }}
+                      size="small"
+                      disabled={selectedProcesses.length == 0 ? true : false}
+                      variant="outlined"
+                      onClick={() => handleFabricationOrder()}
+                      //onClick={() => alert()}
+                    >
+                      &gt;
+                    </Button>
                     <Button sx={{ my: 0.5 }} size="small" variant="outlined">&lt;</Button>
                     <Button sx={{ my: 0.5 }} size="small" variant="outlined">&lt;&lt;</Button>
                   </Grid>
@@ -239,7 +256,6 @@ export default function Register() {
                     </Table>
                   </TableContainer>
                 </Grid>
-
               </Grid>
 
 
@@ -255,8 +271,7 @@ export default function Register() {
                   color: "#FFFFFF",
                   marginInlineStart: 15
                 }}
-                //href="/"
-                onClick={() => console.log(fabricationOrder)}
+                href="/"
               >
                 Cancelar
               </Button>
