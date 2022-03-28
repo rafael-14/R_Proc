@@ -28,6 +28,25 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }
 }));
 
+function Row(props) {
+
+  const { row } = props;
+
+  return (
+    <>
+      <TableRow key={row.id}>
+        <TableCell align="center" >
+          <Checkbox color="secondary" onClick={() => props.handleSelectedProcesses(row.id)} />
+          {row.nome}
+        </TableCell>
+        <TableCell align="right">
+          <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
+        </TableCell>
+      </TableRow>
+    </>
+  )
+}
+
 export default function Register() {
 
   async function handleNotificationSuccess(productName) {
@@ -187,15 +206,7 @@ export default function Register() {
                       </TableHead>
                       <TableBody>
                         {processes.map((row) => (
-                          <StyledTableRow key={row.id}>
-                            <StyledTableCell align="center" >
-                              <Checkbox color="secondary" onClick={() => handleSelectedProcesses(row.id)} />
-                              {row.nome}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                              <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
-                            </StyledTableCell>
-                          </StyledTableRow>
+                          <Row key={row.id} row={row} handleSelectedProcesses={handleSelectedProcesses}/>
                         ))}
                       </TableBody>
                     </Table>
