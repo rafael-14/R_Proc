@@ -33,7 +33,9 @@ function Row(props) {
   const { row } = props;
 
   useEffect(() => {
-    setChecked(false)
+    if (props.selectedProcesses.length == 0) {
+      setChecked(false)
+    }
   }, [props.fabricationOrder])
 
   let [checked, setChecked] = useState(false)
@@ -159,6 +161,13 @@ export default function Register() {
     setSelectedProcesses([])
   }
 
+  let [unselectedProcesses, setUnselectedProcess] = useState([])
+  async function handleUnselectedProcesses() {
+    for (let i = 0; i < unselectedProcesses.length; i++) {
+
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -206,9 +215,6 @@ export default function Register() {
                       <TableHead>
                         <StyledTableRow>
                           <StyledTableCell align="center">
-                            <Checkbox
-                              color="secondary"
-                            />
                             Processos
                           </StyledTableCell>
                           <StyledTableCell align="right">Situação</StyledTableCell>
@@ -216,9 +222,14 @@ export default function Register() {
                       </TableHead>
                       <TableBody>
                         {processes.map((row) => (
-                          <Row key={row.id} row={row}
-                            handleSelectedProcesses={handleSelectedProcesses} setFabricationOrder={setFabricationOrder} fabricationOrder={fabricationOrder}
+                          <Row
+                            key={row.id}
+                            row={row}
+                            handleSelectedProcesses={handleSelectedProcesses}
+                            setFabricationOrder={setFabricationOrder}
+                            fabricationOrder={fabricationOrder}
                             handleFabricationOrder={handleFabricationOrder}
+                            selectedProcesses={selectedProcesses}
                           />
                         ))}
                       </TableBody>
@@ -236,8 +247,25 @@ export default function Register() {
                     >
                       &gt;
                     </Button>
-                    <Button sx={{ my: 0.5 }} size="small" variant="outlined">&lt;</Button>
-                    <Button sx={{ my: 0.5 }} size="small" variant="outlined">&lt;&lt;</Button>
+                    <Button
+                      sx={{ my: 0.5 }}
+                      size="small"
+                      variant="outlined"
+                      //onClick={() => handleUnselectedProcesses()}
+                      onClick={() => console.log(selectedProcesses)}
+                      disabled={fabricationOrder.length == 0 ? true : false}
+                    >
+                      &lt;
+                    </Button>
+                    <Button
+                      sx={{ my: 0.5 }}
+                      size="small"
+                      variant="outlined"
+                      onClick={() => setFabricationOrder([])}
+                      disabled={fabricationOrder.length == 0 ? true : false}
+                    >
+                      &lt;&lt;
+                    </Button>
                   </Grid>
                 </Grid>
                 <Grid item xs={5} >
@@ -252,7 +280,10 @@ export default function Register() {
                       <TableBody>
                         {fabricationOrder.map((newRow) => (
                           <StyledTableRow key={newRow.id}>
-                            <StyledTableCell align="center">{newRow.id}</StyledTableCell>
+                            <StyledTableCell align="center">
+                              <Checkbox color="secondary" onClick={() => setUnselectedProcess(newRow.id)} />
+                              {newRow.id}
+                            </StyledTableCell>
                             <StyledTableCell align="right"></StyledTableCell>
                           </StyledTableRow>
                         ))}
