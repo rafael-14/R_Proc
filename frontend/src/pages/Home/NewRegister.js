@@ -64,6 +64,7 @@ function Row(props) {
 
 export default function Register() {
 
+  var position = 0
   async function handleNotificationSuccess(productName) {
     toast.success(`Produto: ${productName} Cadastrado com Sucesso!`, {
       position: "top-right",
@@ -86,18 +87,13 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-    }
-    )
+    })
   }
 
   const theme = createTheme({
     palette: {
-      primary: {
-        main: '#E8927C'
-      },
-      secondary: {
-        main: '#000000'
-      }
+      primary: { main: '#E8927C' },
+      secondary: { main: '#000000' }
     }
   })
 
@@ -154,9 +150,11 @@ export default function Register() {
   let [fabricationOrder, setFabricationOrder] = useState([])
   async function handleFabricationOrder() {
     if (fabricationOrder.length == 0) {
-      setFabricationOrder(selectedProcesses)
+      setFabricationOrder(selectedProcesses.map((selectedProcesses, position) => ({ ...selectedProcesses, order: (position + 1) * 10 })))
     } else {
-      setFabricationOrder([...fabricationOrder, ...selectedProcesses])
+      setFabricationOrder([...fabricationOrder, ...selectedProcesses.map((selectedProcesses, position) => ({ ...selectedProcesses, order: (fabricationOrder.length + 1 + position) * 10
+       }))])
+      //setFabricationOrder([...fabricationOrder, ...selectedProcesses])
     }
     setSelectedProcesses([])
   }
@@ -214,9 +212,7 @@ export default function Register() {
                     <Table size="medium" stickyHeader>
                       <TableHead>
                         <StyledTableRow>
-                          <StyledTableCell align="center">
-                            Processos
-                          </StyledTableCell>
+                          <StyledTableCell align="center">Processos</StyledTableCell>
                           <StyledTableCell align="right">Situação</StyledTableCell>
                         </StyledTableRow>
                       </TableHead>
@@ -252,7 +248,7 @@ export default function Register() {
                       size="small"
                       variant="outlined"
                       //onClick={() => handleUnselectedProcesses()}
-                      onClick={() => console.log(selectedProcesses)}
+                      onClick={() => console.log(fabricationOrder)}
                       disabled={fabricationOrder.length == 0 ? true : false}
                     >
                       &lt;
@@ -284,7 +280,7 @@ export default function Register() {
                               <Checkbox color="secondary" onClick={() => setUnselectedProcess(newRow.id)} />
                               {newRow.id}
                             </StyledTableCell>
-                            <StyledTableCell align="right"></StyledTableCell>
+                            <StyledTableCell align="right">{newRow.order}</StyledTableCell>
                           </StyledTableRow>
                         ))}
                       </TableBody>
