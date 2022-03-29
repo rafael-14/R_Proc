@@ -41,7 +41,7 @@ function Row(props) {
   let [checked, setChecked] = useState(false)
 
   async function setDirectlyFabricationOrder(id) {
-    props.setFabricationOrder([...props.fabricationOrder, { id }])
+    props.setFabricationOrder([...props.fabricationOrder, { id, order:(props.fabricationOrder.length + 1) * 10 }])
   }
 
   return (
@@ -64,7 +64,6 @@ function Row(props) {
 
 export default function Register() {
 
-  var position = 0
   async function handleNotificationSuccess(productName) {
     toast.success(`Produto: ${productName} Cadastrado com Sucesso!`, {
       position: "top-right",
@@ -149,12 +148,10 @@ export default function Register() {
   }
   let [fabricationOrder, setFabricationOrder] = useState([])
   async function handleFabricationOrder() {
-    if (fabricationOrder.length == 0) {
+    if (fabricationOrder.length === 0) {
       setFabricationOrder(selectedProcesses.map((selectedProcesses, position) => ({ ...selectedProcesses, order: (position + 1) * 10 })))
     } else {
-      setFabricationOrder([...fabricationOrder, ...selectedProcesses.map((selectedProcesses, position) => ({ ...selectedProcesses, order: (fabricationOrder.length + 1 + position) * 10
-       }))])
-      //setFabricationOrder([...fabricationOrder, ...selectedProcesses])
+      setFabricationOrder([...fabricationOrder, ...selectedProcesses.map((selectedProcesses, position) => ({ ...selectedProcesses, order: (fabricationOrder.length + 1 + position) * 10 }))])
     }
     setSelectedProcesses([])
   }
