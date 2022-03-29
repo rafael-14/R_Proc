@@ -49,9 +49,14 @@ function Row(props) {
       <TableRow key={row.id}>
         <TableCell
           align="center"
-          onDoubleClick={() => setDirectlyFabricationOrder(row.id)}
+          onDoubleClick={() => row.ativo ? setDirectlyFabricationOrder(row.id):null}
         >
-          <Checkbox color="secondary" checked={checked} onClick={() => { props.handleSelectedProcesses(row.id); setChecked(!checked) }} />
+          <Checkbox 
+            color="secondary"
+            checked={checked}
+            onClick={() => { props.handleSelectedProcesses(row.id); setChecked(!checked) }}
+            disabled={row.ativo ? false : true}
+          />
           {row.nome}
         </TableCell>
         <TableCell align="right">
@@ -246,7 +251,7 @@ export default function Register() {
                       variant="outlined"
                       //onClick={() => handleUnselectedProcesses()}
                       onClick={() => console.log(fabricationOrder)}
-                      disabled={fabricationOrder.length == 0 ? true : false}
+                      disabled={fabricationOrder.length === 0 ? true : false}
                     >
                       &lt;
                     </Button>
@@ -255,7 +260,7 @@ export default function Register() {
                       size="small"
                       variant="outlined"
                       onClick={() => setFabricationOrder([])}
-                      disabled={fabricationOrder.length == 0 ? true : false}
+                      disabled={fabricationOrder.length === 0 ? true : false}
                     >
                       &lt;&lt;
                     </Button>
@@ -266,7 +271,7 @@ export default function Register() {
                     <Table size="medium" stickyHeader>
                       <TableHead>
                         <StyledTableRow>
-                          <StyledTableCell align="center">Ordem de Fabricação</StyledTableCell>
+                          <StyledTableCell align="center" style={{ width: '70%' }}>Ordem de Fabricação</StyledTableCell>
                           <StyledTableCell align="right">Ordem</StyledTableCell>
                         </StyledTableRow>
                       </TableHead>
@@ -277,7 +282,15 @@ export default function Register() {
                               <Checkbox color="secondary" onClick={() => setUnselectedProcess(newRow.id)} />
                               {newRow.id}
                             </StyledTableCell>
-                            <StyledTableCell align="right">{newRow.order}</StyledTableCell>
+                            <TableCell>
+                              <TextField
+                                size="small"
+                                value={newRow.order}
+                                //onChange={e => setFabricationOrder([...fabricationOrder, e.target.value])}
+                                //no onchange deve chamar uma função que altera o valor do order pegando a posição que ele está na tabela
+                                align="right"
+                              />
+                            </TableCell>
                           </StyledTableRow>
                         ))}
                       </TableBody>
