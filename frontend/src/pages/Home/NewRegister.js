@@ -116,12 +116,10 @@ export default function Register() {
           handleNotificationSuccess(productName)
         }
       } catch (e) {
-        let errorMessage = "Produto Já Cadastrado!"
-        handleNotificationError(errorMessage)
+        handleNotificationError("Produto Já Cadastrado!")
       }
     } else {
-      let errorMessage = "Preencha o Nome do Produto Corretamente!"
-      handleNotificationError(errorMessage)
+      handleNotificationError("Preencha o Nome do Produto Corretamente!")
     }
   }
 
@@ -161,16 +159,14 @@ export default function Register() {
     setSelectedProcesses([])
   }
 
-  let [unselectedProcesses, setUnselectedProcess] = useState([])
-  async function handleUnselectedProcesses() {
-    for (let i = 0; i < unselectedProcesses.length; i++) {
-
+  async function handleNewOrder(newOrder, newRowPosition, id) {
+    let orderExist = fabricationOrder.find(fabricationOrder => fabricationOrder.order === parseInt(newOrder))
+    if (!orderExist) {
+      let newProcessOrder = { id, order: parseInt(newOrder) }
+      setFabricationOrder(fabricationOrder.map((fabricationOrder, position) => position === newRowPosition ? { ...newProcessOrder } : fabricationOrder))
+    } else {
+      handleNotificationError("Ordem já Existente!")
     }
-  }
-
-  async function handleNewOrder(x, y, id) {
-    let newOrder = { id, order: parseInt(x) }
-    setFabricationOrder(fabricationOrder.map((fabricationOrder, position) => position === y ? { ...newOrder } : fabricationOrder))
   }
 
   return (
@@ -284,7 +280,7 @@ export default function Register() {
                         {fabricationOrder.map((newRow, newRowPosition) => (
                           <StyledTableRow key={newRow.id + "|" + newRow.order}>
                             <StyledTableCell align="center">
-                              <Checkbox color="secondary" onClick={() => setUnselectedProcess(newRow.id)} />
+                              <Checkbox color="secondary" /*onClick={() => setUnselectedProcess(newRow.id)}*/ />
                               {newRow.id}
                             </StyledTableCell>
                             <TableCell>
@@ -302,10 +298,6 @@ export default function Register() {
                   </TableContainer>
                 </Grid>
               </Grid>
-
-
-
-
               <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProduct()}>
                 Salvar
               </Button>
