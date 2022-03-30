@@ -168,23 +168,10 @@ export default function Register() {
     }
   }
 
-  async function teste(x, y) {
-    console.log(x)
-    console.log(y)
-    console.log(fabricationOrder[y])
-    let novaAtualizacao = [{ order: x }];
-    //setFabricationOrder({...fabricationOrder, ...novaAtualizacao[y]})
-    setFabricationOrder([...fabricationOrder.map((fabricationOrder,position) => 
-      position === y ? { ...fabricationOrder[y].order= x} : fabricationOrder[position])])
-      //{position === y ? fabricationOrder[y].order = x : fabricationOrder[y]})]);
+  async function handleNewOrder(x, y, id) {
+    let newOrder = { id, order: parseInt(x) }
+    setFabricationOrder(fabricationOrder.map((fabricationOrder, position) => position === y ? { ...newOrder } : fabricationOrder))
   }
-
-  /*async function teste(x, y) {
-    console.log(x)
-    console.log(y)
-    fabricationOrder[y].order= parseInt(x)
-    console.log(fabricationOrder[y])
-  }*/
 
   return (
     <ThemeProvider theme={theme}>
@@ -295,7 +282,7 @@ export default function Register() {
                       </TableHead>
                       <TableBody>
                         {fabricationOrder.map((newRow, newRowPosition) => (
-                          <StyledTableRow key={newRow.id}>
+                          <StyledTableRow key={newRow.id + "|" + newRow.order}>
                             <StyledTableCell align="center">
                               <Checkbox color="secondary" onClick={() => setUnselectedProcess(newRow.id)} />
                               {newRow.id}
@@ -304,8 +291,7 @@ export default function Register() {
                               <TextField
                                 size="small"
                                 value={newRow.order}
-                                onChange={e => teste(e.target.value, newRowPosition)}
-                                //no onchange deve chamar uma função que altera o valor do order pegando a posição que ele está na tabela
+                                onChange={e => handleNewOrder(e.target.value, newRowPosition, newRow.id)}
                                 align="right"
                               />
                             </TableCell>
