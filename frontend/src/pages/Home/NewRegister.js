@@ -41,7 +41,7 @@ function Row(props) {
   let [checked, setChecked] = useState(false)
 
   async function setDirectlyFabricationOrder(id) {
-    props.setFabricationOrder([...props.fabricationOrder, { id, order:(props.fabricationOrder.length + 1) * 10 }])
+    props.setFabricationOrder([...props.fabricationOrder, { id, order: (props.fabricationOrder.length + 1) * 10 }])
   }
 
   return (
@@ -49,9 +49,9 @@ function Row(props) {
       <TableRow key={row.id}>
         <TableCell
           align="center"
-          onDoubleClick={() => row.ativo ? setDirectlyFabricationOrder(row.id):null}
+          onDoubleClick={() => row.ativo ? setDirectlyFabricationOrder(row.id) : null}
         >
-          <Checkbox 
+          <Checkbox
             color="secondary"
             checked={checked}
             onClick={() => { props.handleSelectedProcesses(row.id); setChecked(!checked) }}
@@ -168,6 +168,24 @@ export default function Register() {
     }
   }
 
+  async function teste(x, y) {
+    console.log(x)
+    console.log(y)
+    console.log(fabricationOrder[y])
+    let novaAtualizacao = [{ order: x }];
+    //setFabricationOrder({...fabricationOrder, ...novaAtualizacao[y]})
+    setFabricationOrder([...fabricationOrder.map((fabricationOrder,position) => 
+      position === y ? { ...fabricationOrder[y].order= x} : fabricationOrder[position])])
+      //{position === y ? fabricationOrder[y].order = x : fabricationOrder[y]})]);
+  }
+
+  /*async function teste(x, y) {
+    console.log(x)
+    console.log(y)
+    fabricationOrder[y].order= parseInt(x)
+    console.log(fabricationOrder[y])
+  }*/
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -276,7 +294,7 @@ export default function Register() {
                         </StyledTableRow>
                       </TableHead>
                       <TableBody>
-                        {fabricationOrder.map((newRow) => (
+                        {fabricationOrder.map((newRow, newRowPosition) => (
                           <StyledTableRow key={newRow.id}>
                             <StyledTableCell align="center">
                               <Checkbox color="secondary" onClick={() => setUnselectedProcess(newRow.id)} />
@@ -286,7 +304,7 @@ export default function Register() {
                               <TextField
                                 size="small"
                                 value={newRow.order}
-                                //onChange={e => setFabricationOrder([...fabricationOrder, e.target.value])}
+                                onChange={e => teste(e.target.value, newRowPosition)}
                                 //no onchange deve chamar uma função que altera o valor do order pegando a posição que ele está na tabela
                                 align="right"
                               />
