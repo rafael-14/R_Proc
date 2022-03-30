@@ -112,7 +112,7 @@ export default function Tables() {
 
     useEffect(() => {
         async function loadProducts() {
-            let response = await api.get('/api/select_products')
+            let response = await api.get('/api/select/products')
             setProducts(response.data)
         }
         loadProducts()
@@ -135,6 +135,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                             />
+                            <Button onClick={() => console.log(products) }>teste</Button>
                             <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produto'>Novo</Button>
                         </Grid>
                         <br />

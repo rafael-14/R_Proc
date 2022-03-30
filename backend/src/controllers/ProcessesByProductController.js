@@ -12,7 +12,7 @@ module.exports = {
   },
 
   async selectProcessesByProduct(req, res) {
-    let {id} = req.params;
+    let { id } = req.params;
     let processesByProduct
     await connectionPG.query(`SELECT * FROM processos_por_produto where id_produto = ${id}`)
       .then(results => {
@@ -22,13 +22,15 @@ module.exports = {
   },
 
   async insertProcessesByProduct(req, res) {
-    let { productID, process1ID, process2ID, process3ID, process4ID, process5ID, process6ID, process7ID, process8ID, process9ID, process10ID } = req.body;
+    let { productID, processID } = req.body;
     let insertProcessesByProduct, datetime = new Date
-    await connectionPG.query(`insert into processos_por_produto
-      (id_produto, id_processo1, id_processo2, id_processo3, id_processo4, id_processo5, id_processo6, id_processo7, id_processo8, id_processo9, id_processo10, data_criacao)
-      values(${productID}, ${process1ID}, ${process2ID}, ${process3ID}, ${process4ID}, ${process5ID}, ${process6ID}, ${process7ID}, ${process8ID}, ${process9ID}, ${process10ID},  
-      '${datetime.toISOString().slice(0, 10)}')`)
+    processID.sort((a, b) => {return a.order - b.order}); //ordena os processos pela sua ordem
+    for (let i = 0; i < processID.length; i++) {
+      await connectionPG.query(`insert into 
+        processos_por_produto(id_produto, id_processo, sequencia, data_criacao)
+        values(${productID}, ${processID[i].id}, ${i+1}, '${datetime.toISOString().slice(0, 10)}')`)
       .then(results => { insertProcessesByProduct = results.rows })
+    }
     return res.json(insertProcessesByProduct).status(200)
   }
 };
