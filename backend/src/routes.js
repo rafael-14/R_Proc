@@ -11,7 +11,7 @@ routes.get('/api/select/processes', ProcessController.selectAllProcesses);
 routes.post('/api/insert/process', ProcessController.insertProcess);
 
 //routes.get('/api/select_processes_by_product', ProcessesByProductController.selectAllProcessesByProduct);
-//routes.put('/api/select_processes_by_product/:id', ProcessesByProductController.selectProcessesByProduct);
+routes.put('/api/select/processes_by_product/:id', ProcessesByProductController.selectProcessesByProduct);
 routes.post('/api/insert_processes_by_product', ProcessesByProductController.insertProcessesByProduct);
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete,Table,
+    Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, Collapse, createTheme,
     IconButton, Typography, ThemeProvider
@@ -34,6 +34,17 @@ function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
 
+    let [processesByProduct, setProcessesByProduct] = useState([])
+    useEffect(() => {
+        async function loadProcessesByProduct() {
+            let response = await api.put(`/api/select/processes_by_product/${row.id}`)
+            setProcessesByProduct(response.data)
+        }
+        if (open) {
+            loadProcessesByProduct()
+        }
+    }, [open])
+
     return (
         <>
             <TableRow >
@@ -59,31 +70,17 @@ function Row(props) {
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        {row.nome_processo1 ? <TableCell align="center">Processo 1</TableCell> : null}
-                                        {row.nome_processo2 ? <TableCell align="center">Processo 2</TableCell> : null}
-                                        {row.nome_processo3 ? <TableCell align="center">Processo 3</TableCell> : null}
-                                        {row.nome_processo4 ? <TableCell align="center">Processo 4</TableCell> : null}
-                                        {row.nome_processo5 ? <TableCell align="center">Processo 5</TableCell> : null}
-                                        {row.nome_processo6 ? <TableCell align="center">Processo 6</TableCell> : null}
-                                        {row.nome_processo7 ? <TableCell align="center">Processo 7</TableCell> : null}
-                                        {row.nome_processo8 ? <TableCell align="center">Processo 8</TableCell> : null}
-                                        {row.nome_processo9 ? <TableCell align="center">Processo 9</TableCell> : null}
-                                        {row.nome_processo10 ? <TableCell align="center">Processo 10</TableCell> : null}
+                                        {processesByProduct.map((row) => (
+                                            row.sequencia ?
+                                                <TableCell align="center">{row.sequencia} Processo</TableCell>
+                                                : null
+                                        ))}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    <StyledTableRow key={row.id}>
-                                        <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo3}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo4}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo5}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo6}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo7}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo8}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo9}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo10}</StyledTableCell>
-                                    </StyledTableRow>
+                                    {processesByProduct.map((row) => (
+                                        <TableCell align="center">{row.id}</TableCell>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </Box>
@@ -135,7 +132,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                             />
-                            <Button onClick={() => console.log(products) }>teste</Button>
+
                             <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produto'>Novo</Button>
                         </Grid>
                         <br />

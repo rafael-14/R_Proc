@@ -24,12 +24,12 @@ module.exports = {
   async insertProcessesByProduct(req, res) {
     let { productID, processID } = req.body;
     let insertProcessesByProduct, datetime = new Date
-    processID.sort((a, b) => {return a.order - b.order}); //ordena os processos pela sua ordem
+    processID.sort((a, b) => { return a.order - b.order }); //ordena os processos pela sua ordem
     for (let i = 0; i < processID.length; i++) {
       await connectionPG.query(`insert into 
         processos_por_produto(id_produto, id_processo, sequencia, data_criacao)
-        values(${productID}, ${processID[i].id}, ${i+1}, '${datetime.toISOString().slice(0, 10)}')`)
-      .then(results => { insertProcessesByProduct = results.rows })
+        values(${productID}, ${processID[i].id}, ${i + 1}, '${datetime.toISOString().slice(0, 10)}')`)
+        .then(results => { insertProcessesByProduct = results.rows })
     }
     return res.json(insertProcessesByProduct).status(200)
   }
