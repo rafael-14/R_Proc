@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -19,15 +20,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     }
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover
+const StyledTableCellCollapse = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: "#FBECE8",
+      color: theme.palette.common.black
     },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-        border: 0
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14
     }
-}));
+  }));
 
 function Row(props) {
 
@@ -49,15 +50,19 @@ function Row(props) {
         <>
             <TableRow >
                 <TableCell width="1%">
-                    <IconButton
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
+                    <IconButton size="small" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
                 <TableCell align="center" width="99%">
                     {row.nome}
+                </TableCell>
+                <TableCell align="right" size="small" width="1%">
+                    <abbr title="Editar">
+                        <Button style={{ color: '#000000' }}>
+                            <CreateIcon />
+                        </Button>
+                    </abbr>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -72,7 +77,7 @@ function Row(props) {
                                     <TableRow>
                                         {processesByProduct.map((row) => (
                                             row.sequencia ?
-                                                <TableCell align="center">{row.sequencia} Processo</TableCell>
+                                                <StyledTableCellCollapse align="center">{row.sequencia}º Processo</StyledTableCellCollapse>
                                                 : null
                                         ))}
                                     </TableRow>
@@ -141,10 +146,11 @@ export default function Tables() {
                                 <TableContainer /*sx={{ maxHeight: 440 }}*/ >
                                     <Table size="medium" stickyHeader >
                                         <TableHead>
-                                            <StyledTableRow>
-                                                <StyledTableCell width="1%" />
+                                            <TableRow>
+                                                <StyledTableCell align="left" width="1%" />
                                                 <StyledTableCell align="center" width="99%">Produtos</StyledTableCell>
-                                            </StyledTableRow>
+                                                <StyledTableCell align="right" width="1%"/>
+                                            </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {products.map((row) => (

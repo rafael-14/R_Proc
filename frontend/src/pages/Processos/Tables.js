@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -16,16 +17,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14
-    }
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-        border: 0
     }
 }));
 
@@ -72,7 +63,7 @@ function Row(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    <StyledTableRow key={row.id}>
+                                    <TableRow key={row.id}>
                                         <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
                                         <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
                                         <StyledTableCell align="center">{row.nome_processo3}</StyledTableCell>
@@ -83,7 +74,7 @@ function Row(props) {
                                         <StyledTableCell align="center">{row.nome_processo8}</StyledTableCell>
                                         <StyledTableCell align="center">{row.nome_processo9}</StyledTableCell>
                                         <StyledTableCell align="center">{row.nome_processo10}</StyledTableCell>
-                                    </StyledTableRow>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </Box>
@@ -144,17 +135,24 @@ export default function Tables() {
                                 <TableContainer sx={{ maxHeight: 440 }}>
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
-                                            <StyledTableRow>
+                                            <TableRow>
                                                 <StyledTableCell align="center">Processos</StyledTableCell>
                                                 <StyledTableCell align="center">Código</StyledTableCell>
-                                            </StyledTableRow>
+                                            </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {processes.map((row) => (
-                                                <StyledTableRow key={row.id}>
-                                                    <StyledTableCell align="center">{row.nome}</StyledTableCell>
-                                                    <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                                </StyledTableRow>
+                                                <TableRow key={row.id}>
+                                                    <TableCell align="center">{row.nome}</TableCell>
+                                                    <TableCell align="center">{row.id}</TableCell>
+                                                    <TableCell align="right" size="small" width="1%">
+                                                        <abbr title="Editar">
+                                                            <Button style={{ color: '#000000' }}>
+                                                                <CreateIcon />
+                                                            </Button>
+                                                        </abbr>
+                                                    </TableCell>
+                                                </TableRow>
                                             ))}
                                         </TableBody>
                                     </Table>

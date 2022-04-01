@@ -18,16 +18,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0
-  }
-}));
-
 function Row(props) {
 
   const { row } = props;
@@ -103,6 +93,8 @@ export default function Register() {
 
   let [productName, setProductName] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
+  let [cleanFabricationOrder, setCleanFabricationOrder] = useState(false)
+
 
   async function handleNewProduct() {
     if (productName !== null) {
@@ -113,6 +105,9 @@ export default function Register() {
       try {
         let response = await api.post('/api/insert/product', data)
         if (response.status === 200) {
+          if (cleanFabricationOrder) {
+            setFabricationOrder([])
+          }
           handleNotificationSuccess(productName)
         }
       } catch (e) {
@@ -196,15 +191,26 @@ export default function Register() {
                   />
                 </Grid>
               </Grid>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Switch
-                    checked={manyRegisters}
-                    onChange={() => setManyRegisters(!manyRegisters)}
-                  />}
-                  label="Cadastrar Vários"
-                />
-              </FormGroup>
+              <Grid container>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Switch
+                      checked={manyRegisters}
+                      onChange={() => setManyRegisters(!manyRegisters)}
+                    />}
+                    label="Cadastrar Vários"
+                  />
+                </FormGroup>
+                {manyRegisters ? (<FormGroup>
+                  <FormControlLabel
+                    control={<Switch
+                      checked={cleanFabricationOrder}
+                      onChange={() => setCleanFabricationOrder(!cleanFabricationOrder)}
+                    />}
+                    label="Limpar Ordem de Fabricação"
+                  />
+                </FormGroup>) : null}
+              </Grid>
               <br />
               <Grid
                 container
@@ -214,10 +220,10 @@ export default function Register() {
                   <TableContainer >
                     <Table size="medium" stickyHeader>
                       <TableHead>
-                        <StyledTableRow>
+                        <TableRow>
                           <StyledTableCell align="center">Processos</StyledTableCell>
                           <StyledTableCell align="right">Situação</StyledTableCell>
-                        </StyledTableRow>
+                        </TableRow>
                       </TableHead>
                       <TableBody>
                         {processes.map((row) => (
@@ -271,14 +277,14 @@ export default function Register() {
                   <TableContainer>
                     <Table size="medium" stickyHeader>
                       <TableHead>
-                        <StyledTableRow>
+                        <TableRow>
                           <StyledTableCell align="center" style={{ width: '70%' }}>Ordem de Fabricação</StyledTableCell>
                           <StyledTableCell align="right">Ordem</StyledTableCell>
-                        </StyledTableRow>
+                        </TableRow>
                       </TableHead>
                       <TableBody>
                         {fabricationOrder.map((newRow, newRowPosition) => (
-                          <StyledTableRow key={newRow.id + "|" + newRow.order}>
+                          <TableRow key={newRow.id + "|" + newRow.order}>
                             <StyledTableCell align="center">
                               <Checkbox color="secondary" /*onClick={() => setUnselectedProcess(newRow.id)}*/ />
                               {newRow.id}
@@ -291,7 +297,7 @@ export default function Register() {
                                 align="right"
                               />
                             </TableCell>
-                          </StyledTableRow>
+                          </TableRow>
                         ))}
                       </TableBody>
                     </Table>
