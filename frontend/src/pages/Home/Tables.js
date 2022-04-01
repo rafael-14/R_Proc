@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
+import { ToastContainer, toast } from 'react-toastify';
 import {
     Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
-    Box, Toolbar, TableContainer, Collapse, createTheme,
+    Box, Toolbar, TableContainer, Collapse, createTheme, Switch,
     IconButton, Typography, ThemeProvider
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -22,13 +23,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableCellCollapse = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#FBECE8",
-      color: theme.palette.common.black
+        backgroundColor: "#FBECE8",
+        color: theme.palette.common.black
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 14
+        fontSize: 14
     }
-  }));
+}));
 
 function Row(props) {
 
@@ -54,14 +55,21 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center" width="99%">
+                <TableCell align="center" width="84%">
                     {row.nome}
                 </TableCell>
-                <TableCell align="right" size="small" width="1%">
+                <TableCell align="right" size="small" width="15%">
                     <abbr title="Editar">
                         <Button style={{ color: '#000000' }}>
                             <CreateIcon />
                         </Button>
+                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
+                            <Switch
+                                color="success"
+                                onClick={() => { row.ativo ? props.handleInactivation(row.id) : props.handleActivation(row.id) }}
+                                defaultChecked={row.ativo ? true : false}
+                            />
+                        </abbr>
                     </abbr>
                 </TableCell>
             </TableRow>
@@ -110,20 +118,53 @@ export default function Tables() {
         }
     })
 
-    let [products, setProducts] = useState([])
+    async function handleNotificationSuccess(productName) {
+        toast.success(`Produto: ${productName} Ativado com Sucesso!`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        })
+    }
+      async function handleNotificationError(productName) {
+        toast.error(`Produto: ${productName} Inativado com Sucesso!`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        })
+      }
 
+    const [productSituation, setProductSituation] = useState(null)
+    async function handleInactivation(id) {
+        setProductSituation(await api.put(`/inactivate/product/${id}`))
+        handleNotificationError(productSituation.data.nome)
+    }
+    async function handleActivation(id) {
+        setProductSituation(await api.put(`/activate/product/${id}`))
+        handleNotificationSuccess(productSituation.data.nome)
+    }
+
+    let [products, setProducts] = useState([])
     useEffect(() => {
         async function loadProducts() {
             let response = await api.get('/api/select/products')
             setProducts(response.data)
         }
         loadProducts()
-    }, [])
+    }, [productSituation])
 
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
+                <ToastContainer />
                 <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
                     <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
                         <Grid
@@ -148,13 +189,18 @@ export default function Tables() {
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell align="left" width="1%" />
-                                                <StyledTableCell align="center" width="99%">Produtos</StyledTableCell>
-                                                <StyledTableCell align="right" width="1%"/>
+                                                <StyledTableCell align="center" width="84%">Produtos</StyledTableCell>
+                                                <StyledTableCell align="right" width="15%" />
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {products.map((row) => (
-                                                <Row key={row.id} row={row} />
+                                                <Row 
+                                                    key={row.id}
+                                                    row={row}
+                                                    handleActivation={handleActivation}
+                                                    handleInactivation={handleInactivation}
+                                                />
                                             ))}
                                         </TableBody>
                                     </Table>

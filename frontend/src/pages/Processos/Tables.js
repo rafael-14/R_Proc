@@ -104,7 +104,7 @@ export default function Tables() {
 
     useEffect(() => {
         async function loadProcesses() {
-            let response = await api.get('/api/select_processes')
+            let response = await api.get('/api/select/processes')
             setProcesses(response.data)
         }
         loadProcesses()
@@ -132,19 +132,18 @@ export default function Tables() {
                         <br />
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <TableContainer sx={{ maxHeight: 440 }}>
+                                <TableContainer>
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell align="center">Processos</StyledTableCell>
-                                                <StyledTableCell align="center">Código</StyledTableCell>
+                                                <StyledTableCell align="right"></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {processes.map((row) => (
                                                 <TableRow key={row.id}>
                                                     <TableCell align="center">{row.nome}</TableCell>
-                                                    <TableCell align="center">{row.id}</TableCell>
                                                     <TableCell align="right" size="small" width="1%">
                                                         <abbr title="Editar">
                                                             <Button style={{ color: '#000000' }}>
