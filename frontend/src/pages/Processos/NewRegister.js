@@ -56,7 +56,7 @@ export default function Register() {
     if (processName !== null && processName !== "") {
       let data = {name: processName}
       try {
-        let response = await api.post('/api/insert_process', data)
+        let response = await api.post('/api/insert/process', data)
         if (response.status === 200) {
           handleNotificationSuccess(processName)
         }

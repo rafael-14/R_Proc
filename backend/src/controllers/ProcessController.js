@@ -14,6 +14,7 @@ module.exports = {
     let insertProcess, datetime = new Date
     await connectionPG.query(`insert into processo(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
       .then(results => { insertProcess = results.rows })
+      console.log(insertProcess)
     return res.json(insertProcess).status(200)
   },
 
