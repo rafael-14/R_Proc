@@ -3,9 +3,7 @@ const connectionPG = require('../database');
 module.exports = {
   async selectAllProducts(req, res) {
     await connectionPG.query(`select * from produto order by 1`)
-      .then(results => {
-        allProducts = results.rows
-      })
+      .then(results => { allProducts = results.rows })
     return res.json(allProducts)
   },
 
@@ -15,5 +13,18 @@ module.exports = {
     await connectionPG.query(`insert into produto(nome,data_criacao) values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
       .then(results => { insertProduct = results.rows })
     return res.json(insertProduct).status(200)
+  },
+
+  async inactivateProduct(req, res) {
+    let { id } = req.params;
+    let datetime = new Date
+    await connectionPG.query(`update produto set ativo=false, data_inativacao='${datetime.toISOString().slice(0, 10)}' where id = ${id}`)
+      return res.json().status(200)
+  },
+
+  async activateProduct(req, res) {
+    let { id } = req.params;
+    await connectionPG.query(`update produto set ativo=true, data_inativacao=null where id = ${id}`)
+    return res.json().status(200)
   }
 };

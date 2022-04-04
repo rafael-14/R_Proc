@@ -5,7 +5,7 @@ import {
     Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, Collapse, createTheme, Switch,
-    IconButton, Typography, ThemeProvider
+    IconButton, Typography, ThemeProvider, Chip
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -55,8 +55,11 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center" width="84%">
+                <TableCell align="center" width="69%">
                     {row.nome}
+                </TableCell>
+                <TableCell align="center" width="15%">
+                    <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
                 </TableCell>
                 <TableCell align="right" size="small" width="15%">
                     <abbr title="Editar">
@@ -66,7 +69,7 @@ function Row(props) {
                         <abbr title={row.ativo ? "Inativar" : "Ativar"}>
                             <Switch
                                 color="success"
-                                onClick={() => { row.ativo ? props.handleInactivation(row.id) : props.handleActivation(row.id) }}
+                                onClick={() => { row.ativo ? props.handleInactivation(row.id, row.nome) : props.handleActivation(row.id, row.nome) }}
                                 defaultChecked={row.ativo ? true : false}
                             />
                         </abbr>
@@ -142,13 +145,13 @@ export default function Tables() {
       }
 
     const [productSituation, setProductSituation] = useState(null)
-    async function handleInactivation(id) {
-        setProductSituation(await api.put(`/inactivate/product/${id}`))
-        handleNotificationError(productSituation.data.nome)
+    async function handleInactivation(id, name) {
+        setProductSituation(await api.post(`/api/inactivate/product/${id}`))
+        handleNotificationError(name)
     }
-    async function handleActivation(id) {
-        setProductSituation(await api.put(`/activate/product/${id}`))
-        handleNotificationSuccess(productSituation.data.nome)
+    async function handleActivation(id, name) {
+        setProductSituation(await api.post(`/api/activate/product/${id}`))
+        handleNotificationSuccess(name)
     }
 
     let [products, setProducts] = useState([])
@@ -179,6 +182,7 @@ export default function Tables() {
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                             />
 
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} onClick={() => {console.log(productSituation)}}>teste</Button>
                             <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produto'>Novo</Button>
                         </Grid>
                         <br />
@@ -189,7 +193,8 @@ export default function Tables() {
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell align="left" width="1%" />
-                                                <StyledTableCell align="center" width="84%">Produtos</StyledTableCell>
+                                                <StyledTableCell align="center" width="69%">Produtos</StyledTableCell>
+                                                <StyledTableCell align="center" width="15%">Situação</StyledTableCell>
                                                 <StyledTableCell align="right" width="15%" />
                                             </TableRow>
                                         </TableHead>
