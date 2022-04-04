@@ -146,11 +146,11 @@ export default function Tables() {
 
     const [productSituation, setProductSituation] = useState(null)
     async function handleInactivation(id, name) {
-        setProductSituation(await api.post(`/api/inactivate/product/${id}`))
+        setProductSituation(await api.put(`/api/inactivate/product/${id}`))
         handleNotificationError(name)
     }
     async function handleActivation(id, name) {
-        setProductSituation(await api.post(`/api/activate/product/${id}`))
+        setProductSituation(await api.put(`/api/activate/product/${id}`))
         handleNotificationSuccess(name)
     }
 
