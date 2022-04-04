@@ -20,72 +20,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     }
 }));
 
-function Row(props) {
-
-    const { row } = props;
-    const [open, setOpen] = React.useState(false);
-
-    return (
-        <>
-            <TableRow >
-                <TableCell width="1%">
-                    <IconButton
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
-                <TableCell align="center" width="99%">
-                    {row.nome}
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6">
-                                Processos
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        {row.nome_processo1 ? <TableCell align="center">Processo 1</TableCell> : null}
-                                        {row.nome_processo2 ? <TableCell align="center">Processo 2</TableCell> : null}
-                                        {row.nome_processo3 ? <TableCell align="center">Processo 3</TableCell> : null}
-                                        {row.nome_processo4 ? <TableCell align="center">Processo 4</TableCell> : null}
-                                        {row.nome_processo5 ? <TableCell align="center">Processo 5</TableCell> : null}
-                                        {row.nome_processo6 ? <TableCell align="center">Processo 6</TableCell> : null}
-                                        {row.nome_processo7 ? <TableCell align="center">Processo 7</TableCell> : null}
-                                        {row.nome_processo8 ? <TableCell align="center">Processo 8</TableCell> : null}
-                                        {row.nome_processo9 ? <TableCell align="center">Processo 9</TableCell> : null}
-                                        {row.nome_processo10 ? <TableCell align="center">Processo 10</TableCell> : null}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <TableRow key={row.id}>
-                                        <StyledTableCell align="center">{row.nome_processo1}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo2}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo3}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo4}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo5}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo6}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo7}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo8}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo9}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.nome_processo10}</StyledTableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </>
-    )
-}
-
-
 export default function Tables() {
 
     const theme = createTheme({
@@ -99,9 +33,7 @@ export default function Tables() {
         }
     })
 
-    let [products, setProducts] = useState([])
     let [processes, setProcesses] = useState([])
-
     useEffect(() => {
         async function loadProcesses() {
             let response = await api.get('/api/select/processes')

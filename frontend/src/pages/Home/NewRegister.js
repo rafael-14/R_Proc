@@ -68,7 +68,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/" : setProductName(''),
+      //onClose: () => !manyRegisters ? window.location.href = "/" : setProductName(''),
     })
   }
 
@@ -101,14 +101,12 @@ export default function Register() {
       productName = productName.trim()
     }
     if (productName !== null && productName !== "") {
-      //let data = { productName }
-
+      let data = { productName }
       try {
-        //let response = await api.post('/api/insert/product', data)
-        //if (response.status === 200) {
-        const response = true  
-        if (response){
-          //let response = await api.post('/api/insert')
+        let response = await api.post('/api/insert/product', data)
+        if (response.status === 200) {
+          //let data = {productID:response.data.id, processesID}
+          let response = await api.post('/api/insert')
           if (cleanFabricationOrder) {
             setFabricationOrder([])
           }

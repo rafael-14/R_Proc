@@ -95,7 +95,7 @@ function Row(props) {
                                 </TableHead>
                                 <TableBody>
                                     {processesByProduct.map((row) => (
-                                        <TableCell align="center">{row.id}</TableCell>
+                                        <TableCell align="center" >{row.id_processo}</TableCell>
                                     ))}
                                 </TableBody>
                             </Table>
