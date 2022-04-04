@@ -123,26 +123,26 @@ export default function Tables() {
 
     async function handleNotificationSuccess(productName) {
         toast.success(`Produto: ${productName} Ativado com Sucesso!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
         })
     }
-    async function handleNotificationError(productName) {
+      async function handleNotificationError(productName) {
         toast.error(`Produto: ${productName} Inativado com Sucesso!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
         })
-    }
+      }
 
     const [productSituation, setProductSituation] = useState(null)
     async function handleInactivation(id, name) {
@@ -181,7 +181,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                             />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produto'>Novo</Button>
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>
@@ -198,7 +198,7 @@ export default function Tables() {
                                         </TableHead>
                                         <TableBody>
                                             {products.map((row) => (
-                                                <Row
+                                                <Row 
                                                     key={row.id}
                                                     row={row}
                                                     handleActivation={handleActivation}
