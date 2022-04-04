@@ -54,7 +54,7 @@ export default function Register() {
       processName = processName.trim()
     }
     if (processName !== null && processName !== "") {
-      let data = {name: processName}
+      let data = { processName }
       try {
         let response = await api.post('/api/insert/process', data)
         if (response.status === 200) {

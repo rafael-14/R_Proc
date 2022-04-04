@@ -101,7 +101,7 @@ export default function Register() {
       productName = productName.trim()
     }
     if (productName !== null && productName !== "") {
-      let data = { name: productName }
+      let data = { productName }
       try {
         let response = await api.post('/api/insert/product', data)
         if (response.status === 200) {
