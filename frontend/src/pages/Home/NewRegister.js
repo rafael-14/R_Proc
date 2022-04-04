@@ -104,13 +104,20 @@ export default function Register() {
       let data = { productName }
       try {
         let response = await api.post('/api/insert/product', data)
+        let responseData = response.data
         if (response.status === 200) {
-          //let data = {productID:response.data.id, processesID}
-          let response = await api.post('/api/insert')
+          let data = {productID:responseData.id, processesID: fabricationOrder}
+          try {
+            let response = await api.post('/api/insert/product', data)
+            if (response.status === 200) {
+              handleNotificationSuccess(productName)
+            }
+          } catch (e) {
+            handleNotificationError("Produto Já Cadastrado!")
+          }
           if (cleanFabricationOrder) {
             setFabricationOrder([])
           }
-          handleNotificationSuccess(productName)
         }
       } catch (e) {
         handleNotificationError("Produto Já Cadastrado!")

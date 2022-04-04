@@ -11,8 +11,9 @@ module.exports = {
     let { productName } = req.body;
     let insertProduct, datetime = new Date
     await connectionPG.query(`insert into produto(nome,data_criacao) values('${productName}', '${datetime.toISOString().slice(0, 10)}')`)
+    await connectionPG.query(`select * from produto where nome = '${productName}'`)
       .then(results => { insertProduct = results.rows })
-    return res.json(insertProduct).status(200)
+    return res.json(insertProduct[0]).status(200)
   },
 
   async inactivateProduct(req, res) {
