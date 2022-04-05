@@ -3,9 +3,7 @@ const connectionPG = require('../database');
 module.exports = {
   async selectAllProcesses(req, res) {
     await connectionPG.query(`SELECT * FROM processo order by 1`)
-      .then(results => {
-        allProcesses = results.rows
-      })
+      .then(results => { allProcesses = results.rows })
     return res.json(allProcesses)
   },
 
@@ -17,14 +15,14 @@ module.exports = {
   },
 
   async inactivateProcess(req, res) {
-    let {id} = req.params;
+    let { id } = req.params;
     let datetime = new Date
     await connectionPG.query(`update processo set ativo=false, data_inativacao='${datetime.toISOString().slice(0, 10)}' where id = ${id}`)
     return res.json().status(200)
   },
-  
+
   async activateProcess(req, res) {
-    let {id} = req.params;
+    let { id } = req.params;
     await connectionPG.query(`update processo set ativo=true, data_inativacao=null where id = ${id}`)
     return res.json().status(200)
   }

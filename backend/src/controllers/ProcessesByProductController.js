@@ -2,11 +2,8 @@ const connectionPG = require('../database');
 
 module.exports = {
   async selectAllProcessesByProduct(req, res) {
-    await connectionPG.query(`select * from processos_por_produto
-    `)
-      .then(results => {
-        allProcessesByProduct = results.rows
-      })
+    await connectionPG.query(`select * from processos_por_produto`)
+      .then(results => { allProcessesByProduct = results.rows })
     return res.json(allProcessesByProduct)
   },
 

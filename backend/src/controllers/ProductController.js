@@ -20,7 +20,7 @@ module.exports = {
     let { id } = req.params;
     let datetime = new Date
     await connectionPG.query(`update produto set ativo=false, data_inativacao='${datetime.toISOString().slice(0, 10)}' where id = ${id}`)
-      return res.json().status(200)
+    return res.json().status(200)
   },
 
   async activateProduct(req, res) {
