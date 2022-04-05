@@ -9,7 +9,7 @@ module.exports = {
 
   async insertProduct(req, res) {
     let { productName } = req.body;
-    let insertProduct, datetime = new Date
+    let datetime = new Date
     await connectionPG.query(`insert into produto(nome,data_criacao) values('${productName}', '${datetime.toISOString().slice(0, 10)}')`)
     await connectionPG.query(`select * from produto where nome = '${productName}'`)
       .then(results => { insertProduct = results.rows })

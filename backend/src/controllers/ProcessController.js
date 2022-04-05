@@ -11,11 +11,9 @@ module.exports = {
 
   async insertProcess(req, res) {
     let { processName } = req.body;
-    let insertProcess, datetime = new Date
+    let datetime = new Date
     await connectionPG.query(`insert into processo(nome,data_criacao) values('${processName}', '${datetime.toISOString().slice(0, 10)}')`)
-      .then(results => { insertProcess = results.rows })
-      console.log(insertProcess)
-    return res.json(insertProcess).status(200)
+    return res.json().status(200)
   },
 
   async inactivateProcess(req, res) {
