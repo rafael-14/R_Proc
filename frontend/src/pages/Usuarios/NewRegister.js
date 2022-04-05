@@ -9,8 +9,8 @@ import {
 
 export default function Register() {
 
-  async function handleNotificationSuccess(processName) {
-    toast.success(`Processo: ${processName} Cadastrado com Sucesso!`, {
+  async function handleNotificationSuccess(userName, userSurname) {
+    toast.success(`Usuário: ${userName} ${userSurname} Cadastrado com Sucesso!`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -79,21 +79,15 @@ export default function Register() {
   let [manyRegisters, setManyRegisters] = useState(false)
 
   async function handleNewUser() {
-/*    if (processName !== null && processName !== "") {
-      let data = { name: processName }
-      try {
-        let response = await api.post('/api/insert_process', data)
-        if (response.status === 200) {
-          handleNotificationSuccess(processName)
-        }
-      } catch (e) {
-        let errorMessage = "Erro ao Cadastrar Processo!"
-        handleNotificationError(errorMessage)
+    let data = { userName, userSurname, userLogin, userPassword }
+    try {
+      let response = await api.post('/api/insert/user', data)
+      if (response.status === 200) {
+        handleNotificationSuccess(userName, userSurname)
       }
-    } else {
-      let errorMessage = "Preencha o Nome do Processo Corretamente!"
-      handleNotificationError(errorMessage)
-    }*/
+    } catch (e) {
+      handleNotificationError("Erro ao Cadastrar Usuário!")
+    }
   }
 
   return (

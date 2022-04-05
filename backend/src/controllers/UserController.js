@@ -10,7 +10,7 @@ module.exports = {
   },
 
   async insertUser(req, res) {
-    let { name  } = req.body;
+    let { userName, userSurname, userLogin, userPassword } = req.body;
     let insertProcess, datetime = new Date
     await connectionPG.query(`insert into processo
       (nome, sobrenome, login, senha, data_criacao)
