@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
-import { ToastContainer, toast } from 'react-toastify';
 import {
     Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
-    Box, Toolbar, TableContainer, Collapse, createTheme, Switch,
-    IconButton, Typography, ThemeProvider, Chip
+    Box, Toolbar, TableContainer, createTheme, ThemeProvider
 } from "@mui/material";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -21,155 +17,30 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     }
 }));
 
-const StyledTableCellCollapse = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#FBECE8",
-        color: theme.palette.common.black
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
-
-function Row(props) {
-
-    const { row } = props;
-    const [open, setOpen] = React.useState(false);
-
-    let [processesByProduct, setProcessesByProduct] = useState([])
-    useEffect(() => {
-        async function loadProcessesByProduct() {
-            let response = await api.put(`/api/select/processes_by_product/${row.id}`)
-            setProcessesByProduct(response.data)
-        }
-        if (open) {
-            loadProcessesByProduct()
-        }
-    }, [open])
-
-    return (
-        <>
-            <TableRow >
-                <TableCell width="1%">
-                    <IconButton size="small" onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
-                <TableCell align="center" width="69%">
-                    {row.nome}
-                </TableCell>
-                <TableCell align="center" width="15%">
-                    <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
-                </TableCell>
-                <TableCell align="right" size="small" width="15%">
-                    <abbr title="Editar">
-                        <Button style={{ color: '#000000' }}>
-                            <CreateIcon />
-                        </Button>
-                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
-                            <Switch
-                                color="success"
-                                onClick={() => { row.ativo ? props.handleInactivation(row.id, row.nome) : props.handleActivation(row.id, row.nome) }}
-                                defaultChecked={row.ativo ? true : false}
-                            />
-                        </abbr>
-                    </abbr>
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6">
-                                Processos
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        {processesByProduct.map((row) => (
-                                            row.sequencia ?
-                                                <StyledTableCellCollapse align="center">{row.sequencia}º Processo</StyledTableCellCollapse>
-                                                : null
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {processesByProduct.map((row) => (
-                                        <TableCell align="center">{row.id}</TableCell>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </>
-    )
-}
-
-
 export default function Tables() {
 
     const theme = createTheme({
         palette: {
-            primary: {
-                main: '#FF7A40'
-            },
-            secondary: {
-                main: '#000000'
-            }
+            primary: { main: '#FF7A40' },
+            secondary: { main: '#000000' }
         }
     })
 
-    async function handleNotificationSuccess(productName) {
-        toast.success(`Produto: ${productName} Ativado com Sucesso!`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-        })
-    }
-      async function handleNotificationError(productName) {
-        toast.error(`Produto: ${productName} Inativado com Sucesso!`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-        })
-      }
-
-    const [productSituation, setProductSituation] = useState(null)
-    async function handleInactivation(id, name) {
-        setProductSituation(await api.post(`/api/inactivate/product/${id}`))
-        handleNotificationError(name)
-    }
-    async function handleActivation(id, name) {
-        setProductSituation(await api.post(`/api/activate/product/${id}`))
-        handleNotificationSuccess(name)
-    }
-
-    let [products, setProducts] = useState([])
+    let [users, setUsers] = useState([])
     useEffect(() => {
-        async function loadProducts() {
-            let response = await api.get('/api/select/products')
-            setProducts(response.data)
+        async function loadUsers() {
+            let response = await api.get('/api/select/users')
+            setUsers(response.data)
         }
-        loadProducts()
-    }, [productSituation])
+        loadUsers()
+    }, [])
 
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <ToastContainer />
-                <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
-                    <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
+                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                    <Paper>
                         <Grid
                             container
                             direction="row"
@@ -177,33 +48,35 @@ export default function Tables() {
                         >
                             <Autocomplete
                                 disablePortal
-                                options={products.map((row) => row.nome)}
+                                options={users.map((row) => row.nome)}
                                 sx={{ width: 500 }}
-                                renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
+                                renderInput={(params) => <TextField color="secondary" {...params} label="Usuários" />}
                             />
                             <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <TableContainer /*sx={{ maxHeight: 440 }}*/ >
-                                    <Table size="medium" stickyHeader >
+                                <TableContainer>
+                                    <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell align="left" width="1%" />
-                                                <StyledTableCell align="center" width="69%">Produtos</StyledTableCell>
-                                                <StyledTableCell align="center" width="15%">Situação</StyledTableCell>
-                                                <StyledTableCell align="right" width="15%" />
+                                                <StyledTableCell align="center">Usuários</StyledTableCell>
+                                                <StyledTableCell align="right"></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {products.map((row) => (
-                                                <Row 
-                                                    key={row.id}
-                                                    row={row}
-                                                    handleActivation={handleActivation}
-                                                    handleInactivation={handleInactivation}
-                                                />
+                                            {users.map((row) => (
+                                                <TableRow key={row.id}>
+                                                    <TableCell align="center">{row.nome} {row.sobrenome}</TableCell>
+                                                    <TableCell align="right" size="small" width="1%">
+                                                        <abbr title="Editar">
+                                                            <Button style={{ color: '#000000' }}>
+                                                                <CreateIcon />
+                                                            </Button>
+                                                        </abbr>
+                                                    </TableCell>
+                                                </TableRow>
                                             ))}
                                         </TableBody>
                                     </Table>
@@ -213,7 +86,7 @@ export default function Tables() {
                     </Paper>
                 </Container>
             </Box>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
 

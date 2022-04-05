@@ -3,11 +3,8 @@ import api from '../../services/api';
 import {
     Button, styled, tableCellClasses, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
-    Box, Toolbar, TableContainer, Collapse, createTheme,
-    IconButton, Typography, ThemeProvider
+    Box, Toolbar, TableContainer, createTheme, ThemeProvider
 } from "@mui/material";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CreateIcon from '@mui/icons-material/Create';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -24,12 +21,8 @@ export default function Tables() {
 
     const theme = createTheme({
         palette: {
-            primary: {
-                main: '#FF7A40'
-            },
-            secondary: {
-                main: '#000000'
-            }
+            primary: { main: '#FF7A40' },
+            secondary: { main: '#000000' }
         }
     })
 
@@ -59,7 +52,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Processos" />}
                             />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/processo'>Novo</Button>
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/processos'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>
