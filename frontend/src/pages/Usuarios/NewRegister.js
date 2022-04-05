@@ -42,6 +42,29 @@ export default function Register() {
     setManyRegisters("")
   }
 
+  async function checkFields() {
+    userName = userName.trim()
+    userSurname = userSurname.trim()
+    userLogin = userLogin.trim()
+    userPassword = userPassword.trim()
+
+    if (userName === "") {
+      handleNotificationError("Preencher Nome do Usuário Corretamente!")
+      document.getElementById("userName").focus()
+    } else if (userSurname === "") {
+      handleNotificationError("Preencher Sobrenome do Usuário Corretamente!")
+      document.getElementById("userSurname").focus()
+    } else if (userLogin === "") {
+      handleNotificationError("Preencher Login do Usuário Corretamente!")
+      document.getElementById("userLogin").focus()
+    } else if (userPassword === "") {
+      handleNotificationError("Preencher Senha do Usuário Corretamente!")
+      document.getElementById("userPassword").focus()
+    } else {
+      handleNewUser()
+    }
+  }
+
   const theme = createTheme({
     palette: {
       primary: { main: '#E8927C' },
@@ -49,32 +72,29 @@ export default function Register() {
     }
   })
 
-  let [userName, setUserName] = useState(null)
-  let [userSurname, setUserSurname] = useState(null)
-  let [userLogin, setUserLogin] = useState(null)
-  let [userPassword, setUserPassword] = useState(null)
+  let [userName, setUserName] = useState("")
+  let [userSurname, setUserSurname] = useState("")
+  let [userLogin, setUserLogin] = useState("")
+  let [userPassword, setUserPassword] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
 
-  /*  async function handleNewProcess() {
-      if (processName !== null) {
-        processName = processName.trim()
-      }
-      if (processName !== null && processName !== "") {
-        let data = { name: processName }
-        try {
-          let response = await api.post('/api/insert_process', data)
-          if (response.status === 200) {
-            handleNotificationSuccess(processName)
-          }
-        } catch (e) {
-          let errorMessage = "Erro ao Cadastrar Processo!"
-          handleNotificationError(errorMessage)
+  async function handleNewUser() {
+/*    if (processName !== null && processName !== "") {
+      let data = { name: processName }
+      try {
+        let response = await api.post('/api/insert_process', data)
+        if (response.status === 200) {
+          handleNotificationSuccess(processName)
         }
-      } else {
-        let errorMessage = "Preencha o Nome do Processo Corretamente!"
+      } catch (e) {
+        let errorMessage = "Erro ao Cadastrar Processo!"
         handleNotificationError(errorMessage)
       }
+    } else {
+      let errorMessage = "Preencha o Nome do Processo Corretamente!"
+      handleNotificationError(errorMessage)
     }*/
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -94,6 +114,7 @@ export default function Register() {
               <Grid container spacing={3}>
                 <Grid item xs={12} >
                   <TextField
+                    id="userName"
                     required
                     label="Nome"
                     color="secondary"
@@ -101,6 +122,7 @@ export default function Register() {
                     onChange={e => setUserName(e.target.value)}
                   />
                   <TextField
+                    id="userSurname"
                     required
                     style={{ marginInlineStart: 15 }}
                     label="Sobrenome"
@@ -111,6 +133,7 @@ export default function Register() {
                 </Grid>
                 <Grid item xs={12} >
                   <TextField
+                    id="userLogin"
                     required
                     label="Login"
                     color="secondary"
@@ -118,6 +141,7 @@ export default function Register() {
                     onChange={e => setUserLogin(e.target.value)}
                   />
                   <TextField
+                    id="userPassword"
                     required
                     style={{ marginInlineStart: 15 }}
                     label="Senha"
@@ -137,7 +161,7 @@ export default function Register() {
                 />
               </FormGroup>
               <br />
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => alert()}>
+              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => checkFields()}>
                 Salvar
               </Button>
               <Button

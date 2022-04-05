@@ -97,16 +97,16 @@ export default function Register() {
 
 
   async function handleNewProduct() {
-    if (productName !== null) {
-      productName = productName.trim()
-    }
-    if (productName !== null && productName !== "") {
+
+    productName = productName.trim()
+
+    if (productName !== "") {
       let data = { productName }
       try {
         let response = await api.post('/api/insert/product', data)
         let responseData = response.data
         if (response.status === 200) {
-          let data = {productID:responseData.id, processesID: fabricationOrder}
+          let data = { productID: responseData.id, processesID: fabricationOrder }
           try {
             let response = await api.post('/api/insert_processes_by_product', data)
             if (response.status === 200) {
@@ -123,6 +123,7 @@ export default function Register() {
         handleNotificationError("Produto Já Cadastrado!")
       }
     } else {
+      document.getElementById("productName").focus()
       handleNotificationError("Preencha o Nome do Produto Corretamente!")
     }
   }
@@ -191,6 +192,7 @@ export default function Register() {
               <Grid container spacing={3}>
                 <Grid item xs={12} >
                   <TextField
+                    id="productName"
                     required
                     label="Produto"
                     fullWidth

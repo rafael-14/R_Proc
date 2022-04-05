@@ -31,8 +31,8 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-    }
-    )
+      
+    })
   }
 
   const theme = createTheme({
@@ -46,14 +46,12 @@ export default function Register() {
     }
   })
 
-  let [processName, setProcessName] = useState(null)
+  let [processName, setProcessName] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
 
   async function handleNewProcess() {
-    if (processName !== null) {
-      processName = processName.trim()
-    }
-    if (processName !== null && processName !== "") {
+    processName = processName.trim()
+    if (processName !== "") {
       let data = { processName }
       try {
         let response = await api.post('/api/insert/process', data)
@@ -61,12 +59,11 @@ export default function Register() {
           handleNotificationSuccess(processName)
         }
       } catch (e) {
-        let errorMessage = "Erro ao Cadastrar Processo!"
-        handleNotificationError(errorMessage)
+        handleNotificationError("Erro ao Cadastrar Processo!")
       }
     } else {
-      let errorMessage = "Preencha o Nome do Processo Corretamente!"
-      handleNotificationError(errorMessage)
+      document.getElementById("processName").focus()
+      handleNotificationError("Preencha o Nome do Processo Corretamente!")
     }
   }
 
@@ -88,6 +85,7 @@ export default function Register() {
               <Grid container spacing={3}>
                 <Grid item xs={12} >
                   <TextField
+                    id="processName"
                     required
                     label="Processo"
                     fullWidth
