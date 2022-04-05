@@ -9,12 +9,11 @@ module.exports = {
 
   async insertUser(req, res) {
     let { userName, userSurname, userLogin, userPassword } = req.body;
-    let insertProcess, datetime = new Date
-    await connectionPG.query(`insert into processo
+    let datetime = new Date
+    await connectionPG.query(`insert into usuario
       (nome, sobrenome, login, senha, data_criacao)
-      values('${name}', '${datetime.toISOString().slice(0, 10)}')`)
-      .then(results => { insertProcess = results.rows })
-    return res.json(insertProcess).status(200)
+      values('${userName}', '${userSurname}', '${userLogin}', '${userPassword}', '${datetime.toISOString().slice(0, 10)}')`)
+    return res.json().status(200)
   },
 
   async inactivateUser(req, res) {
