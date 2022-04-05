@@ -108,7 +108,7 @@ export default function Register() {
         if (response.status === 200) {
           let data = {productID:responseData.id, processesID: fabricationOrder}
           try {
-            let response = await api.post('/api/insert/product', data)
+            let response = await api.post('/api/insert_processes_by_product', data)
             if (response.status === 200) {
               handleNotificationSuccess(productName)
             }
