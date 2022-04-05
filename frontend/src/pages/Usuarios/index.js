@@ -1,5 +1,5 @@
 import React from 'react';
-import Dashboard from './Dashboard'
+import Dashboard from '../components/Dashboard'
 import NewRegister from './NewRegister'
 import Tables from './Tables';
 
