@@ -1,11 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel,
-  Container, Grid, Paper, Box, TextField, Toolbar
+  Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
+  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
+  Checkbox
 } from "@mui/material";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#E8927C",
+    color: theme.palette.common.white
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14
+  }
+}));
+
+function Row(props) {
+
+  const { row } = props;
+
+  useEffect(() => {
+    if (props.selectedProcesses.length == 0) {
+      setChecked(false)
+    }
+  }, [props.vinculatedProcess])
+
+  let [checked, setChecked] = useState(false)
+
+  async function setDirectlyVinculatedProcess(id) {
+    props.setVinculatedProcess([...props.vinculatedProcess, { id }])
+  }
+
+  return (
+    <>
+
+    </>
+  )
+}
 
 export default function Register() {
 
@@ -77,6 +111,7 @@ export default function Register() {
   let [userLogin, setUserLogin] = useState("")
   let [userPassword, setUserPassword] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
+  let [cleanProcesses, setCleanProcesses] = useState(false)
 
   async function handleNewUser() {
     let data = { userName, userSurname, userLogin, userPassword }
@@ -89,6 +124,21 @@ export default function Register() {
       handleNotificationError("Erro ao Cadastrar Usuário!")
     }
   }
+
+  let [processes, setProcesses] = useState([])
+  useEffect(() => {
+    async function loadProcesses() {
+      let response = await api.get('/api/select/processes')
+      setProcesses(response.data)
+    }
+    loadProcesses()
+  }, [])
+
+  let [selectedProcesses, setSelectedProcesses] = useState([])
+  let [vinculatedProcess, setVinculatedProcess] = useState([])
+  function handleSelectedProcesses() { }
+  function handleFabricationOrder() { }
+  function handleNewOrder() { }
 
   return (
     <ThemeProvider theme={theme}>
@@ -145,16 +195,57 @@ export default function Register() {
                   />
                 </Grid>
               </Grid>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Switch
-                    checked={manyRegisters}
-                    onChange={() => setManyRegisters(!manyRegisters)}
-                  />}
-                  label="Cadastrar Vários"
-                />
-              </FormGroup>
+              <Grid container>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Switch
+                      checked={manyRegisters}
+                      onChange={() => setManyRegisters(!manyRegisters)}
+                    />}
+                    label="Cadastrar Vários"
+                  />
+                </FormGroup>
+                {manyRegisters ? (<FormGroup>
+                  <FormControlLabel
+                    control={<Switch
+                      checked={cleanProcesses}
+                      onChange={() => setCleanProcesses(!cleanProcesses)}
+                    />}
+                    label="Limpar Processos"
+                  />
+                </FormGroup>) : null}
+              </Grid>
               <br />
+
+              <Grid item xs={5} >
+                <TableContainer >
+                  <Table size="medium" stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell align="center">Processos</StyledTableCell>
+                        <StyledTableCell align="right">Situação</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {processes.map((row) => (
+                        <TableRow key={row.id}>
+                          <TableCell align="center">
+                            <Checkbox
+                              color="secondary"
+                              //onClick={() => { props.handleSelectedProcesses(row.id); setChecked(!checked) }}
+                              disabled={row.ativo ? false : true}
+                            />
+                            {row.nome}
+                          </TableCell>
+                          <TableCell align="right">
+                            <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
               <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => checkFields()}>
                 Salvar
               </Button>
