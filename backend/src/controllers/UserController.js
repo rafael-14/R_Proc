@@ -13,7 +13,9 @@ module.exports = {
     await connectionPG.query(`insert into usuario
       (nome, sobrenome, login, senha, data_criacao)
       values('${userName}', '${userSurname}', '${userLogin}', '${userPassword}', '${datetime.toISOString().slice(0, 10)}')`)
-    return res.json().status(200)
+    await connectionPG.query(`select * from usuario where login = '${userLogin}'`)
+      .then(results => { insertUser = results.rows })
+    return res.json(insertUser[0]).status(200)
   },
 
   async inactivateUser(req, res) {

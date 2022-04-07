@@ -18,29 +18,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }
 }));
 
-function Row(props) {
-
-  const { row } = props;
-
-  useEffect(() => {
-    if (props.selectedProcesses.length == 0) {
-      setChecked(false)
-    }
-  }, [props.vinculatedProcess])
-
-  let [checked, setChecked] = useState(false)
-
-  async function setDirectlyVinculatedProcess(id) {
-    props.setVinculatedProcess([...props.vinculatedProcess, { id }])
-  }
-
-  return (
-    <>
-
-    </>
-  )
-}
-
 export default function Register() {
 
   async function handleNotificationSuccess(userName, userSurname) {
@@ -117,8 +94,15 @@ export default function Register() {
     let data = { userName, userSurname, userLogin, userPassword }
     try {
       let response = await api.post('/api/insert/user', data)
+      let responseData = response.data
       if (response.status === 200) {
-        handleNotificationSuccess(userName, userSurname)
+        let data = { userID: responseData.id, vinculatedProcess }
+        try {
+          let response = await api.post('/api/insert/processes_by_user', data)
+          if (response.status === 200) {
+            handleNotificationSuccess(userName, userSurname)
+          }
+        } catch (e) { }
       }
     } catch (e) {
       handleNotificationError("Erro ao Cadastrar Usuário!")
@@ -134,11 +118,17 @@ export default function Register() {
     loadProcesses()
   }, [])
 
-  let [selectedProcesses, setSelectedProcesses] = useState([])
   let [vinculatedProcess, setVinculatedProcess] = useState([])
-  function handleSelectedProcesses() { }
-  function handleFabricationOrder() { }
-  function handleNewOrder() { }
+  function handleVinculatedProcesses(id) {
+    //vinculatedProcess.find(vinculatedProcess => vinculatedProcess === id)
+    let indexProcess = vinculatedProcess.indexOf(id)
+    console.log(indexProcess)
+    if (indexProcess !== -1) {
+      vinculatedProcess.splice(indexProcess, 1)
+    } else {
+      setVinculatedProcess([...vinculatedProcess, id])
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -199,6 +189,7 @@ export default function Register() {
                 <FormGroup>
                   <FormControlLabel
                     control={<Switch
+                      onClick={() => console.log(vinculatedProcess)}
                       checked={manyRegisters}
                       onChange={() => setManyRegisters(!manyRegisters)}
                     />}
@@ -232,7 +223,7 @@ export default function Register() {
                           <TableCell align="center">
                             <Checkbox
                               color="secondary"
-                              //onClick={() => { props.handleSelectedProcesses(row.id); setChecked(!checked) }}
+                              onClick={() => handleVinculatedProcesses(row.id)}
                               disabled={row.ativo ? false : true}
                             />
                             {row.nome}
