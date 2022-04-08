@@ -19,6 +19,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     }
 }));
 
+const StyledTableCellCollapse = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: "#FBECE8",
+        color: theme.palette.common.black
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14
+    }
+}));
+
 function Row(props) {
 
     const { row } = props;
@@ -109,7 +119,7 @@ export default function Tables() {
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Usuários" />}
                             />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
+                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
                         </Grid>
                         <br />
                         <Grid container spacing={3}>

@@ -5,8 +5,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
   Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
-  Checkbox
+  Autocomplete, Fab, InputAdornment
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,7 +31,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/usuarios" : cleanFields(''),
+      onClose: () => !manyOrders ? window.location.href = "/pedidos" : null//cleanFields(''),
     })
   }
 
@@ -45,14 +47,7 @@ export default function Register() {
     })
   }
 
-  async function cleanFields() {
-    setUserName("")
-    setUserSurname("")
-    setUserLogin("")
-    setUserPassword("")
-  }
-
-  async function checkFields() {
+  /*async function checkFields() {
     userName = userName.trim()
     userSurname = userSurname.trim()
     userLogin = userLogin.trim()
@@ -73,7 +68,7 @@ export default function Register() {
     } else {
       handleNewUser()
     }
-  }
+  }*/
 
   const theme = createTheme({
     palette: {
@@ -82,24 +77,19 @@ export default function Register() {
     }
   })
 
-  let [userName, setUserName] = useState("")
-  let [userSurname, setUserSurname] = useState("")
-  let [userLogin, setUserLogin] = useState("")
-  let [userPassword, setUserPassword] = useState("")
-  let [manyRegisters, setManyRegisters] = useState(false)
-  let [cleanProcesses, setCleanProcesses] = useState(false)
+  let [manyOrders, setManyOrders] = useState(false)
+  let [cleanProducts, setCleanProducts] = useState(false)
 
-  async function handleNewUser() {
-    let data = { userName, userSurname, userLogin, userPassword }
+  async function handleNewOrder() {
     try {
-      let response = await api.post('/api/insert/user', data)
+      let response = await api.post('/api/insert/order') //verificar qual a rota correta --- verificar se é a rota get
       let responseData = response.data
       if (response.status === 200) {
-        let data = { userID: responseData.id, vinculatedProcess }
+        let data = { userID: responseData.id, orderProducts }
         try {
           let response = await api.post('/api/insert/processes_by_user', data)
           if (response.status === 200) {
-            handleNotificationSuccess(userName, userSurname)
+            //handleNotificationSuccess(userName, userSurname)
           }
         } catch (e) { }
       }
@@ -108,24 +98,22 @@ export default function Register() {
     }
   }
 
-  let [processes, setProcesses] = useState([])
+  let [products, setProducts] = useState([])
   useEffect(() => {
-    async function loadProcesses() {
-      let response = await api.get('/api/select/processes')
-      setProcesses(response.data)
+    async function loadProducts() {
+      let response = await api.get('/api/select/products')
+      setProducts(response.data)
     }
-    loadProcesses()
+    loadProducts()
   }, [])
 
-  let [vinculatedProcess, setVinculatedProcess] = useState([])
-  function handleVinculatedProcesses(id) {
-    //vinculatedProcess.find(vinculatedProcess => vinculatedProcess === id)
-    let indexProcess = vinculatedProcess.indexOf(id)
-    if (indexProcess !== -1) {
-      vinculatedProcess.splice(indexProcess, 1)
-    } else {
-      setVinculatedProcess([...vinculatedProcess, id])
-    }
+  let [orderProducts, setOrderProducts] = useState([])
+  let [productQuantity, setProductQuantity] = useState(1)
+  let [product, setProduct] = useState(null)
+  async function handleOrderProduct() {
+    setOrderProducts([...orderProducts,  {...products.find(products => products.nome === product), productQuantity: productQuantity} ])
+    setProduct(null)
+    setProductQuantity(1)
   }
 
   return (
@@ -144,97 +132,84 @@ export default function Register() {
           <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
             <Grid >
               <Grid container spacing={3}>
-                <Grid item xs={12} >
-                  <TextField
-                    id="userName"
-                    required
-                    label="Nome"
-                    color="secondary"
-                    value={userName}
-                    onChange={e => setUserName(e.target.value)}
+                <Grid item xs={12} container>
+                  <Autocomplete
+                    disablePortal
+                    onChange={(event, newValue) => setProduct(newValue)}
+                    value={product}
+                    options={products.map((row) => row.nome)}
+                    sx={{ width: 500 }}
+                    renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
                   />
                   <TextField
-                    id="userSurname"
-                    required
-                    style={{ marginInlineStart: 15 }}
-                    label="Sobrenome"
                     color="secondary"
-                    value={userSurname}
-                    onChange={e => setUserSurname(e.target.value)}
+                    label="Quantidade"
+                    style={{ marginInlineStart: 5 }}
+                    type="text"
+                    sx={{ width: 125 }}
+                    value={productQuantity}
+                    onChange={e => isNaN(parseInt(e.target.value)) ? setProductQuantity(1): setProductQuantity(parseInt(e.target.value)) }
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RemoveIcon onClick={() => setProductQuantity(productQuantity - 1)} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <AddIcon onClick={() => setProductQuantity(productQuantity + 1)} />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
-                </Grid>
-                <Grid item xs={12} >
-                  <TextField
-                    id="userLogin"
-                    required
-                    label="Login"
-                    color="secondary"
-                    value={userLogin}
-                    onChange={e => setUserLogin(e.target.value)}
-                  />
-                  <TextField
-                    id="userPassword"
-                    required
-                    style={{ marginInlineStart: 15 }}
-                    label="Senha"
-                    color="secondary"
-                    value={userPassword}
-                    onChange={e => setUserPassword(e.target.value)}
-                  />
+                  <Fab color="primary" style={{ marginInlineStart: 15 }} onClick={() => handleOrderProduct()}>
+                    <AddIcon />
+                  </Fab>
                 </Grid>
               </Grid>
               <Grid container>
                 <FormGroup>
                   <FormControlLabel
                     control={<Switch
-                      checked={manyRegisters}
-                      onChange={() => setManyRegisters(!manyRegisters)}
+                      checked={manyOrders}
+                      onChange={() => setManyOrders(!manyOrders)}
                     />}
-                    label="Cadastrar Vários"
+                    label="Vários Pedidos"
                   />
                 </FormGroup>
-                {manyRegisters ? (<FormGroup>
+                {manyOrders ? (<FormGroup>
                   <FormControlLabel
                     control={<Switch
-                      checked={cleanProcesses}
-                      onChange={() => setCleanProcesses(!cleanProcesses)}
+                      checked={cleanProducts}
+                      onChange={() => setCleanProducts(!cleanProducts)}
                     />}
-                    label="Limpar Processos"
+                    label="Limpar Produtos"
                   />
                 </FormGroup>) : null}
               </Grid>
+              <Button onClick={() => {console.log(orderProducts)}}>teste</Button>
               <br />
-
               <Grid item xs={5} >
                 <TableContainer >
                   <Table size="medium" stickyHeader>
                     <TableHead>
                       <TableRow>
-                        <StyledTableCell align="center">Processos</StyledTableCell>
-                        <StyledTableCell align="right">Situação</StyledTableCell>
+                        <StyledTableCell align="center">Produtos</StyledTableCell>
+                        <StyledTableCell align="right">Quantidade</StyledTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {processes.map((row) => (
+                      {orderProducts.map((row) => (
                         <TableRow key={row.id}>
-                          <TableCell align="center">
-                            <Checkbox
-                              color="secondary"
-                              onClick={() => handleVinculatedProcesses(row.id)}
-                              disabled={row.ativo ? false : true}
-                            />
-                            {row.nome}
-                          </TableCell>
-                          <TableCell align="right">
-                            <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
-                          </TableCell>
+                          <TableCell align="center">{row.nome}</TableCell>
+                          <TableCell align="right">{row.productQuantity}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
               </Grid>
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => checkFields()}>
+              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewOrder()}>
                 Salvar
               </Button>
               <Button

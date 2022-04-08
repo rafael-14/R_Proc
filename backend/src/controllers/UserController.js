@@ -12,9 +12,8 @@ module.exports = {
     let datetime = new Date
     await connectionPG.query(`insert into usuario
       (nome, sobrenome, login, senha, data_criacao)
-      values('${userName}', '${userSurname}', '${userLogin}', '${userPassword}', '${datetime.toISOString().slice(0, 10)}')`)
-    await connectionPG.query(`select * from usuario where login = '${userLogin}'`)
-      .then(results => { insertUser = results.rows })
+      values('${userName}', '${userSurname}', '${userLogin}', '${userPassword}', '${datetime.toISOString().slice(0, 10)}')
+      returning *`).then(results => { insertUser = results.rows })
     return res.json(insertUser[0]).status(200)
   },
 

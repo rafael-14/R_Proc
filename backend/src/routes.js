@@ -4,6 +4,7 @@ const ProcessController = require('./controllers/ProcessController');
 const ProcessesByProductController = require('./controllers/ProcessesByProductController');
 const UserController = require('./controllers/UserController');
 const ProcessesByUserController = require('./controllers/ProcessesByUserController')
+const OrderController = require('./controllers/OrderController')
 const routes = express.Router();
 
 routes.get('/api/select/products', ProductController.selectAllProducts);
@@ -27,5 +28,7 @@ routes.put('/api/activate/user/:id', UserController.activateUser);
 routes.put('/api/select/processes_by_user/:id', ProcessesByUserController.selectProcessesByUser);
 routes.post('/api/insert/processes_by_user', ProcessesByUserController.insertProcessesByUser);
 
+routes.get('/api/select/orders', OrderController.selectAllOrders);
+routes.post('/api/insert/order', OrderController.insertOrder);
 
 module.exports = routes;
