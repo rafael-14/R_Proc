@@ -88,7 +88,7 @@ export default function Register() {
   let [productQuantity, setProductQuantity] = useState(1)
   let [product, setProduct] = useState(null)
   async function handleOrderProduct() {
-    setOrderProducts([...orderProducts,  {...products.find(products => products.nome === product), productQuantity: productQuantity} ])
+    setOrderProducts([...orderProducts, { ...products.find(products => products.nome === product), productQuantity: productQuantity }])
     setProduct(null)
     setProductQuantity(1)
   }
@@ -125,7 +125,7 @@ export default function Register() {
                     type="text"
                     sx={{ width: 125 }}
                     value={productQuantity}
-                    onChange={e => isNaN(parseInt(e.target.value)) ? setProductQuantity(1): setProductQuantity(parseInt(e.target.value)) }
+                    onChange={e => isNaN(parseInt(e.target.value)) ? setProductQuantity(1) : setProductQuantity(parseInt(e.target.value))}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -164,28 +164,34 @@ export default function Register() {
                   />
                 </FormGroup>) : null}
               </Grid>
-              <Button onClick={() => {console.log(orderProducts)}}>teste</Button>
               <br />
-              <Grid item xs={5} >
+              {orderProducts.length > 0 ? (<Grid item xs={5} >
                 <TableContainer >
                   <Table size="medium" stickyHeader>
                     <TableHead>
                       <TableRow>
                         <StyledTableCell align="center">Produtos</StyledTableCell>
-                        <StyledTableCell align="right">Quantidade</StyledTableCell>
+                        <StyledTableCell align="center">Quantidade</StyledTableCell>
+                        <StyledTableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {orderProducts.map((row) => (
                         <TableRow key={row.id}>
                           <TableCell align="center">{row.nome}</TableCell>
-                          <TableCell align="right">{row.productQuantity}</TableCell>
+                          <TableCell align="center">{row.productQuantity}</TableCell>
+                          <TableCell align="center">
+                            <Fab onClick={() => alert("desenvolver a parte de remoção")}  size="small" style={{ backgroundColor: '#D32F2F', color: "#FFFFFF" }}>
+                              <RemoveIcon />
+                            </Fab>
+                            {/*<RemoveIcon onClick={() => alert("desenvolver a parte de remoção")}  size="small"/>*/}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
-              </Grid>
+              </Grid>) : null}
               <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewOrder()}>
                 Salvar
               </Button>
