@@ -10,6 +10,13 @@ module.exports = {
       values(${userID}, ${vinculatedProcess[i]}, '${datetime.toISOString().slice(0, 10)}')`)
     }
     return res.json().status(200)
-  }
+  },
+
+  async selectProcessesByUser(req, res) {
+    let { id } = req.params;
+    await connectionPG.query(`SELECT * FROM processos_por_usuario where id_usuario = ${id}`)
+      .then(results => { processesByUser = results.rows })
+    return res.json(processesByUser)
+  },
   
 };

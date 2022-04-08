@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete, Table,
+    Button, styled, tableCellClasses, TextField, Autocomplete, Table, Typography, IconButton,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
-    Box, Toolbar, TableContainer, createTheme, ThemeProvider
+    Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse,
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -16,6 +18,71 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14
     }
 }));
+
+const StyledTableCellCollapse = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: "#FBECE8",
+        color: theme.palette.common.black
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14
+    }
+}));
+
+function Row(props) {
+
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
+
+    let [processesByUser, setProcessesByUser] = useState([])
+    useEffect(() => {
+        async function loadProcessesByUser() {
+            let response = await api.put(`/api/select/processes_by_user/${row.id}`)
+            setProcessesByUser(response.data)
+        }
+        if (open) {
+            loadProcessesByUser()
+        }
+    }, [open])
+
+    return (
+        <>
+            <TableRow >
+                <TableCell width="1%">
+                    <IconButton size="small" onClick={() => setOpen(!open)}>
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
+                <TableCell align="center">{row.nome} {row.sobrenome}</TableCell>
+                <TableCell align="right" size="small" width="1%">
+                    <abbr title="Editar">
+                        <Button style={{ color: '#000000' }}>
+                            <CreateIcon />
+                        </Button>
+                    </abbr>
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Box sx={{ margin: 1 }}>
+                            <Typography variant="h6">
+                                Processos
+                            </Typography>
+                            <Table size="small" aria-label="purchases">
+                                <TableBody>
+                                    {processesByUser.map((row) => (
+                                        <TableRow align="left" >{row.id_processo}</TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </>
+    )
+}
 
 export default function Tables() {
 
@@ -61,22 +128,17 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <TableRow>
+                                                <StyledTableCell align="left" width="1%" />
                                                 <StyledTableCell align="center">Usuários</StyledTableCell>
                                                 <StyledTableCell align="right"></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {users.map((row) => (
-                                                <TableRow key={row.id}>
-                                                    <TableCell align="center">{row.nome} {row.sobrenome}</TableCell>
-                                                    <TableCell align="right" size="small" width="1%">
-                                                        <abbr title="Editar">
-                                                            <Button style={{ color: '#000000' }}>
-                                                                <CreateIcon />
-                                                            </Button>
-                                                        </abbr>
-                                                    </TableCell>
-                                                </TableRow>
+                                                <Row
+                                                    key={row.id}
+                                                    row={row}
+                                                />
                                             ))}
                                         </TableBody>
                                     </Table>
