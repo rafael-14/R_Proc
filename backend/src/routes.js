@@ -3,8 +3,9 @@ const ProductController = require('./controllers/ProductController');
 const ProcessController = require('./controllers/ProcessController');
 const ProcessesByProductController = require('./controllers/ProcessesByProductController');
 const UserController = require('./controllers/UserController');
-const ProcessesByUserController = require('./controllers/ProcessesByUserController')
-const OrderController = require('./controllers/OrderController')
+const ProcessesByUserController = require('./controllers/ProcessesByUserController');
+const OrderController = require('./controllers/OrderController');
+const ProductsByOrderController = require('./controllers/ProductsByOrderController');
 const routes = express.Router();
 
 routes.get('/api/select/products', ProductController.selectAllProducts);
@@ -30,5 +31,8 @@ routes.post('/api/insert/processes_by_user', ProcessesByUserController.insertPro
 
 routes.get('/api/select/orders', OrderController.selectAllOrders);
 routes.post('/api/insert/order', OrderController.insertOrder);
+
+//routes.put('/api/select/processes_by_user/:id', ProcessesByUserController.selectProcessesByUser);
+routes.post('/api/insert/products_by_order', ProductsByOrderController.insertProductsByOrder);
 
 module.exports = routes;

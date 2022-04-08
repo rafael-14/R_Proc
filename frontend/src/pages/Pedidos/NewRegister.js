@@ -22,8 +22,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export default function Register() {
 
-  async function handleNotificationSuccess(userName, userSurname) {
-    toast.success(`Usuário: ${userName} ${userSurname} Cadastrado com Sucesso!`, {
+  async function handleNotificationSuccess(orderNumber) {
+    toast.success(`Pedido: ${orderNumber} Efetuado com Sucesso!`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -47,29 +47,6 @@ export default function Register() {
     })
   }
 
-  /*async function checkFields() {
-    userName = userName.trim()
-    userSurname = userSurname.trim()
-    userLogin = userLogin.trim()
-    userPassword = userPassword.trim()
-
-    if (userName === "") {
-      handleNotificationError("Preencher Nome do Usuário Corretamente!")
-      document.getElementById("userName").focus()
-    } else if (userSurname === "") {
-      handleNotificationError("Preencher Sobrenome do Usuário Corretamente!")
-      document.getElementById("userSurname").focus()
-    } else if (userLogin === "") {
-      handleNotificationError("Preencher Login do Usuário Corretamente!")
-      document.getElementById("userLogin").focus()
-    } else if (userPassword === "") {
-      handleNotificationError("Preencher Senha do Usuário Corretamente!")
-      document.getElementById("userPassword").focus()
-    } else {
-      handleNewUser()
-    }
-  }*/
-
   const theme = createTheme({
     palette: {
       primary: { main: '#E8927C' },
@@ -85,16 +62,16 @@ export default function Register() {
       let response = await api.post('/api/insert/order') //verificar qual a rota correta --- verificar se é a rota get
       let responseData = response.data
       if (response.status === 200) {
-        let data = { userID: responseData.id, orderProducts }
+        let data = { orderID: responseData.id, orderProducts }
         try {
-          let response = await api.post('/api/insert/processes_by_user', data)
+          let response = await api.post('/api/insert/products_by_order', data)
           if (response.status === 200) {
-            //handleNotificationSuccess(userName, userSurname)
+            handleNotificationSuccess(responseData.id)
           }
         } catch (e) { }
       }
     } catch (e) {
-      handleNotificationError("Erro ao Cadastrar Usuário!")
+      handleNotificationError("Erro ao Efetuar Pedido!")
     }
   }
 
