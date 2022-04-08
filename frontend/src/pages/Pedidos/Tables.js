@@ -34,14 +34,14 @@ function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
 
-    let [processesByUser, setProcessesByUser] = useState([])
+    let [productsByOrder, setProductsByOrder] = useState([])
     useEffect(() => {
-        async function loadProcessesByUser() {
-            let response = await api.put(`/api/select/processes_by_user/${row.id}`)
-            setProcessesByUser(response.data)
+        async function loadProductsByOrder() {
+            let response = await api.put(`/api/select/products_by_order/${row.id}`)
+            setProductsByOrder(response.data)
         }
         if (open) {
-            loadProcessesByUser()
+            loadProductsByOrder()
         }
     }, [open])
 
@@ -53,7 +53,7 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center">{row.nome} {row.sobrenome}</TableCell>
+                <TableCell align="center">{row.id}</TableCell>
                 <TableCell align="right" size="small" width="1%">
                     <abbr title="Editar">
                         <Button style={{ color: '#000000' }}>
@@ -66,13 +66,22 @@ function Row(props) {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6">
-                                Processos
+                            <Typography variant="h6" onClick={() => console.log(productsByOrder)}>
+                                Produtos
                             </Typography>
                             <Table size="small" aria-label="purchases">
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCellCollapse align="center">Produtos</StyledTableCellCollapse>
+                                        <StyledTableCellCollapse align="center">Quantidade</StyledTableCellCollapse>
+                                    </TableRow>
+                                </TableHead>
                                 <TableBody>
-                                    {processesByUser.map((row) => (
-                                        <TableRow align="left" >{row.id_processo}</TableRow>
+                                    {productsByOrder.map((row) => (
+                                        <TableRow key={row.id}>
+                                            <TableCell align="center">{row.id_produto}</TableCell>
+                                            <TableCell align="center">{row.quantidade}</TableCell>
+                                        </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
@@ -93,13 +102,13 @@ export default function Tables() {
         }
     })
 
-    let [users, setUsers] = useState([])
+    let [orders, setOrders] = useState([])
     useEffect(() => {
-        async function loadUsers() {
-            let response = await api.get('/api/select/users')
-            setUsers(response.data)
+        async function loadOrders() {
+            let response = await api.get('/api/select/orders')
+            setOrders(response.data)
         }
-        loadUsers()
+        loadOrders()
     }, [])
 
     return (
@@ -115,7 +124,7 @@ export default function Tables() {
                         >
                             <Autocomplete
                                 disablePortal
-                                options={users.map((row) => row.nome)}
+                                options={orders.map((row) => row.id)}
                                 sx={{ width: 500 }}
                                 renderInput={(params) => <TextField color="secondary" {...params} label="Usuários" />}
                             />
@@ -129,12 +138,12 @@ export default function Tables() {
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell align="left" width="1%" />
-                                                <StyledTableCell align="center">Usuários</StyledTableCell>
+                                                <StyledTableCell align="center">Pedidos</StyledTableCell>
                                                 <StyledTableCell align="right"></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {users.map((row) => (
+                                            {orders.map((row) => (
                                                 <Row
                                                     key={row.id}
                                                     row={row}

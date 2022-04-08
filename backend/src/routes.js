@@ -32,7 +32,7 @@ routes.post('/api/insert/processes_by_user', ProcessesByUserController.insertPro
 routes.get('/api/select/orders', OrderController.selectAllOrders);
 routes.post('/api/insert/order', OrderController.insertOrder);
 
-//routes.put('/api/select/processes_by_user/:id', ProcessesByUserController.selectProcessesByUser);
+routes.put('/api/select/products_by_order/:id', ProductsByOrderController.selectProductsByOrder);
 routes.post('/api/insert/products_by_order', ProductsByOrderController.insertProductsByOrder);
 
 module.exports = routes;

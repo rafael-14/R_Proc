@@ -1,6 +1,13 @@
 const connectionPG = require('../database');
 
 module.exports = {
+  async selectProductsByOrder(req, res) {
+    let { id } = req.params;
+    await connectionPG.query(`SELECT * FROM produtos_por_pedido where id_pedido = ${id}`)
+      .then(results => { productsByOrder = results.rows })
+    return res.json(productsByOrder)
+  },
+
   async insertProductsByOrder(req, res) {
     let { orderID, orderProducts } = req.body;
     let datetime = new Date
