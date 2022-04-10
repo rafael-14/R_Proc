@@ -5,7 +5,6 @@ import {
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse,
 } from "@mui/material";
-import CreateIcon from '@mui/icons-material/Create';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
@@ -54,13 +53,6 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell align="center">{row.id}</TableCell>
-                <TableCell align="right" size="small" width="1%">
-                    <abbr title="Editar">
-                        <Button style={{ color: '#000000' }}>
-                            <CreateIcon />
-                        </Button>
-                    </abbr>
-                </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -139,7 +131,6 @@ export default function Tables() {
                                             <TableRow>
                                                 <StyledTableCell align="left" width="1%" />
                                                 <StyledTableCell align="center">Pedidos</StyledTableCell>
-                                                <StyledTableCell align="right"></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

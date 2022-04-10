@@ -1,15 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Home, CadastrarProduto } from './pages/Home'
+import { ListarProdutos, CadastrarProduto } from './pages/Produtos'
 import { CadastrarProcessos, ListarProcessos } from "./pages/Processos";
 import { ListarUsuarios, CadastrarUsuarios } from "./pages/Usuarios";
 import { ListarPedidos, FazerPedidos } from "./pages/Pedidos";
+
+import Dashboard from "./pages/components/Dashboard";
+import Tables from "./pages/Pedidos/Tables";
 
 function Rotas() {
     return (
         <Router>
             <Routes>
-                <Route path='/' exact element={<Home />} />
+                <Route path='/' exact element={<Dashboard componente={Tables}/>} />
+                <Route path='/produtos' exact element={<ListarProdutos />} />
                 <Route path='/cadastrar/produtos' exact element={<CadastrarProduto />} />
                 <Route path='/processos' exact element={<ListarProcessos />} />
                 <Route path='/cadastrar/processos' exact element={<CadastrarProcessos />} />
