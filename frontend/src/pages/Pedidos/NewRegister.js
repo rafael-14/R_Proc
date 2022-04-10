@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
-  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
+  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, 
   Autocomplete, Fab, InputAdornment
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -88,9 +88,14 @@ export default function Register() {
   let [productQuantity, setProductQuantity] = useState(1)
   let [product, setProduct] = useState(null)
   async function handleOrderProduct() {
-    setOrderProducts([...orderProducts, { ...products.find(products => products.nome === product), productQuantity: productQuantity }])
+    setOrderProducts([...orderProducts, { ...products.find(products => products.nome === product), productQuantity: productQuantity, productSeq: orderProducts.length+1 }])
     setProduct(null)
     setProductQuantity(1)
+  }
+  async function handleRemoveOrderProduct(row) {
+    orderProducts.splice(orderProducts.indexOf(row), 1)
+    setOrderProducts([...orderProducts])
+    //let x = orderProducts.indexOf(orderProducts => orderProducts.id === id && orderProducts.productSeq === productSeq)
   }
 
   return (
@@ -164,6 +169,7 @@ export default function Register() {
                   />
                 </FormGroup>) : null}
               </Grid>
+              <Button onClick={() => console.log(orderProducts)}>teste</Button>
               <br />
               {orderProducts.length > 0 ? (<Grid item xs={5} >
                 <TableContainer >
@@ -177,11 +183,11 @@ export default function Register() {
                     </TableHead>
                     <TableBody>
                       {orderProducts.map((row) => (
-                        <TableRow key={row.id}>
+                        <TableRow key={`${row.id}|${row.productSeq}`}>
                           <TableCell align="center">{row.nome}</TableCell>
                           <TableCell align="center">{row.productQuantity}</TableCell>
                           <TableCell align="center">
-                            <Fab onClick={() => alert("desenvolver a parte de remoção")}  size="small" style={{ backgroundColor: '#D32F2F', color: "#FFFFFF" }}>
+                            <Fab onClick={() => handleRemoveOrderProduct(row)}  size="small" style={{ backgroundColor: '#D32F2F', color: "#FFFFFF" }}>
                               <RemoveIcon />
                             </Fab>
                             {/*<RemoveIcon onClick={() => alert("desenvolver a parte de remoção")}  size="small"/>*/}

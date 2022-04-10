@@ -126,7 +126,7 @@ export default function Tables() {
                                 disablePortal
                                 options={orders.map((row) => row.id)}
                                 sx={{ width: 500 }}
-                                renderInput={(params) => <TextField color="secondary" {...params} label="Usuários" />}
+                                renderInput={(params) => <TextField color="secondary" {...params} label="Pedidos" />}
                             />
                             <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
                         </Grid>
