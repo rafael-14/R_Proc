@@ -98,6 +98,15 @@ export default function Register() {
     //let x = orderProducts.indexOf(orderProducts => orderProducts.id === id && orderProducts.productSeq === productSeq)
   }
 
+  async function handleChangeProductQuantity(newProductQuantity, rowPosition) {
+    //let newProcessOrder = { id, order: parseInt(newOrder) }
+    //setFabricationOrder(fabricationOrder.map((fabricationOrder, position) => position === newRowPosition ? { ...newProcessOrder } : fabricationOrder))
+    // acima está o exemplo funcionando (tela de alteração da ordem no cadastro de produto) ----- o erro está que "changeProductQuantity" recebe apenas a nova quantidade
+    let changeProductQuantity = orderProducts[rowPosition].productQuantity = parseInt(newProductQuantity)
+    console.log(changeProductQuantity)
+    setOrderProducts(orderProducts.map((orderProducts, position) => position === rowPosition ? { ...changeProductQuantity } : orderProducts))
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -182,10 +191,17 @@ export default function Register() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {orderProducts.map((row) => (
-                        <TableRow key={`${row.id}|${row.productSeq}`}>
+                      {orderProducts.map((row, rowPosition) => (
+                        <TableRow key={`${row.id}|${rowPosition}`}>
                           <TableCell align="center">{row.nome}</TableCell>
-                          <TableCell align="center">{row.productQuantity}</TableCell>
+                          <TableCell align="center">
+                            <TextField
+                              value={row.productQuantity}
+                              onChange={e => handleChangeProductQuantity(e.target.value, rowPosition)}
+                              size="small"
+                              align="center"
+                            />
+                          </TableCell>
                           <TableCell align="center">
                             <Fab onClick={() => handleRemoveOrderProduct(row)} size="small" style={{ backgroundColor: '#D32F2F', color: "#FFFFFF" }}>
                               <RemoveIcon />

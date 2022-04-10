@@ -293,11 +293,11 @@ export default function Register() {
                       </TableHead>
                       <TableBody>
                         {fabricationOrder.map((newRow, newRowPosition) => (
-                          <TableRow key={newRow.id + "|" + newRow.order}>
-                            <StyledTableCell align="center">
+                          <TableRow key={newRow.id + newRowPosition}>
+                            <TableCell align="center">
                               <Checkbox color="secondary" /*onClick={() => setUnselectedProcess(newRow.id)}*/ />
                               {newRow.id}
-                            </StyledTableCell>
+                            </TableCell>
                             <TableCell>
                               <TextField
                                 size="small"

@@ -21,7 +21,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Processos" primaryTypographyProps={{ color: '#000000' }} />
     </ListItem>
-    <ListItem button component="a" href="/" >
+    <ListItem button component="a" href="/produtos" >
       <ListItemIcon >
         <DiamondIcon style={{ color: '#000000' }} />
       </ListItemIcon>
