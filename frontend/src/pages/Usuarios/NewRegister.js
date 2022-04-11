@@ -33,7 +33,7 @@ export default function Register() {
     })
   }
 
-  async function handleNotificationError(errorMessage) {
+  async function handleNotificationError(errorMessage, fieldToBeFocused) {
     toast.error(errorMessage, {
       position: "top-right",
       autoClose: 2000,
@@ -42,6 +42,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
+      onOpen: () => fieldToBeFocused ? document.getElementById(fieldToBeFocused).focus() : null,
     })
   }
 
@@ -59,17 +60,13 @@ export default function Register() {
     userPassword = userPassword.trim()
 
     if (userName === "") {
-      handleNotificationError("Preencher Nome do Usuário Corretamente!")
-      document.getElementById("userName").focus()
+      handleNotificationError("Preencher Nome do Usuário Corretamente!", "userName")
     } else if (userSurname === "") {
-      handleNotificationError("Preencher Sobrenome do Usuário Corretamente!")
-      document.getElementById("userSurname").focus()
+      handleNotificationError("Preencher Sobrenome do Usuário Corretamente!", "userSurname")
     } else if (userLogin === "") {
-      handleNotificationError("Preencher Login do Usuário Corretamente!")
-      document.getElementById("userLogin").focus()
+      handleNotificationError("Preencher Login do Usuário Corretamente!", "userLogin")
     } else if (userPassword === "") {
-      handleNotificationError("Preencher Senha do Usuário Corretamente!")
-      document.getElementById("userPassword").focus()
+      handleNotificationError("Preencher Senha do Usuário Corretamente!", "userPassword")
     } else {
       handleNewUser()
     }

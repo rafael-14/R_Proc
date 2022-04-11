@@ -35,7 +35,7 @@ export default function Register() {
     })
   }
 
-  async function handleNotificationError(errorMessage) {
+  async function handleNotificationError(errorMessage, fieldToBeFocused) {
     toast.error(errorMessage, {
       position: "top-right",
       autoClose: 2000,
@@ -44,6 +44,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
+      onOpen: () => fieldToBeFocused ? document.getElementById(fieldToBeFocused).focus() : null,
     })
   }
 
@@ -58,20 +59,25 @@ export default function Register() {
   let [cleanProducts, setCleanProducts] = useState(false)
 
   async function handleNewOrder() {
-    try {
-      let response = await api.post('/api/insert/order') //verificar qual a rota correta --- verificar se é a rota get
-      let responseData = response.data
-      if (response.status === 200) {
-        let data = { orderID: responseData.id, orderProducts }
-        try {
-          let response = await api.post('/api/insert/products_by_order', data)
-          if (response.status === 200) {
-            handleNotificationSuccess(responseData.id)
-          }
-        } catch (e) { }
+    if (orderProducts.length > 0) {
+      try {
+        let response = await api.post('/api/insert/order') //verificar qual a rota correta --- verificar se é a rota get
+        let responseData = response.data
+        if (response.status === 200) {
+          let data = { orderID: responseData.id, orderProducts }
+          try {
+            let response = await api.post('/api/insert/products_by_order', data)
+            if (response.status === 200) {
+              handleNotificationSuccess(responseData.id)
+            }
+          } catch (e) { }
+        }
+      } catch (e) {
+        handleNotificationError("Erro ao Efetuar Pedido!")
       }
-    } catch (e) {
-      handleNotificationError("Erro ao Efetuar Pedido!")
+    }
+    else {
+      handleNotificationError("Preencher Produtos do Pedido Corretamente!", "product")
     }
   }
 
@@ -88,6 +94,10 @@ export default function Register() {
   let [productQuantity, setProductQuantity] = useState(1)
   let [product, setProduct] = useState(null)
   async function handleOrderProduct() {
+    if (!product) {
+      handleNotificationError("Preencha o Produto Corretamente", "product")
+      return
+    }
     setOrderProducts([...orderProducts, { ...products.find(products => products.nome === product), productQuantity: productQuantity, productSeq: orderProducts.length + 1 }])
     setProduct(null)
     setProductQuantity(1)
@@ -125,6 +135,7 @@ export default function Register() {
               <Grid container spacing={3}>
                 <Grid item xs={12} container>
                   <Autocomplete
+                    id="product"
                     disablePortal
                     onChange={(event, newValue) => setProduct(newValue)}
                     value={product}

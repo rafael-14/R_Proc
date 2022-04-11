@@ -22,7 +22,7 @@ export default function Register() {
     })
   }
 
-  async function handleNotificationError(errorMessage) {
+  async function handleNotificationError(errorMessage, fieldToBeFocused) {
     toast.error(errorMessage, {
       position: "top-right",
       autoClose: 2000,
@@ -31,7 +31,7 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      
+      onOpen: () => fieldToBeFocused ? document.getElementById(fieldToBeFocused).focus() : null,
     })
   }
 
@@ -62,8 +62,7 @@ export default function Register() {
         handleNotificationError("Erro ao Cadastrar Processo!")
       }
     } else {
-      document.getElementById("processName").focus()
-      handleNotificationError("Preencha o Nome do Processo Corretamente!")
+      handleNotificationError("Preencha o Nome do Processo Corretamente!", "processName")
     }
   }
 
