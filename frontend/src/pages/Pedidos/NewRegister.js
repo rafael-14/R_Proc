@@ -109,12 +109,8 @@ export default function Register() {
   }
 
   async function handleChangeProductQuantity(newProductQuantity, rowPosition) {
-    //let newProcessOrder = { id, order: parseInt(newOrder) }
-    //setFabricationOrder(fabricationOrder.map((fabricationOrder, position) => position === newRowPosition ? { ...newProcessOrder } : fabricationOrder))
-    // acima está o exemplo funcionando (tela de alteração da ordem no cadastro de produto) ----- o erro está que "changeProductQuantity" recebe apenas a nova quantidade
-    let changeProductQuantity = orderProducts[rowPosition].productQuantity = parseInt(newProductQuantity)
-    console.log(changeProductQuantity)
-    setOrderProducts(orderProducts.map((orderProducts, position) => position === rowPosition ? { ...changeProductQuantity } : orderProducts))
+    orderProducts[rowPosition].productQuantity = parseInt(newProductQuantity)
+    setOrderProducts([...orderProducts])
   }
 
   return (
@@ -189,7 +185,6 @@ export default function Register() {
                   />
                 </FormGroup>) : null}
               </Grid>
-              <Button onClick={() => console.log(orderProducts)}>teste</Button>
               <br />
               {orderProducts.length > 0 ? (<Grid item xs={5} >
                 <TableContainer >
@@ -208,7 +203,7 @@ export default function Register() {
                           <TableCell align="center">
                             <TextField
                               value={row.productQuantity}
-                              onChange={e => handleChangeProductQuantity(e.target.value, rowPosition)}
+                              onChange={e => isNaN(parseInt(e.target.value)) ? null : handleChangeProductQuantity(e.target.value, rowPosition)}
                               size="small"
                               align="center"
                             />
@@ -217,7 +212,6 @@ export default function Register() {
                             <Fab onClick={() => handleRemoveOrderProduct(row)} size="small" style={{ backgroundColor: '#D32F2F', color: "#FFFFFF" }}>
                               <RemoveIcon />
                             </Fab>
-                            {/*<RemoveIcon onClick={() => alert("desenvolver a parte de remoção")}  size="small"/>*/}
                           </TableCell>
                         </TableRow>
                       ))}
