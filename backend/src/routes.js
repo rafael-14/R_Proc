@@ -6,6 +6,9 @@ const UserController = require('./controllers/UserController');
 const ProcessesByUserController = require('./controllers/ProcessesByUserController');
 const OrderController = require('./controllers/OrderController');
 const ProductsByOrderController = require('./controllers/ProductsByOrderController');
+const SectorController = require('./controllers/SectorController');
+const UsersBySector = require('./controllers/UsersBySectorController');
+const UsersBySectorController = require('./controllers/UsersBySectorController');
 const routes = express.Router();
 
 routes.get('/api/select/products', ProductController.selectAllProducts);
@@ -34,5 +37,11 @@ routes.post('/api/insert/order', OrderController.insertOrder);
 
 routes.put('/api/select/products_by_order/:id', ProductsByOrderController.selectProductsByOrder);
 routes.post('/api/insert/products_by_order', ProductsByOrderController.insertProductsByOrder);
+
+routes.get('/api/select/sectors', SectorController.selectAllSectors);
+routes.post('/api/insert/sector', SectorController.insertSector);
+
+routes.put('/api/select/users_by_sector/:id', UsersBySectorController.selectUsersBySector);
+routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBySector);
 
 module.exports = routes;

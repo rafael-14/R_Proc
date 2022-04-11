@@ -6,6 +6,7 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import DiamondIcon from '@mui/icons-material/Diamond';
 import PersonIcon from '@mui/icons-material/Person';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 export const mainListItems = (
   <>
@@ -26,6 +27,12 @@ export const mainListItems = (
         <DiamondIcon style={{ color: '#000000' }} />
       </ListItemIcon>
       <ListItemText primary="Produtos" primaryTypographyProps={{ color: '#000000' }} />
+    </ListItem>
+    <ListItem button component="a" href="/setores" >
+      <ListItemIcon >
+        <ViewModuleIcon style={{ color: '#000000' }} />
+      </ListItemIcon>
+      <ListItemText primary="Setores" primaryTypographyProps={{ color: '#000000' }} />
     </ListItem>
     <ListItem button component="a" href="/usuarios" >
       <ListItemIcon >

@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ListarProdutos, CadastrarProduto } from './pages/Produtos'
 import { CadastrarProcessos, ListarProcessos } from "./pages/Processos";
 import { ListarUsuarios, CadastrarUsuarios } from "./pages/Usuarios";
-import { ListarPedidos, FazerPedidos } from "./pages/Pedidos";
+import { ListarPedidos, CadastrarPedidos } from "./pages/Pedidos";
+import { ListarSetores, CadastrarSetores } from "./pages/Setores";
 
 import Dashboard from "./pages/components/Dashboard";
 import Tables from "./pages/Pedidos/Tables";
@@ -20,7 +21,9 @@ function Rotas() {
                 <Route path='/usuarios' exact element={<ListarUsuarios />} />
                 <Route path='/cadastrar/usuarios' exact element={<CadastrarUsuarios />} />
                 <Route path='/pedidos' exact element={<ListarPedidos />} />
-                <Route path='/fazer/pedidos' exact element={<FazerPedidos />} />
+                <Route path='/fazer/pedidos' exact element={<CadastrarPedidos />} />
+                <Route path='/setores' exact element={<ListarSetores />} />
+                <Route path='/cadastrar/setores' exact element={<CadastrarSetores />} />
             </Routes>
         </Router>
     );
