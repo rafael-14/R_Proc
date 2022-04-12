@@ -168,7 +168,7 @@ export default function Tables() {
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <ToastContainer />
-                <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
+                <Container maxWidth="xg" sx={{ mt: 2, mb: 1 }}>
                     <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
                         <Grid
                             container

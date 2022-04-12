@@ -5,15 +5,13 @@ import { CadastrarProcessos, ListarProcessos } from "./pages/Processos";
 import { ListarUsuarios, CadastrarUsuarios } from "./pages/Usuarios";
 import { ListarPedidos, CadastrarPedidos } from "./pages/Pedidos";
 import { ListarSetores, CadastrarSetores } from "./pages/Setores";
-
-import Dashboard from "./pages/components/Dashboard";
-import Tables from "./pages/Pedidos/Tables";
+import { ListarProducao } from "./pages/Producao";
 
 function Rotas() {
     return (
         <Router>
             <Routes>
-                <Route path='/' exact element={<Dashboard componente={Tables}/>} />
+                <Route path='/' exact element={<ListarProducao />} />
                 <Route path='/produtos' exact element={<ListarProdutos />} />
                 <Route path='/cadastrar/produtos' exact element={<CadastrarProduto />} />
                 <Route path='/processos' exact element={<ListarProcessos />} />

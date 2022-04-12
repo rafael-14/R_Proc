@@ -107,7 +107,7 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Paper>
                         <Grid
                             container
