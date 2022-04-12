@@ -62,11 +62,14 @@ export default function Tables() {
                                                 />
                                                 <CardContent>
                                                     <Box>
-                                                        <Typography variant="h6" align="left"  color="text.secondary">
+                                                        <Typography variant="h6" align="left" color="text.secondary">
                                                             NúmeroPedido
                                                         </Typography>
                                                         <Typography variant="h5" align="center" color="text.primary">
                                                             Nome do Produto
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            Observação do Produto, apareça caso tenha alguma info
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
@@ -91,11 +94,14 @@ export default function Tables() {
                                                 />
                                                 <CardContent>
                                                     <Box>
-                                                        <Typography variant="h6" align="left"  color="text.secondary">
+                                                        <Typography variant="h6" align="left" color="text.secondary">
                                                             NúmeroPedido
                                                         </Typography>
                                                         <Typography variant="h5" align="center" color="text.primary">
                                                             Nome do Produto
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            Observação do Produto, apareça caso tenha alguma info
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
