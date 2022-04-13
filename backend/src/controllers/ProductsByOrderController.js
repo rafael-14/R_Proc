@@ -13,8 +13,9 @@ module.exports = {
     let datetime = new Date
     for (let i = 0; i < orderProducts.length; i++) {
       await connectionPG.query(`insert into produtos_por_pedido
-      (id_pedido, id_produto, sequencia, quantidade, data_pedido)
-      values(${orderID}, ${orderProducts[i].id}, ${i + 1}, ${orderProducts[i].productQuantity} ,'${datetime.toISOString().slice(0, 10)}')`)
+      (id_pedido, id_produto, sequencia, quantidade, data_pedido, observacao)
+      values(${orderID}, ${orderProducts[i].id}, ${i + 1}, ${orderProducts[i].productQuantity},
+      '${datetime.toISOString().slice(0, 10)}', ${orderProducts[i].productNote !== "" ? `'${orderProducts[i].productNote}'` : null})`)
     }
     return res.json().status(200)
   }

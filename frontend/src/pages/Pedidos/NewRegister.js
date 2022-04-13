@@ -96,15 +96,18 @@ export default function Register() {
 
   let [orderProducts, setOrderProducts] = useState([])
   let [productQuantity, setProductQuantity] = useState(1)
+  let [productNote, setProductNote] = useState("")
   let [product, setProduct] = useState(null)
   async function handleOrderProduct() {
+    productNote = productNote.trim()
     if (!product) {
       handleNotificationError("Preencha o Produto Corretamente", "product")
       return
     }
-    setOrderProducts([...orderProducts, { ...products.find(products => products.nome === product), productQuantity: productQuantity, productSeq: orderProducts.length + 1 }])
+    setOrderProducts([...orderProducts, { ...products.find(products => products.nome === product), productQuantity, productSeq: orderProducts.length + 1, productNote }])
     setProduct(null)
     setProductQuantity(1)
+    setProductNote("")
   }
   async function handleRemoveOrderProduct(row) {
     orderProducts.splice(orderProducts.indexOf(row), 1)
@@ -147,7 +150,6 @@ export default function Register() {
                     color="secondary"
                     label="Quantidade"
                     style={{ marginInlineStart: 5 }}
-                    type="text"
                     sx={{ width: 125 }}
                     value={productQuantity}
                     onChange={e => isNaN(parseInt(e.target.value)) ? setProductQuantity(1) : setProductQuantity(parseInt(e.target.value))}
@@ -169,6 +171,14 @@ export default function Register() {
                   </Fab>
                 </Grid>
               </Grid>
+              <TextField
+                onChange={e => setProductNote(e.target.value)}
+                value={productNote}
+                style={{ marginTop: 10 }}
+                sx={{ width: 630 }}
+                color="secondary"
+                label="Observação"
+              />
               <Grid container>
                 <FormGroup>
                   <FormControlLabel
@@ -233,7 +243,7 @@ export default function Register() {
                   color: "#FFFFFF",
                   marginInlineStart: 15
                 }}
-                href="/processos"
+                href="/pedidos"
               >
                 Cancelar
               </Button>
