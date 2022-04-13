@@ -62,13 +62,17 @@ export default function Register() {
     if (orderProducts.length > 0) {
       try {
         let response = await api.post('/api/insert/order') //verificar qual a rota correta --- verificar se é a rota get
-        let responseData = response.data
+        let responseOrder = response.data
         if (response.status === 200) {
-          let data = { orderID: responseData.id, orderProducts }
+          let data = { orderID: responseOrder.id, orderProducts }
           try {
             let response = await api.post('/api/insert/products_by_order', data)
             if (response.status === 200) {
-              handleNotificationSuccess(responseData.id)
+              let data = { orderID: responseOrder.id, productID: orderProducts }
+              try {
+                let response = await api.post('/api/insert/production', data)
+              } catch (e) { }
+              handleNotificationSuccess(responseOrder.id)
             }
           } catch (e) { }
         }

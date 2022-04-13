@@ -7,8 +7,8 @@ const ProcessesByUserController = require('./controllers/ProcessesByUserControll
 const OrderController = require('./controllers/OrderController');
 const ProductsByOrderController = require('./controllers/ProductsByOrderController');
 const SectorController = require('./controllers/SectorController');
-const UsersBySector = require('./controllers/UsersBySectorController');
 const UsersBySectorController = require('./controllers/UsersBySectorController');
+const ProductionController = require('./controllers/ProductionController');
 const routes = express.Router();
 
 routes.get('/api/select/products', ProductController.selectAllProducts);
@@ -43,5 +43,8 @@ routes.post('/api/insert/sector', SectorController.insertSector);
 
 routes.put('/api/select/users_by_sector/:id', UsersBySectorController.selectUsersBySector);
 routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBySector);
+
+routes.post('/api/insert/production', ProductionController.insertProduction);
+routes.get('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
 
 module.exports = routes;

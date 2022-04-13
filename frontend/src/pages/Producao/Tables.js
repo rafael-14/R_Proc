@@ -25,13 +25,13 @@ export default function Tables() {
         }
     })
 
-    let [processes, setProcesses] = useState([])
+    let [productionNotStarted, setProductionNotStarted] = useState([])
     useEffect(() => {
-        async function loadProcesses() {
-            let response = await api.get('/api/select/processes')
-            setProcesses(response.data)
+        async function loadProductionNotStarted() {
+            let response = await api.get('/api/select/production_not_started')
+            setProductionNotStarted(response.data)
         }
-        loadProcesses()
+        loadProductionNotStarted()
     }, [])
 
     return (
@@ -47,13 +47,13 @@ export default function Tables() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {processes.map((tier) => (
-                                <TableRow key={tier.id}>
+                            {productionNotStarted.map((row) => (
+                                <TableRow key={row.id}>
                                     <TableCell align="center" width="50%">
-                                        <Grid key={tier.id}>
+                                        <Grid key={row.id}>
                                             <Card>
                                                 <CardHeader
-                                                    title="processo a ser realizado"
+                                                    title={row.nome_processo}
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader="próximo processo"
                                                     subheaderTypographyProps={{ align: 'right', }}
@@ -63,10 +63,10 @@ export default function Tables() {
                                                 <CardContent>
                                                     <Box>
                                                         <Typography variant="h6" align="left" color="text.secondary">
-                                                            NúmeroPedido
+                                                            {row.id_pedido}
                                                         </Typography>
                                                         <Typography variant="h5" align="center" color="text.primary">
-                                                            Nome do Produto
+                                                            {row.nome_produto}
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
                                                             Observação do Produto, apareça caso tenha alguma info
@@ -82,7 +82,7 @@ export default function Tables() {
                                         </Grid>
                                     </TableCell>
                                     <TableCell align="center" width="50%">
-                                        <Grid key={tier.id}>
+                                        <Grid key={row.id}>
                                             <Card>
                                                 <CardHeader
                                                     title="processo a ser realizado"
@@ -95,7 +95,7 @@ export default function Tables() {
                                                 <CardContent>
                                                     <Box>
                                                         <Typography variant="h6" align="left" color="text.secondary">
-                                                            NúmeroPedido
+                                                            Número do Pedido
                                                         </Typography>
                                                         <Typography variant="h5" align="center" color="text.primary">
                                                             Nome do Produto
