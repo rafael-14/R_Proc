@@ -45,6 +45,7 @@ routes.put('/api/select/users_by_sector/:id', UsersBySectorController.selectUser
 routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBySector);
 
 routes.post('/api/insert/production', ProductionController.insertProduction);
+routes.post('/api/insert/production', ProcessesByProductController.nextProcess);
 routes.get('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
 
 module.exports = routes;

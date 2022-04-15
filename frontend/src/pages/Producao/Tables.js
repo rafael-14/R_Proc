@@ -39,6 +39,7 @@ export default function Tables() {
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+                    <Button onClick={() => console.log(productionNotStarted)}>teste</Button>
                     <Table size="medium" stickyHeader>
                         <TableHead>
                             <TableRow>
@@ -69,7 +70,7 @@ export default function Tables() {
                                                             {row.nome_produto}
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
-                                                            Observação do Produto, apareça caso tenha alguma info
+                                                            {row.observacao}
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
