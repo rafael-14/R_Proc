@@ -25,14 +25,27 @@ export default function Tables() {
         }
     })
 
+    const [startProduction, setStartProduction] = useState(null)
+    async function handleStartProduction(id) {
+        setStartProduction(await api.put(`/api/start/production/${id}`))
+        //handleNotificationError(name)
+    }
+
     let [productionNotStarted, setProductionNotStarted] = useState([])
+    let [productionStarted, setProductionStarted] = useState([])
     useEffect(() => {
         async function loadProductionNotStarted() {
             let response = await api.get('/api/select/production_not_started')
             setProductionNotStarted(response.data)
         }
         loadProductionNotStarted()
-    }, [])
+
+        async function loadProductionStarted() {
+            let response = await api.get('/api/select/production_started')
+            setProductionStarted(response.data)
+        }
+        loadProductionStarted()
+    }, [startProduction])
 
     return (
         <ThemeProvider theme={theme}>
@@ -76,40 +89,13 @@ export default function Tables() {
                                                 </CardContent>
                                                 <CardActions>
                                                     <Grid container justifyContent="left">
-                                                        <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Iniciar</Button>
-                                                    </Grid>
-                                                </CardActions>
-                                            </Card>
-                                        </Grid>
-                                    </TableCell>
-                                    <TableCell align="center" width="50%">
-                                        <Grid key={row.id}>
-                                            <Card>
-                                                <CardHeader
-                                                    title="processo a ser realizado"
-                                                    titleTypographyProps={{ align: 'right' }}
-                                                    subheader="próximo processo"
-                                                    subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox />}
-                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
-                                                />
-                                                <CardContent>
-                                                    <Box>
-                                                        <Typography variant="h6" align="left" color="text.secondary">
-                                                            Número do Pedido
-                                                        </Typography>
-                                                        <Typography variant="h5" align="center" color="text.primary">
-                                                            Nome do Produto
-                                                        </Typography>
-                                                        <Typography variant="body2" color="text.secondary">
-                                                            Observação do Produto, apareça caso tenha alguma info
-                                                        </Typography>
-                                                    </Box>
-                                                </CardContent>
-                                                <CardActions>
-                                                    <Grid container justifyContent="space-between">
-                                                        <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Finalizar</Button>
-                                                        <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausar</Button>
+                                                        <Button
+                                                            onClick={() => handleStartProduction(row.id)}
+                                                            variant="contained"
+                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                        >
+                                                            Iniciar
+                                                        </Button>
                                                     </Grid>
                                                 </CardActions>
                                             </Card>
@@ -117,6 +103,40 @@ export default function Tables() {
                                     </TableCell>
                                 </TableRow>
                             ))}
+                            {/*<TableCell align="center" width="50%">
+                                <Grid key={row.id}>
+                                    <Card>
+                                        <CardHeader
+                                            title="processo a ser realizado"
+                                            titleTypographyProps={{ align: 'right' }}
+                                            subheader="próximo processo"
+                                            subheaderTypographyProps={{ align: 'right', }}
+                                            avatar={<Checkbox />}
+                                            sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
+                                        />
+                                        <CardContent>
+                                            <Box>
+                                                <Typography variant="h6" align="left" color="text.secondary">
+                                                    Número do Pedido
+                                                </Typography>
+                                                <Typography variant="h5" align="center" color="text.primary">
+                                                    Nome do Produto
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Observação do Produto, apareça caso tenha alguma info
+                                                </Typography>
+                                            </Box>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Grid container justifyContent="space-between">
+                                                <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Finalizar</Button>
+                                                <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausar</Button>
+                                            </Grid>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            </TableCell>
+                            */}
                         </TableBody>
                     </Table>
                 </Container>
