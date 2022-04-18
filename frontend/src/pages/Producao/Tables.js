@@ -34,6 +34,10 @@ export default function Tables() {
         setProductionStatus(await api.put(`/api/pause/production/${id}`))
         //handleNotificationError(name)
     }
+    async function handleResumeProduction(id) {
+        setProductionStatus(await api.put(`/api/resume/production/${id}`))
+        //handleNotificationError(name)
+    }
 
     let [productionNotStarted, setProductionNotStarted] = useState([])
     let [productionStarted, setProductionStarted] = useState([])
@@ -148,7 +152,7 @@ export default function Tables() {
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
-                                                    {rowProduction.situacao === 1 ? (<Grid container justifyContent="space-between">
+                                                    {rowProduction.situacao !== 2 ? (<Grid container justifyContent="space-between">
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
@@ -167,6 +171,7 @@ export default function Tables() {
                                                             <Button
                                                                 variant="contained"
                                                                 style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                                onClick={() => handleResumeProduction(rowProduction.id)}
                                                             >
                                                                 Retomar
                                                             </Button>

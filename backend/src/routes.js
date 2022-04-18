@@ -47,6 +47,7 @@ routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBy
 routes.post('/api/insert/production', ProductionController.insertProduction);
 routes.put('/api/start/production/:id', ProductionController.startProduction);
 routes.put('/api/pause/production/:id', ProductionController.pauseProduction);
+routes.put('/api/resume/production/:id', ProductionController.resumeProduction);
 routes.get('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
 routes.get('/api/select/production_started', ProductionController.selectProductionStarted);
 

@@ -4,11 +4,12 @@ const nextProcess = require('../functions/nextProcess')
 module.exports = {
 
   async selectProductionNotStarted(req, res) {
-    await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, proc_prod.sequencia
+    await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, proc_prod.sequencia, prod_ped.observacao
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
     join processo proc on proc.id = prodc.id_processo
     join processos_por_produto proc_prod on proc_prod.id_produto = prodc.id_produto
+    join produtos_por_pedido prod_ped on prod_ped.id_pedido = prodc.id_pedido and prod_ped.id_produto = prodc.id_produto
     where prodc.situacao = 0
     and proc_prod.sequencia = 1`)
       .then(results => { productionNotStarted = results.rows })
@@ -20,12 +21,13 @@ module.exports = {
   },
 
   async selectProductionStarted(req, res) {
-    await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, proc_prod.sequencia
+    await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, proc_prod.sequencia, prod_ped.observacao
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
     join processo proc on proc.id = prodc.id_processo
     join processos_por_produto proc_prod on proc_prod.id_produto = prodc.id_produto
-    where prodc.situacao in (1, 2)  
+    join produtos_por_pedido prod_ped on prod_ped.id_pedido = prodc.id_pedido and prod_ped.id_produto = prodc.id_produto
+    where prodc.situacao in (1, 2, 3)  
     and proc_prod.sequencia = 1`)
       .then(results => { productionStarted = results.rows })
     for (let i = 0; i < productionStarted.length; i++) {
@@ -61,8 +63,16 @@ module.exports = {
     let { id } = req.params;
     let datetime = new Date
     await connectionPG.query(`update producao set situacao = 2 where id = ${id}`)
+    await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
+    return res.json().status(200)
+  },
+
+  async resumeProduction(req, res) {
+    let { id } = req.params;
+    let datetime = new Date
+    await connectionPG.query(`update producao set situacao = 3 where id = ${id}`)
     await connectionPG.query(`insert into producao_tempo
-    (id_producao, fim)
+    (id_producao, inicio)
     values(${id}, '${datetime.toISOString()}')`)
     return res.json().status(200)
   }
