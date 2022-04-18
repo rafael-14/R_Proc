@@ -25,9 +25,13 @@ export default function Tables() {
         }
     })
 
-    const [startProduction, setStartProduction] = useState(null)
+    const [productionStatus, setProductionStatus] = useState(null)
     async function handleStartProduction(id) {
-        setStartProduction(await api.put(`/api/start/production/${id}`))
+        setProductionStatus(await api.put(`/api/start/production/${id}`))
+        //handleNotificationError(name)
+    }
+    async function handlePauseProduction(id) {
+        setProductionStatus(await api.put(`/api/pause/production/${id}`))
         //handleNotificationError(name)
     }
 
@@ -45,7 +49,7 @@ export default function Tables() {
             setProductionStarted(response.data)
         }
         loadProductionStarted()
-    }, [startProduction])
+    }, [productionStatus])
 
     return (
         <ThemeProvider theme={theme}>
@@ -144,10 +148,29 @@ export default function Tables() {
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
-                                                    <Grid container justifyContent="space-between">
-                                                        <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Finalizar</Button>
-                                                        <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausar</Button>
-                                                    </Grid>
+                                                    {rowProduction.situacao === 1 ? (<Grid container justifyContent="space-between">
+                                                        <Button
+                                                            variant="contained"
+                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                        >
+                                                            Finalizar
+                                                        </Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            onClick={() => handlePauseProduction(rowProduction.id)}
+                                                        >
+                                                            Pausar
+                                                        </Button>
+                                                    </Grid>) :
+                                                        (<Grid container justifyContent="center">
+                                                            <Button
+                                                                variant="contained"
+                                                                style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            >
+                                                                Retomar
+                                                            </Button>
+                                                        </Grid>)}
                                                 </CardActions>
                                             </Card>
                                         </Grid>
