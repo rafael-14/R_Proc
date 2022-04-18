@@ -49,15 +49,15 @@ export default function Tables() {
 
     return (
         <ThemeProvider theme={theme}>
+            {/*<Button onClick={() => console.log(productionNotStarted)}>productionNotStarted</Button>*/}
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+
                 <Toolbar />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Button onClick={() => console.log(productionNotStarted)}>teste</Button>
                     <Table size="medium" stickyHeader>
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell align="center" width="50%">A Fazer</StyledTableCell>
-                                <StyledTableCell align="center" width="50%">Fazendo</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -103,45 +103,73 @@ export default function Tables() {
                                     </TableCell>
                                 </TableRow>
                             ))}
-                            {/*<TableCell align="center" width="50%">
-                                <Grid key={row.id}>
-                                    <Card>
-                                        <CardHeader
-                                            title="processo a ser realizado"
-                                            titleTypographyProps={{ align: 'right' }}
-                                            subheader="próximo processo"
-                                            subheaderTypographyProps={{ align: 'right', }}
-                                            avatar={<Checkbox />}
-                                            sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
-                                        />
-                                        <CardContent>
-                                            <Box>
-                                                <Typography variant="h6" align="left" color="text.secondary">
-                                                    Número do Pedido
-                                                </Typography>
-                                                <Typography variant="h5" align="center" color="text.primary">
-                                                    Nome do Produto
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Observação do Produto, apareça caso tenha alguma info
-                                                </Typography>
-                                            </Box>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Grid container justifyContent="space-between">
-                                                <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Finalizar</Button>
-                                                <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausar</Button>
-                                            </Grid>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            </TableCell>
-                            */}
                         </TableBody>
                     </Table>
                 </Container>
+            </Box>
+            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+                <Toolbar />
+                <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+                    <Table size="medium" stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell align="center" width="50%">Fazendo</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {productionStarted.map((rowProduction) => (
+                                <TableRow key={rowProduction.id}>
+                                    <TableCell align="center" width="50%">
+                                        <Grid key={rowProduction.id}>
+                                            <Card>
+                                                <CardHeader
+                                                    title={rowProduction.nome_processo}
+                                                    titleTypographyProps={{ align: 'right' }}
+                                                    subheader={rowProduction.nome_proximo_processo}
+                                                    subheaderTypographyProps={{ align: 'right', }}
+                                                    avatar={<Checkbox />}
+                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
+                                                />
+                                                <CardContent>
+                                                    <Box>
+                                                        <Typography variant="h6" align="left" color="text.secondary">
+                                                            {rowProduction.id_pedido}
+                                                        </Typography>
+                                                        <Typography variant="h5" align="center" color="text.primary">
+                                                            {rowProduction.nome_produto}
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            {rowProduction.observacao}
+                                                        </Typography>
+                                                    </Box>
+                                                </CardContent>
+                                                <CardActions>
+                                                    <Grid container justifyContent="space-between">
+                                                        <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Finalizar</Button>
+                                                        <Button variant="contained" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausar</Button>
+                                                    </Grid>
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+
+
+
+                </Container>
             </Box >
+
+
         </ThemeProvider >
+
+
+
+
+
+
     );
 }
 
