@@ -120,6 +120,11 @@ export default function Register() {
     setOrderProducts([...orderProducts])
   }
 
+  async function handleChangeProductNote(newProductNote, rowPosition) {
+    orderProducts[rowPosition].productNote = newProductNote
+    setOrderProducts([...orderProducts])
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -172,6 +177,7 @@ export default function Register() {
                 </Grid>
               </Grid>
               <TextField
+                multiline
                 onChange={e => setProductNote(e.target.value)}
                 value={productNote}
                 style={{ marginTop: 10 }}
@@ -207,6 +213,7 @@ export default function Register() {
                       <TableRow>
                         <StyledTableCell align="center">Produtos</StyledTableCell>
                         <StyledTableCell align="center">Quantidade</StyledTableCell>
+                        <StyledTableCell align="center">Observação</StyledTableCell>
                         <StyledTableCell />
                       </TableRow>
                     </TableHead>
@@ -221,6 +228,17 @@ export default function Register() {
                               size="small"
                               align="center"
                             />
+                          </TableCell>
+                          <TableCell align="center">
+                            
+                            {row.productNote ? (<TextField
+                              multiline
+                              value={row.productNote}
+                              onChange={e => handleChangeProductNote(e.target.value, rowPosition)}
+                              size="small"
+                              align="center"
+                            />) : null}
+
                           </TableCell>
                           <TableCell align="center">
                             <Fab onClick={() => handleRemoveOrderProduct(row)} size="small" style={{ backgroundColor: '#D32F2F', color: "#FFFFFF" }}>
