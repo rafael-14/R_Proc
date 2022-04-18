@@ -56,7 +56,7 @@ export default function Tables() {
                                                 <CardHeader
                                                     title={row.nome_processo}
                                                     titleTypographyProps={{ align: 'right' }}
-                                                    subheader="próximo processo"
+                                                    subheader={row.nome_proximo_processo}
                                                     subheaderTypographyProps={{ align: 'right', }}
                                                     avatar={<Checkbox />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}

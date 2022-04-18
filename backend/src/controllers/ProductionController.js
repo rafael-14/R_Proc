@@ -13,6 +13,15 @@ module.exports = {
     where prodc.situacao = 0
 	  and proc_prod.sequencia = 1`)
       .then(results => { productionNotStarted = results.rows })
+      for (let i = 0; i < productionNotStarted.length; i++) {
+        let x = await nextProcess.nextProcess(productionNotStarted[i].id_produto, productionNotStarted[i].sequencia)
+        if (x[0] === undefined) {
+          productionNotStarted[i].nome_proximo_processo = null
+        } else {
+          productionNotStarted[i].nome_proximo_processo = x[0].nome_proximo_processo
+        }
+      }
+      //console.log(productionNotStarted)
     return res.json(productionNotStarted)
   },
 
