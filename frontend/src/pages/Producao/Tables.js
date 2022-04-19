@@ -38,8 +38,8 @@ export default function Tables() {
         setProductionStatus(await api.put(`/api/resume/production/${id}`))
         //handleNotificationError(name) 
     }
-    async function handleFinishProduction(id) {
-        setProductionStatus(await api.put(`/api/finish/production/${id}`))
+    async function handleFinishProduction(id, id_proximo_processo) {
+        setProductionStatus(await api.put(`/api/finish/production/${id}`, {id_proximo_processo}))
         //handleNotificationError(name)
     }
 
@@ -160,7 +160,7 @@ export default function Tables() {
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
-                                                            onClick={() => handleFinishProduction(rowProduction.id)}
+                                                            onClick={() => handleFinishProduction(rowProduction.id, rowProduction.id_proximo_processo)}
                                                         >
                                                             Finalizar
                                                         </Button>

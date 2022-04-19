@@ -35,7 +35,7 @@ module.exports = {
       let dataNextProcess = await nextProcess.nextProcess(productionStarted[i].id_produto, productionStarted[i].sequencia)
       productionStarted[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome_proximo_processo)
       productionStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id_proximo_processo)
-      
+
     }
     return res.json(productionStarted)
   },
@@ -81,10 +81,17 @@ module.exports = {
   },
 
   async finishProduction(req, res) {
+    let { id_proximo_processo } = req.body;
     let { id } = req.params;
     let datetime = new Date
-    await connectionPG.query(`update producao set situacao = 4 where id = ${id}`)
     await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
+    await connectionPG.query(`update producao set situacao = 4 where id = ${id} returning *`)
+      .then(results => { productFinished = results.rows })
+    if (id_proximo_processo) {
+      await connectionPG.query(`insert into producao
+      (id_pedido, id_produto, id_processo, id_usuario, situacao)
+      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${id_proximo_processo}, 1 , 0)`)
+    }
     return res.json().status(200)
   }
 
