@@ -14,8 +14,9 @@ module.exports = {
     and proc_prod.sequencia = 1`)
       .then(results => { productionNotStarted = results.rows })
     for (let i = 0; i < productionNotStarted.length; i++) {
-      let nameNextProcess = await nextProcess.nextProcess(productionNotStarted[i].id_produto, productionNotStarted[i].sequencia)
-      productionNotStarted[i].nome_proximo_processo = (nameNextProcess[0] === undefined ? null : nameNextProcess[0].nome_proximo_processo)
+      let dataNextProcess = await nextProcess.nextProcess(productionNotStarted[i].id_produto, productionNotStarted[i].sequencia)
+      productionNotStarted[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome_proximo_processo)
+      productionNotStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id_proximo_processo)
     }
     return res.json(productionNotStarted)
   },
@@ -31,8 +32,10 @@ module.exports = {
     and proc_prod.sequencia = 1`)
       .then(results => { productionStarted = results.rows })
     for (let i = 0; i < productionStarted.length; i++) {
-      let nameNextProcess = await nextProcess.nextProcess(productionStarted[i].id_produto, productionStarted[i].sequencia)
-      productionStarted[i].nome_proximo_processo = (nameNextProcess[0] === undefined ? null : nameNextProcess[0].nome_proximo_processo)
+      let dataNextProcess = await nextProcess.nextProcess(productionStarted[i].id_produto, productionStarted[i].sequencia)
+      productionStarted[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome_proximo_processo)
+      productionStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id_proximo_processo)
+      
     }
     return res.json(productionStarted)
   },
@@ -74,6 +77,14 @@ module.exports = {
     await connectionPG.query(`insert into producao_tempo
     (id_producao, inicio)
     values(${id}, '${datetime.toISOString()}')`)
+    return res.json().status(200)
+  },
+
+  async finishProduction(req, res) {
+    let { id } = req.params;
+    let datetime = new Date
+    await connectionPG.query(`update producao set situacao = 4 where id = ${id}`)
+    await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
     return res.json().status(200)
   }
 

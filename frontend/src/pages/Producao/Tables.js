@@ -36,6 +36,10 @@ export default function Tables() {
     }
     async function handleResumeProduction(id) {
         setProductionStatus(await api.put(`/api/resume/production/${id}`))
+        //handleNotificationError(name) 
+    }
+    async function handleFinishProduction(id) {
+        setProductionStatus(await api.put(`/api/finish/production/${id}`))
         //handleNotificationError(name)
     }
 
@@ -156,6 +160,7 @@ export default function Tables() {
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            onClick={() => handleFinishProduction(rowProduction.id)}
                                                         >
                                                             Finalizar
                                                         </Button>
