@@ -21,14 +21,12 @@ module.exports = {
   },
 
   async selectProductionStarted(req, res) {
-    await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, proc_prod.sequencia, prod_ped.observacao
+    await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo,prod_ped.observacao
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
     join processo proc on proc.id = prodc.id_processo
-    join processos_por_produto proc_prod on proc_prod.id_produto = prodc.id_produto
     join produtos_por_pedido prod_ped on prod_ped.id_pedido = prodc.id_pedido and prod_ped.id_produto = prodc.id_produto
-    where prodc.situacao in (1, 2, 3)  
-    and proc_prod.sequencia = 1`)
+    where prodc.situacao in (1, 3)`)
       .then(results => { productionStarted = results.rows })
     for (let i = 0; i < productionStarted.length; i++) {
       let dataNextProcess = await nextProcess.nextProcess(productionStarted[i].id_produto, productionStarted[i].id_processo)
@@ -36,6 +34,22 @@ module.exports = {
       productionStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id)
     }
     return res.json(productionStarted)
+  },
+
+  async selectProductionPaused(req, res) {
+    await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, prod_ped.observacao
+    from producao prodc
+    join produto prod on prod.id = prodc.id_produto
+    join processo proc on proc.id = prodc.id_processo
+    join produtos_por_pedido prod_ped on prod_ped.id_pedido = prodc.id_pedido and prod_ped.id_produto = prodc.id_produto
+    where prodc.situacao = 2`)
+      .then(results => { productionPaused = results.rows })
+    for (let i = 0; i < productionPaused.length; i++) {
+      let dataNextProcess = await nextProcess.nextProcess(productionPaused[i].id_produto, productionPaused[i].id_processo)
+      productionPaused[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome)
+      productionPaused[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id)
+    }
+    return res.json(productionPaused)
   },
 
   async insertProduction(req, res) {

@@ -20,7 +20,7 @@ export default function Tables() {
 
     const theme = createTheme({
         palette: {
-            primary: { main: '#FF7A40' },
+            primary: { main: '#E8927C' },
             secondary: { main: '#000000' }
         }
     })
@@ -39,12 +39,13 @@ export default function Tables() {
         //handleNotificationError(name) 
     }
     async function handleFinishProduction(id, id_proximo_processo) {
-        setProductionStatus(await api.put(`/api/finish/production/${id}`, {id_proximo_processo}))
+        setProductionStatus(await api.put(`/api/finish/production/${id}`, { id_proximo_processo }))
         //handleNotificationError(name)
     }
 
     let [productionNotStarted, setProductionNotStarted] = useState([])
     let [productionStarted, setProductionStarted] = useState([])
+    let [productionPaused, setProductionPaused] = useState([])
     useEffect(() => {
         async function loadProductionNotStarted() {
             let response = await api.get('/api/select/production_not_started')
@@ -57,19 +58,36 @@ export default function Tables() {
             setProductionStarted(response.data)
         }
         loadProductionStarted()
+
+        async function loadProductionPaused() {
+            let response = await api.get('/api/select/production_paused')
+            setProductionPaused(response.data)
+        }
+        loadProductionPaused()
     }, [productionStatus])
+
+    let [production, setProduction] = useState([])
+    function handleProduction(id) {
+        let indexProduction = production.indexOf(id)
+        if (indexProduction !== -1) {
+            production.splice(indexProduction, 1)
+            setProduction([...production])
+        } else {
+            setProduction([...production, id])
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
-            {/*<Button onClick={() => console.log(productionNotStarted)}>productionNotStarted</Button>*/}
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
-
                 <Toolbar />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Table size="medium" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center" width="50%">A Fazer</StyledTableCell>
+                                <StyledTableCell align="center" width="50%">
+                                    A Fazer
+                                </StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -83,7 +101,7 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={row.nome_proximo_processo}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox />}
+                                                    avatar={<Checkbox onClick={() => handleProduction(row.id)} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
                                                 <CardContent>
@@ -102,7 +120,7 @@ export default function Tables() {
                                                 <CardActions>
                                                     <Grid container justifyContent="left">
                                                         <Button
-                                                            onClick={() => handleStartProduction(row.id)}
+                                                            onClick={() => { production.length === 0 ? handleStartProduction(row.id) : alert() }}
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
                                                         >
@@ -156,7 +174,7 @@ export default function Tables() {
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
-                                                    {rowProduction.situacao !== 2 ? (<Grid container justifyContent="space-between">
+                                                    <Grid container justifyContent="space-between">
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
@@ -171,16 +189,7 @@ export default function Tables() {
                                                         >
                                                             Pausar
                                                         </Button>
-                                                    </Grid>) :
-                                                        (<Grid container justifyContent="center">
-                                                            <Button
-                                                                variant="contained"
-                                                                style={{ background: '#E8927C', color: '#FFFFFF' }}
-                                                                onClick={() => handleResumeProduction(rowProduction.id)}
-                                                            >
-                                                                Retomar
-                                                            </Button>
-                                                        </Grid>)}
+                                                    </Grid>
                                                 </CardActions>
                                             </Card>
                                         </Grid>
@@ -189,20 +198,66 @@ export default function Tables() {
                             ))}
                         </TableBody>
                     </Table>
-
-
-
+                </Container>
+            </Box >
+            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+                <Toolbar />
+                <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+                    <Table size="medium" stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell align="center" width="50%">Pausado</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {productionPaused.map((rowProductionPaused) => (
+                                <TableRow key={rowProductionPaused.id}>
+                                    <TableCell align="center" width="50%">
+                                        <Grid key={rowProductionPaused.id}>
+                                            <Card>
+                                                <CardHeader
+                                                    title={rowProductionPaused.nome_processo}
+                                                    titleTypographyProps={{ align: 'right' }}
+                                                    subheader={rowProductionPaused.nome_proximo_processo}
+                                                    subheaderTypographyProps={{ align: 'right', }}
+                                                    avatar={<Checkbox />}
+                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
+                                                />
+                                                <CardContent>
+                                                    <Box>
+                                                        <Typography variant="h6" align="left" color="text.secondary">
+                                                            {rowProductionPaused.id_pedido}
+                                                        </Typography>
+                                                        <Typography variant="h5" align="center" color="text.primary">
+                                                            {rowProductionPaused.nome_produto}
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            {rowProductionPaused.observacao}
+                                                        </Typography>
+                                                    </Box>
+                                                </CardContent>
+                                                <CardActions>
+                                                    <Grid container justifyContent="center">
+                                                        <Button
+                                                            variant="contained"
+                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            onClick={() => handleResumeProduction(rowProductionPaused.id)}
+                                                        >
+                                                            Retomar
+                                                        </Button>
+                                                    </Grid>
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </Container>
             </Box >
 
-
         </ThemeProvider >
-
-
-
-
-
-
     );
 }
 

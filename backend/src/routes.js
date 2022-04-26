@@ -51,5 +51,6 @@ routes.put('/api/resume/production/:id', ProductionController.resumeProduction);
 routes.put('/api/finish/production/:id', ProductionController.finishProduction);
 routes.get('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
 routes.get('/api/select/production_started', ProductionController.selectProductionStarted);
+routes.get('/api/select/production_paused', ProductionController.selectProductionPaused);
 
 module.exports = routes;
