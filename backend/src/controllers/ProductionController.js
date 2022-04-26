@@ -105,7 +105,52 @@ module.exports = {
       values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${id_proximo_processo}, 1 , 0)`)
     }
     return res.json().status(200)
-  }
+  },
+
+  async startManyProductions(req, res) {
+    let { checkboxStartProduction } = req.body;
+    let datetime = new Date
+    for (let i = 0; i < checkboxStartProduction.length; i++) {
+      await connectionPG.query(`update producao set situacao = 1 where id = ${checkboxStartProduction[i]}`)
+      await connectionPG.query(`insert into producao_tempo
+      (id_producao, inicio)
+      values(${checkboxStartProduction[i]}, '${datetime.toISOString()}')`)
+    }
+    return res.json().status(200)
+  },
+
+  /*async pauseProduction(req, res) {
+    let { id } = req.params;
+    let datetime = new Date
+    await connectionPG.query(`update producao set situacao = 2 where id = ${id}`)
+    await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
+    return res.json().status(200)
+  },
+
+  async resumeProduction(req, res) {
+    let { id } = req.params;
+    let datetime = new Date
+    await connectionPG.query(`update producao set situacao = 3 where id = ${id}`)
+    await connectionPG.query(`insert into producao_tempo
+    (id_producao, inicio)
+    values(${id}, '${datetime.toISOString()}')`)
+    return res.json().status(200)
+  },
+
+  async finishProduction(req, res) {
+    let { id_proximo_processo } = req.body;
+    let { id } = req.params;
+    let datetime = new Date
+    await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
+    await connectionPG.query(`update producao set situacao = 4 where id = ${id} returning *`)
+      .then(results => { productFinished = results.rows })
+    if (id_proximo_processo) {
+      await connectionPG.query(`insert into producao
+      (id_pedido, id_produto, id_processo, id_usuario, situacao)
+      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${id_proximo_processo}, 1 , 0)`)
+    }
+    return res.json().status(200)
+  }*/
 
 };
 

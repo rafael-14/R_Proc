@@ -42,6 +42,22 @@ export default function Tables() {
         setProductionStatus(await api.put(`/api/finish/production/${id}`, { id_proximo_processo }))
         //handleNotificationError(name)
     }
+    async function handleStartManyProductions() {
+        setProductionStatus(await api.post(`/api/start/many_productions`, { checkboxStartProduction }))
+        //handleNotificationError(name)
+    }
+    async function handlePauseManyProductions() {
+        //setProductionStatus(await api.post(`/api/pause/production/${id}`))
+        //handleNotificationError(name)
+    }
+    async function handleResumeManyProductions() {
+        //setProductionStatus(await api.post(`/api/resume/production/${id}`))
+        //handleNotificationError(name) 
+    }
+    async function handleFinishManyProductions() {
+        //setProductionStatus(await api.post(`/api/finish/production/${id}`, { id_proximo_processo }))
+        //handleNotificationError(name)
+    }
 
     let [productionNotStarted, setProductionNotStarted] = useState([])
     let [productionStarted, setProductionStarted] = useState([])
@@ -66,14 +82,14 @@ export default function Tables() {
         loadProductionPaused()
     }, [productionStatus])
 
-    let [production, setProduction] = useState([])
-    function handleProduction(id) {
-        let indexProduction = production.indexOf(id)
+    let [checkboxStartProduction, setCheckboxStartProduction] = useState([])
+    function handleCheckboxStartProduction(id) {
+        let indexProduction = checkboxStartProduction.indexOf(id)
         if (indexProduction !== -1) {
-            production.splice(indexProduction, 1)
-            setProduction([...production])
+            checkboxStartProduction.splice(indexProduction, 1)
+            setCheckboxStartProduction([...checkboxStartProduction])
         } else {
-            setProduction([...production, id])
+            setCheckboxStartProduction([...checkboxStartProduction, id])
         }
     }
 
@@ -101,7 +117,7 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={row.nome_proximo_processo}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox onClick={() => handleProduction(row.id)} />}
+                                                    avatar={<Checkbox onClick={() => handleCheckboxStartProduction(row.id)} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
                                                 <CardContent>
@@ -120,7 +136,7 @@ export default function Tables() {
                                                 <CardActions>
                                                     <Grid container justifyContent="left">
                                                         <Button
-                                                            onClick={() => { production.length === 0 ? handleStartProduction(row.id) : alert() }}
+                                                            onClick={() => { checkboxStartProduction.length === 0 ? handleStartProduction(row.id) : handleStartManyProductions() }}
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
                                                         >
