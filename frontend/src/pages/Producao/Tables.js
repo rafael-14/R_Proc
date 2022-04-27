@@ -47,15 +47,15 @@ export default function Tables() {
         //handleNotificationError(name)
     }
     async function handlePauseManyProductions() {
-        //setProductionStatus(await api.post(`/api/pause/production/${id}`))
+        setProductionStatus(await api.post(`/api/pause/many_productions`, { checkboxPause_FinishProduction }))
         //handleNotificationError(name)
     }
     async function handleResumeManyProductions() {
-        //setProductionStatus(await api.post(`/api/resume/production/${id}`))
+        setProductionStatus(await api.post(`/api/resume/many_productions`, { checkboxResumeProduction }))
         //handleNotificationError(name) 
     }
     async function handleFinishManyProductions() {
-        //setProductionStatus(await api.post(`/api/finish/production/${id}`, { id_proximo_processo }))
+        setProductionStatus(await api.post(`/api/finish/many_productions`, { checkboxPause_FinishProduction }))
         //handleNotificationError(name)
     }
 
@@ -90,6 +90,26 @@ export default function Tables() {
             setCheckboxStartProduction([...checkboxStartProduction])
         } else {
             setCheckboxStartProduction([...checkboxStartProduction, id])
+        }
+    }
+    let [checkboxPause_FinishProduction, setCheckboxPause_FinishProduction] = useState([])
+    function handleCheckboxPause_FinishProduction(id) {
+        let indexProduction = checkboxPause_FinishProduction.indexOf(id)
+        if (indexProduction !== -1) {
+            checkboxPause_FinishProduction.splice(indexProduction, 1)
+            setCheckboxPause_FinishProduction([...checkboxPause_FinishProduction])
+        } else {
+            setCheckboxPause_FinishProduction([...checkboxPause_FinishProduction, id])
+        }
+    }
+    let [checkboxResumeProduction, setCheckboxResumeProduction] = useState([])
+    function handleCheckboxResumeProduction(id) {
+        let indexProduction = checkboxStartProduction.indexOf(id)
+        if (indexProduction !== -1) {
+            checkboxResumeProduction.splice(indexProduction, 1)
+            setCheckboxResumeProduction([...checkboxResumeProduction])
+        } else {
+            setCheckboxResumeProduction([...checkboxResumeProduction, id])
         }
     }
 
@@ -173,7 +193,7 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={rowProduction.nome_proximo_processo}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox />}
+                                                    avatar={<Checkbox onClick={() => handleCheckboxPause_FinishProduction(rowProduction.id)} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
                                                 <CardContent>
@@ -194,14 +214,24 @@ export default function Tables() {
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
-                                                            onClick={() => handleFinishProduction(rowProduction.id, rowProduction.id_proximo_processo)}
+                                                            onClick={() => {
+                                                                checkboxPause_FinishProduction.length === 0 ?
+                                                                    handleFinishProduction(rowProduction.id, rowProduction.id_proximo_processo)
+                                                                    :
+                                                                    handleFinishManyProductions()
+                                                            }}
                                                         >
                                                             Finalizar
                                                         </Button>
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
-                                                            onClick={() => handlePauseProduction(rowProduction.id)}
+                                                            onClick={() => {
+                                                                checkboxPause_FinishProduction.length === 0 ?
+                                                                    handlePauseProduction(rowProduction.id)
+                                                                    :
+                                                                    handlePauseManyProductions()
+                                                            }}
                                                         >
                                                             Pausar
                                                         </Button>
@@ -236,7 +266,7 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={rowProductionPaused.nome_proximo_processo}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox />}
+                                                    avatar={<Checkbox onClick={() => handleCheckboxResumeProduction(rowProductionPaused.id)} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
                                                 <CardContent>
@@ -257,7 +287,12 @@ export default function Tables() {
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
-                                                            onClick={() => handleResumeProduction(rowProductionPaused.id)}
+                                                            onClick={() => {
+                                                                checkboxStartProduction.length === 0 ?
+                                                                    handleResumeProduction(rowProductionPaused.id)
+                                                                    :
+                                                                    handleResumeManyProductions()
+                                                            }}
                                                         >
                                                             Retomar
                                                         </Button>
@@ -272,7 +307,6 @@ export default function Tables() {
                     </Table>
                 </Container>
             </Box >
-
         </ThemeProvider >
     );
 }

@@ -119,7 +119,7 @@ module.exports = {
     return res.json().status(200)
   },
 
-  /*async pauseProduction(req, res) {
+  async pauseManyProductions(req, res) {
     let { id } = req.params;
     let datetime = new Date
     await connectionPG.query(`update producao set situacao = 2 where id = ${id}`)
@@ -127,13 +127,15 @@ module.exports = {
     return res.json().status(200)
   },
 
-  async resumeProduction(req, res) {
-    let { id } = req.params;
+  /*async resumeManyProductions(req, res) {
+    let { checkboxStartProduction } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao set situacao = 3 where id = ${id}`)
-    await connectionPG.query(`insert into producao_tempo
-    (id_producao, inicio)
-    values(${id}, '${datetime.toISOString()}')`)
+    for (let i = 0; i < checkboxStartProduction.length; i++) {
+      await connectionPG.query(`update producao set situacao = 1 where id = ${checkboxStartProduction[i]}`)
+      await connectionPG.query(`insert into producao_tempo
+      (id_producao, inicio)
+      values(${checkboxStartProduction[i]}, '${datetime.toISOString()}')`)
+    }
     return res.json().status(200)
   },
 
