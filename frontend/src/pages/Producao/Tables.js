@@ -44,18 +44,23 @@ export default function Tables() {
     }
     async function handleStartManyProductions() {
         setProductionStatus(await api.post(`/api/start/many_productions`, { checkboxStartProduction }))
+        setCheckboxStartProduction([])
         //handleNotificationError(name)
     }
     async function handlePauseManyProductions() {
         setProductionStatus(await api.post(`/api/pause/many_productions`, { checkboxPause_FinishProduction }))
+        setCheckboxPause_FinishProduction([])
         //handleNotificationError(name)
     }
     async function handleResumeManyProductions() {
         setProductionStatus(await api.post(`/api/resume/many_productions`, { checkboxResumeProduction }))
+        setCheckboxResumeProduction([])
         //handleNotificationError(name) 
     }
     async function handleFinishManyProductions() {
-        setProductionStatus(await api.post(`/api/finish/many_productions`, { checkboxPause_FinishProduction }))
+        setProductionStatus(await api.post(`/api/finish/many_productions`, { checkboxPause_FinishProduction, checkboxNextProcesses }))
+        setCheckboxPause_FinishProduction([])
+        setCheckboxNextProcesses([])
         //handleNotificationError(name)
     }
 
@@ -93,18 +98,22 @@ export default function Tables() {
         }
     }
     let [checkboxPause_FinishProduction, setCheckboxPause_FinishProduction] = useState([])
-    function handleCheckboxPause_FinishProduction(id) {
+    let [checkboxNextProcesses, setCheckboxNextProcesses] = useState([])
+    function handleCheckboxPause_FinishProduction(id, id_proximo_processo) {
         let indexProduction = checkboxPause_FinishProduction.indexOf(id)
         if (indexProduction !== -1) {
             checkboxPause_FinishProduction.splice(indexProduction, 1)
+            checkboxNextProcesses.splice(indexProduction, 1)
             setCheckboxPause_FinishProduction([...checkboxPause_FinishProduction])
+            setCheckboxNextProcesses([...checkboxNextProcesses])
         } else {
             setCheckboxPause_FinishProduction([...checkboxPause_FinishProduction, id])
+            setCheckboxNextProcesses([...checkboxNextProcesses, id_proximo_processo])
         }
     }
     let [checkboxResumeProduction, setCheckboxResumeProduction] = useState([])
     function handleCheckboxResumeProduction(id) {
-        let indexProduction = checkboxStartProduction.indexOf(id)
+        let indexProduction = checkboxResumeProduction.indexOf(id)
         if (indexProduction !== -1) {
             checkboxResumeProduction.splice(indexProduction, 1)
             setCheckboxResumeProduction([...checkboxResumeProduction])
@@ -193,7 +202,11 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={rowProduction.nome_proximo_processo}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox onClick={() => handleCheckboxPause_FinishProduction(rowProduction.id)} />}
+                                                    avatar={
+                                                        <Checkbox onClick={
+                                                            () => handleCheckboxPause_FinishProduction(rowProduction.id, rowProduction.id_proximo_processo)
+                                                        } />
+                                                    }
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
                                                 <CardContent>
@@ -288,7 +301,7 @@ export default function Tables() {
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
                                                             onClick={() => {
-                                                                checkboxStartProduction.length === 0 ?
+                                                                checkboxResumeProduction.length === 0 ?
                                                                     handleResumeProduction(rowProductionPaused.id)
                                                                     :
                                                                     handleResumeManyProductions()

@@ -54,7 +54,7 @@ routes.get('/api/select/production_started', ProductionController.selectProducti
 routes.get('/api/select/production_paused', ProductionController.selectProductionPaused);
 routes.post('/api/start/many_productions', ProductionController.startManyProductions);
 routes.post('/api/pause/many_productions', ProductionController.pauseManyProductions);
-//routes.post('/api/resume/many_productions', ProductionController.resumeManyProductions);
-//routes.post('/api/finish/many_productions', ProductionController.finishManyProductions);
+routes.post('/api/resume/many_productions', ProductionController.resumeManyProductions);
+routes.post('/api/finish/many_productions', ProductionController.finishManyProductions);
 
 module.exports = routes;

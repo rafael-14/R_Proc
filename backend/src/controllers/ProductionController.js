@@ -120,39 +120,42 @@ module.exports = {
   },
 
   async pauseManyProductions(req, res) {
-    let { id } = req.params;
+    let { checkboxPause_FinishProduction } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao set situacao = 2 where id = ${id}`)
-    await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
+    for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
+      await connectionPG.query(`update producao set situacao = 2 where id = ${checkboxPause_FinishProduction[i]}`)
+      await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${checkboxPause_FinishProduction[i]}`)
+    }
     return res.json().status(200)
   },
 
-  /*async resumeManyProductions(req, res) {
-    let { checkboxStartProduction } = req.body;
+  async resumeManyProductions(req, res) {
+    let { checkboxResumeProduction } = req.body;
     let datetime = new Date
-    for (let i = 0; i < checkboxStartProduction.length; i++) {
-      await connectionPG.query(`update producao set situacao = 1 where id = ${checkboxStartProduction[i]}`)
+    for (let i = 0; i < checkboxResumeProduction.length; i++) {
+      await connectionPG.query(`update producao set situacao = 3 where id = ${checkboxResumeProduction[i]}`)
       await connectionPG.query(`insert into producao_tempo
       (id_producao, inicio)
-      values(${checkboxStartProduction[i]}, '${datetime.toISOString()}')`)
+      values(${checkboxResumeProduction[i]}, '${datetime.toISOString()}')`)
     }
     return res.json().status(200)
   },
 
-  async finishProduction(req, res) {
-    let { id_proximo_processo } = req.body;
-    let { id } = req.params;
+  async finishManyProductions(req, res) {
+    let { checkboxPause_FinishProduction, checkboxNextProcesses } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
-    await connectionPG.query(`update producao set situacao = 4 where id = ${id} returning *`)
-      .then(results => { productFinished = results.rows })
-    if (id_proximo_processo) {
-      await connectionPG.query(`insert into producao
+    for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
+      await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${checkboxPause_FinishProduction[i]}`)
+      await connectionPG.query(`update producao set situacao = 4 where id = ${checkboxPause_FinishProduction[i]} returning *`)
+        .then(results => { productFinished = results.rows })
+      if (checkboxNextProcesses[i]) {
+        await connectionPG.query(`insert into producao
       (id_pedido, id_produto, id_processo, id_usuario, situacao)
-      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${id_proximo_processo}, 1 , 0)`)
+      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${checkboxNextProcesses[i]}, 1 , 0)`)
+      }
     }
     return res.json().status(200)
-  }*/
+  }
 
 };
 
