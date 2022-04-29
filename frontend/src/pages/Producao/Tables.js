@@ -38,6 +38,17 @@ export default function Tables() {
             progress: undefined,
         })
     }
+    async function handleNotificationManyProductions(status, toast) {
+        toast(`Produções ${status}!`, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
 
     const [productionStatus, setProductionStatus] = useState(null)
     async function handleStartProduction(id, nome_produto, id_pedido) {
@@ -59,23 +70,23 @@ export default function Tables() {
     async function handleStartManyProductions() {
         setProductionStatus(await api.post(`/api/start/many_productions`, { checkboxStartProduction }))
         setCheckboxStartProduction([])
-        //handleNotificationError(name)
+        handleNotificationManyProductions("Iniciadas", toast.info)
     }
     async function handlePauseManyProductions() {
         setProductionStatus(await api.post(`/api/pause/many_productions`, { checkboxPause_FinishProduction }))
         setCheckboxPause_FinishProduction([])
-        //handleNotificationError(name)
+        handleNotificationManyProductions("Pausadas", toast.error)
     }
     async function handleResumeManyProductions() {
         setProductionStatus(await api.post(`/api/resume/many_productions`, { checkboxResumeProduction }))
         setCheckboxResumeProduction([])
-        //handleNotificationError(name) 
+        handleNotificationManyProductions("Retomadas", toast.warning)
     }
     async function handleFinishManyProductions() {
         setProductionStatus(await api.post(`/api/finish/many_productions`, { checkboxPause_FinishProduction, checkboxNextProcesses }))
         setCheckboxPause_FinishProduction([])
         setCheckboxNextProcesses([])
-        //handleNotificationError(name)
+        handleNotificationManyProductions("Concluídas", toast.success)
     }
 
     let [productionNotStarted, setProductionNotStarted] = useState([])
