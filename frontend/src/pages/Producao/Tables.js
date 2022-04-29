@@ -5,6 +5,8 @@ import {
     Typography, TableCell, CardHeader, CardContent, Container, Grid, TableRow,
     Box, Toolbar, CardActions, createTheme, ThemeProvider, Table, TableHead
 } from "@mui/material";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -25,22 +27,34 @@ export default function Tables() {
         }
     })
 
+    async function handleNotification(nome_produto, id_pedido, status, toast) {
+        toast(`Produção do Produto: ${nome_produto} do Pedido: ${id_pedido} ${status}!`, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+
     const [productionStatus, setProductionStatus] = useState(null)
-    async function handleStartProduction(id) {
+    async function handleStartProduction(id, nome_produto, id_pedido) {
         setProductionStatus(await api.put(`/api/start/production/${id}`))
-        //handleNotificationError(name)
+        handleNotification(nome_produto, id_pedido, "Iniciada", toast.info)
     }
-    async function handlePauseProduction(id) {
+    async function handlePauseProduction(id, nome_produto, id_pedido) {
         setProductionStatus(await api.put(`/api/pause/production/${id}`))
-        //handleNotificationError(name)
+        handleNotification(nome_produto, id_pedido, "Pausada", toast.error)
     }
-    async function handleResumeProduction(id) {
+    async function handleResumeProduction(id, nome_produto, id_pedido) {
         setProductionStatus(await api.put(`/api/resume/production/${id}`))
-        //handleNotificationError(name) 
+        handleNotification(nome_produto, id_pedido, "Retomada", toast.warning)
     }
-    async function handleFinishProduction(id, id_proximo_processo) {
+    async function handleFinishProduction(id, id_proximo_processo, nome_produto, id_pedido) {
         setProductionStatus(await api.put(`/api/finish/production/${id}`, { id_proximo_processo }))
-        //handleNotificationError(name)
+        handleNotification(nome_produto, id_pedido, "Concluída", toast.success)
     }
     async function handleStartManyProductions() {
         setProductionStatus(await api.post(`/api/start/many_productions`, { checkboxStartProduction }))
@@ -126,6 +140,7 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
+                <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Table size="medium" stickyHeader>
                         <TableHead>
@@ -165,7 +180,11 @@ export default function Tables() {
                                                 <CardActions>
                                                     <Grid container justifyContent="left">
                                                         <Button
-                                                            onClick={() => { checkboxStartProduction.length === 0 ? handleStartProduction(row.id) : handleStartManyProductions() }}
+                                                            onClick={() => {
+                                                                checkboxStartProduction.length === 0 ?
+                                                                    handleStartProduction(row.id, row.nome_produto, row.id_pedido)
+                                                                    : handleStartManyProductions()
+                                                            }}
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
                                                         >
@@ -229,9 +248,8 @@ export default function Tables() {
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
                                                             onClick={() => {
                                                                 checkboxPause_FinishProduction.length === 0 ?
-                                                                    handleFinishProduction(rowProduction.id, rowProduction.id_proximo_processo)
-                                                                    :
-                                                                    handleFinishManyProductions()
+                                                                    handleFinishProduction(rowProduction.id, rowProduction.id_proximo_processo, rowProduction.nome_produto, rowProduction.id_pedido)
+                                                                    : handleFinishManyProductions()
                                                             }}
                                                         >
                                                             Finalizar
@@ -241,9 +259,8 @@ export default function Tables() {
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
                                                             onClick={() => {
                                                                 checkboxPause_FinishProduction.length === 0 ?
-                                                                    handlePauseProduction(rowProduction.id)
-                                                                    :
-                                                                    handlePauseManyProductions()
+                                                                    handlePauseProduction(rowProduction.id, rowProduction.nome_produto, rowProduction.id_pedido)
+                                                                    : handlePauseManyProductions()
                                                             }}
                                                         >
                                                             Pausar
@@ -302,9 +319,8 @@ export default function Tables() {
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
                                                             onClick={() => {
                                                                 checkboxResumeProduction.length === 0 ?
-                                                                    handleResumeProduction(rowProductionPaused.id)
-                                                                    :
-                                                                    handleResumeManyProductions()
+                                                                    handleResumeProduction(rowProductionPaused.id, rowProductionPaused.nome_produto, rowProductionPaused.id_pedido)
+                                                                    : handleResumeManyProductions()
                                                             }}
                                                         >
                                                             Retomar
