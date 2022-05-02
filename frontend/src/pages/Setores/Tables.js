@@ -43,7 +43,7 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center">{row.nome} {row.sobrenome}</TableCell>
+                <TableCell align="center">{row.nome}</TableCell>
                 <TableCell align="right" size="small" width="1%">
                     <abbr title="Editar">
                         <Button style={{ color: '#000000' }}>

@@ -1,4 +1,4 @@
-//npm instal express pg bcrypt pg-hstore sequelize nodemon routes path cors cookie-parser concurrently mongoose
+//npm instal express pg bcrypt pg-hstore sequelize nodemon routes path cors cookie-parser concurrently mongoose jsonwebtoken
 //npm install -g create-react-app
 //rodar no powershell: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 const express = require('express');
