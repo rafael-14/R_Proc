@@ -112,12 +112,8 @@ export default function Tables() {
 
     const theme = createTheme({
         palette: {
-            primary: {
-                main: '#FF7A40'
-            },
-            secondary: {
-                main: '#000000'
-            }
+            primary: { main: '#FF7A40' },
+            secondary: { main: '#000000' }
         }
     })
 

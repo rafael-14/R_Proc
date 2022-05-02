@@ -6,11 +6,14 @@ import { ListarUsuarios, CadastrarUsuarios } from "./pages/Usuarios";
 import { ListarPedidos, CadastrarPedidos } from "./pages/Pedidos";
 import { ListarSetores, CadastrarSetores } from "./pages/Setores";
 import { ListarProducao } from "./pages/Producao";
+import Login from "./pages/Login";
 
 function Rotas() {
     return (
         <Router>
             <Routes>
+                <Route path='/login' exact element={<Login />} />
+
                 <Route path='/' exact element={<ListarProducao />} />
                 <Route path='/produtos' exact element={<ListarProdutos />} />
                 <Route path='/cadastrar/produtos' exact element={<CadastrarProduto />} />
