@@ -14,9 +14,11 @@ module.exports = {
 
   async selectUsersBySector(req, res) {
     let { id } = req.params;
-    await connectionPG.query(`SELECT * FROM usuarios_por_setor where id_setor = ${id}`)
+    await connectionPG.query(`SELECT u_setor.*, u.nome, u.sobrenome
+      FROM usuarios_por_setor u_setor
+      JOIN usuario u on u.id = u_setor.id_usuario where u_setor.id_setor = ${id}`)
       .then(results => { usersBySector = results.rows })
     return res.json(usersBySector)
   },
-  
+
 };

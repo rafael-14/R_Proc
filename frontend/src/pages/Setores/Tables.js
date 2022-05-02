@@ -62,7 +62,7 @@ function Row(props) {
                             <Table size="small" aria-label="purchases">
                                 <TableBody>
                                     {usersBySector.map((row) => (
-                                        <TableRow align="left" >{row.id_usuario}</TableRow>
+                                        <TableRow align="left" >{row.nome} {row.sobrenome}</TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
