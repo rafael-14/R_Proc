@@ -23,12 +23,13 @@ module.exports = {
     let { nome } = req.body;
     await connectionPG.query(`select * from setor where nome ilike '${nome}'`)
       .then(results => { login = results.rows })
-    if (!login) {
-      return res.json().status(500)
+    if (login[0] === undefined) {
+      return res.json({ status: 500 })
+    } else {
+      const payload = { nome };
+      const token = jwt.sign(payload, secret, { expiresIn: '24h' })
+      res.cookie('token', token, { httpOnly: true });
+      return res.json({ token: token, login: login[0], auth:true, status: 200 })
     }
-    const payload = { nome };
-    const token = jwt.sign(payload, secret, {expiresIn: '24h'})
-    res.cookie('token', token, {httpOnly: true});
-    res.json({token:token, login}).status(200)
   }
 };

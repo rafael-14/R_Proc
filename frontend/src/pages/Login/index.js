@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import {
   createTheme, ThemeProvider, Avatar, Button, CssBaseline,
-  TextField, FormControlLabel, Checkbox, Box, Typography, Container
+  TextField, Box, Typography, Container
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import api from '../../services/api';
+import {setIdUsuario, login} from '../../services/auth';
 
 function Copyright() {
   return (
@@ -22,8 +24,21 @@ export default function Login() {
     }
   })
 
-  let [login, setLogin] = useState("")
+  let [sector, setSector] = useState("")
   let [password, setPassword] = useState("")
+
+  async function handleSubmit() {
+    await api.post("/api/login", {nome: sector})
+    .then(res => {
+      if (res.data.status === 200) {
+        login(res.data.token)
+        setIdUsuario(res.data.login.id)
+        window.location.href="/"
+      } else {
+        alert("não conectou")
+      }
+    })
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -46,8 +61,8 @@ export default function Login() {
             fullWidth
             label="Setor"
             color="secondary"
-            value={login}
-            onChange={e => setLogin(e.target.value)}
+            value={sector}
+            onChange={e => setSector(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -67,8 +82,7 @@ export default function Login() {
               background: '#FF7A40',
               color: "#FFFFFF",
             }}
-          //onClick={() => handleSubmit()}
-          onClick={() => console.log(password)}
+            onClick={() => handleSubmit()}
           >
             Login
           </Button>
