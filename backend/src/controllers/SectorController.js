@@ -29,7 +29,17 @@ module.exports = {
       const payload = { nome };
       const token = jwt.sign(payload, secret, { expiresIn: '24h' })
       res.cookie('token', token, { httpOnly: true });
-      return res.json({ token: token, login: login[0], auth:true, status: 200 })
+      return res.json({ token: token, login: login[0], auth: true, status: 200 })
     }
+  },
+
+  async checkToken(req, res) {
+    let status = 401
+    const token = req.body.token || req.query.token || req.cookies.token || req.headers['x-access-token'];
+    if (token) {
+      jwt.verify(token, secret)
+      status = 200
+    }
+    res.json({ status })
   }
 };
