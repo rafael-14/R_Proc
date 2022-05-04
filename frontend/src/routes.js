@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ListarProdutos, CadastrarProduto } from './pages/Produtos'
 import { CadastrarProcessos, ListarProcessos } from "./pages/Processos";
 import { ListarUsuarios, CadastrarUsuarios } from "./pages/Usuarios";
@@ -11,23 +11,29 @@ import PrivateRoute from './services/wAuth';
 
 function Rotas() {
     return (
-        <Router>
+        <BrowserRouter>
             <Routes>
-                <PrivateRoute path='/login/*' exact element={<Login />} />
+                {/*<Route exact path='/' element={<ListarProducao />} />*/}
 
-                <Route path='/' exact element={<ListarProducao />} />
-                <Route path='/produtos' exact element={<ListarProdutos />} />
-                <Route path='/cadastrar/produtos' exact element={<CadastrarProduto />} />
-                <Route path='/processos' exact element={<ListarProcessos />} />
-                <Route path='/cadastrar/processos' exact element={<CadastrarProcessos />} />
-                <Route path='/usuarios' exact element={<ListarUsuarios />} />
-                <Route path='/cadastrar/usuarios' exact element={<CadastrarUsuarios />} />
-                <Route path='/pedidos' exact element={<ListarPedidos />} />
-                <Route path='/fazer/pedidos' exact element={<CadastrarPedidos />} />
-                <Route path='/setores' exact element={<ListarSetores />} />
-                <Route path='/cadastrar/setores' exact element={<CadastrarSetores />} />
+                <Route path='/' element={<PrivateRoute element={<ListarProducao />} />}>
+                </Route>
+
+                <Route path='/login' element={<Login />} />
+
+
+
+                <Route exact path='/produtos' element={<ListarProdutos />} />
+                <Route exact path='/cadastrar/produtos' element={<CadastrarProduto />} />
+                <Route exact path='/processos' element={<ListarProcessos />} />
+                <Route exact path='/cadastrar/processos' element={<CadastrarProcessos />} />
+                <Route exact path='/usuarios' element={<ListarUsuarios />} />
+                <Route exact path='/cadastrar/usuarios' element={<CadastrarUsuarios />} />
+                <Route exact path='/pedidos' element={<ListarPedidos />} />
+                <Route exact path='/fazer/pedidos' element={<CadastrarPedidos />} />
+                <Route exact path='/setores' element={<ListarSetores />} />
+                <Route exact path='/cadastrar/setores' element={<CadastrarSetores />} />
             </Routes>
-        </Router>
+        </BrowserRouter>
     );
 };
 
