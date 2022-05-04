@@ -7,14 +7,14 @@ export default function WAuth({ children }) {
     const [redirect, setRedirect] = useState(false)
 
     useEffect(() => {
-        async function verify() {
+        async function verifyToken() {
             var res = await api.get('/api/check/token', { params: { token: getToken() } })
             if (res.data.status !== 200) {
                 logout()
                 setRedirect(true);
             }
         }
-        verify();
+        verifyToken();
     }, [])
 
     return (

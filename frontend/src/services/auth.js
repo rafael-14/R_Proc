@@ -12,4 +12,4 @@ export const getIdUsuario = () => localStorage.getItem(ID_USUARIO);
 export const setNomeUsuario = nome => localStorage.setItem(NOME_USUARIO, nome);
 export const getNomeUsuario = () => localStorage.getItem(NOME_USUARIO);
 
-export const getToken = () => localStorage.getItem(TOKEN_KEY)
+export const getToken = () => localStorage.getItem(TOKEN_KEY);

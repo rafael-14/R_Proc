@@ -27,7 +27,7 @@ module.exports = {
       return res.json({ status: 500 })
     } else {
       const payload = { nome };
-      const token = jwt.sign(payload, secret, { expiresIn: '24h' })
+      const token = jwt.sign(payload, secret, { expiresIn: '1h' })
       res.cookie('token', token, { httpOnly: true });
       return res.json({ token: token, login: login[0], auth: true, status: 200 })
     }
