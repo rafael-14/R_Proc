@@ -13,25 +13,19 @@ function Rotas() {
     return (
         <BrowserRouter>
             <Routes>
-                {/*<Route exact path='/' element={<ListarProducao />} />*/}
+                <Route exact path='/' element={<PrivateRoute><ListarProducao /></PrivateRoute>} />
+                <Route exact path='/login' element={<Login />} />
 
-                <Route path='/' element={<PrivateRoute element={<ListarProducao />} />}>
-                </Route>
-
-                <Route path='/login' element={<Login />} />
-
-
-
-                <Route exact path='/produtos' element={<ListarProdutos />} />
-                <Route exact path='/cadastrar/produtos' element={<CadastrarProduto />} />
-                <Route exact path='/processos' element={<ListarProcessos />} />
-                <Route exact path='/cadastrar/processos' element={<CadastrarProcessos />} />
-                <Route exact path='/usuarios' element={<ListarUsuarios />} />
-                <Route exact path='/cadastrar/usuarios' element={<CadastrarUsuarios />} />
-                <Route exact path='/pedidos' element={<ListarPedidos />} />
-                <Route exact path='/fazer/pedidos' element={<CadastrarPedidos />} />
-                <Route exact path='/setores' element={<ListarSetores />} />
-                <Route exact path='/cadastrar/setores' element={<CadastrarSetores />} />
+                <Route exact path='/produtos' element={<PrivateRoute><ListarProdutos /></PrivateRoute>} />
+                <Route exact path='/cadastrar/produtos' element={<PrivateRoute><CadastrarProduto /></PrivateRoute>} />
+                <Route exact path='/processos' element={<PrivateRoute><ListarProcessos /></PrivateRoute>} />
+                <Route exact path='/cadastrar/processos' element={<PrivateRoute><CadastrarProcessos /></PrivateRoute>} />
+                <Route exact path='/usuarios' element={<PrivateRoute><ListarUsuarios /></PrivateRoute>} />
+                <Route exact path='/cadastrar/usuarios' element={<PrivateRoute><CadastrarUsuarios /></PrivateRoute>} />
+                <Route exact path='/pedidos' element={<PrivateRoute><ListarPedidos /></PrivateRoute>} />
+                <Route exact path='/fazer/pedidos' element={<PrivateRoute><CadastrarPedidos /></PrivateRoute>} />
+                <Route exact path='/setores' element={<PrivateRoute><ListarSetores /></PrivateRoute>} />
+                <Route exact path='/cadastrar/setores' element={<PrivateRoute><CadastrarSetores /></PrivateRoute>} />
             </Routes>
         </BrowserRouter>
     );
