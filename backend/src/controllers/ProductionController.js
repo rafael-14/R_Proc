@@ -17,6 +17,7 @@ module.exports = {
       productionNotStarted[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome)
       productionNotStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id)
     }
+    console.log(productionNotStarted)
     return res.json(productionNotStarted)
   },
 
