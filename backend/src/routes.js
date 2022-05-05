@@ -43,6 +43,7 @@ routes.post('/api/insert/sector', SectorController.insertSector);
 
 routes.post('/api/login', SectorController.login);
 routes.get('/api/check/token', SectorController.checkToken);
+routes.get('/api/destroy/token', SectorController.destroyToken);
 
 routes.put('/api/select/users_by_sector/:id', UsersBySectorController.selectUsersBySector);
 routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBySector);

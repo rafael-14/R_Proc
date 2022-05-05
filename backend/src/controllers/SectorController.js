@@ -37,9 +37,17 @@ module.exports = {
     let status = 401
     const token = req.body.token || req.query.token || req.cookies.token || req.headers['x-access-token'];
     if (token) {
+      //quebrando na próxima linha
       jwt.verify(token, secret)
       status = 200
     }
     res.json({ status })
+  },
+
+  async destroyToken(req, res) {
+    const token = req.headers.token;
+    if (token) {
+      res.cookie('token', null, { httpOnly: true }).json();
+    }
   }
 };

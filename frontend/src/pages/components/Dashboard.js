@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { Button, styled, createTheme, CssBaseline,ThemeProvider, Box, Toolbar, List, Divider, IconButton} from '@mui/material';
+import { Button, styled, createTheme, CssBaseline, ThemeProvider, Box, Toolbar, List, Divider, IconButton, Grid } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import  {mainListItems}  from '../components/listItems';
+import { mainListItems } from '../components/listItems';
+import api from '../../services/api';
+import { getToken, logout } from '../../services/auth';
 
 const drawerWidth = 240;
 
@@ -56,18 +58,26 @@ const mdTheme = createTheme()
 
 export default function Dashboard(props) {
 
-  let Componente = props.componente;
+  const Componente = props.componente;
 
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  async function handleLogout() {
+    let response = await api.get('/api/destroy/token', {headers: {token: getToken()}})
+    if (response.status === 200) {
+      logout()
+      window.location.href="/login"
+    }
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" style={{ background: '#E8927C'}} open={open}>
+        <AppBar position="absolute" style={{ background: '#E8927C' }} open={open}>
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
@@ -85,7 +95,14 @@ export default function Dashboard(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Button style={{ color:'inherit', hover: '#FFFFFF'}}  href="/"><strong>R_Proc</strong></Button>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+            >
+              <Button style={{ color: 'inherit', hover: '#FFFFFF' }} href="/"><strong>R_Proc</strong></Button>
+              <Button style={{ color: 'inherit', hover: '#FFFFFF' }} onClick={() => handleLogout()}><strong>Sair</strong></Button>
+            </Grid>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -108,6 +125,6 @@ export default function Dashboard(props) {
         <Componente />
       </Box>
     </ThemeProvider>
-    
+
   );
 }
