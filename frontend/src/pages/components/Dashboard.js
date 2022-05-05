@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import { Button, styled, createTheme, CssBaseline, ThemeProvider, Box, Toolbar, List, Divider, IconButton, Grid } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
@@ -60,7 +60,7 @@ export default function Dashboard(props) {
 
   const Componente = props.componente;
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
