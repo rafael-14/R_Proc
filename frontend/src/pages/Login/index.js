@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import api from '../../services/api';
-import {setIdUsuario, login} from '../../services/auth';
+import {setIdSetor, login} from '../../services/auth';
 
 function Copyright() {
   return (
@@ -32,7 +32,7 @@ export default function Login() {
     .then(res => {
       if (res.data.status === 200) {
         login(res.data.token)
-        setIdUsuario(res.data.login.id)
+        setIdSetor(res.data.login.id)
         window.location.href="/"
       } else {
         alert("não conectou")
