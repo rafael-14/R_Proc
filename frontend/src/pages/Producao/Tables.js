@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {getIdSetor} from '../../services/auth';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -52,7 +53,7 @@ export default function Tables() {
 
     const [productionStatus, setProductionStatus] = useState(null)
     async function handleStartProduction(id, nome_produto, id_pedido) {
-        setProductionStatus(await api.put(`/api/start/production/${id}`))
+        setProductionStatus(await api.post(`/api/start/production/${id}`))
         handleNotification(nome_produto, id_pedido, "Iniciada", toast.info)
     }
     async function handlePauseProduction(id, nome_produto, id_pedido) {
@@ -94,7 +95,8 @@ export default function Tables() {
     let [productionPaused, setProductionPaused] = useState([])
     useEffect(() => {
         async function loadProductionNotStarted() {
-            let response = await api.get('/api/select/production_not_started')
+            let response = await api.post('/api/select/production_not_started', {id_setor : getIdSetor()})
+            console.log(response.data)
             setProductionNotStarted(response.data)
         }
         loadProductionNotStarted()

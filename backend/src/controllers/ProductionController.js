@@ -1,9 +1,11 @@
 const connectionPG = require('../database');
-const nextProcess = require('../functions/nextProcess')
+const nextProcess = require('../functions/nextProcess');
+const processesBySector = require('../functions/processesBySector');
 
 module.exports = {
 
   async selectProductionNotStarted(req, res) {
+    let { id_setor } = req.body;
     await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, prod_ped.observacao
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
@@ -17,8 +19,29 @@ module.exports = {
       productionNotStarted[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome)
       productionNotStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id)
     }
-    console.log(productionNotStarted)
-    return res.json(productionNotStarted)
+    let dataProcessesBySector = await processesBySector.processesBySector(id_setor)
+    let returnProductionNotStarter = []
+    for (let i = 0; i < productionNotStarted.length; i++) {
+      for (let j = 0; j < dataProcessesBySector.length; j++) {
+        if (productionNotStarted[i].id_processo === dataProcessesBySector[j].id_processo) {
+          returnProductionNotStarter[returnProductionNotStarter.length] = productionNotStarted[i]
+          break
+        }
+      }
+    }
+    console.log(returnProductionNotStarter)
+    /*let x = new Object()
+    for (let i = 0; i < productionNotStarted.length; i++) {
+      try {
+        x = [productionNotStarted.find(productionNotStarted => productionNotStarted.id_processo == dataProcessesBySector[i].id_processo)]
+        console.log("passei aqui1")
+      } catch (e) {
+        console.log("passei aqui2")
+        x = []
+      }
+    }
+    console.log(x)*/
+    return res.json(returnProductionNotStarter)
   },
 
   async selectProductionStarted(req, res) {
@@ -54,21 +77,22 @@ module.exports = {
   },
 
   async insertProduction(req, res) {
-    let { orderID, productID, userID } = req.body;
+    let { orderID, productID } = req.body;
     for (let i = 0; i < productID.length; i++) {
       await connectionPG.query(`select * from processos_por_produto where id_produto = ${productID[i].id} order by sequencia limit 1`)
         .then(results => processID = results.rows)
       await connectionPG.query(`insert into producao
-      (id_pedido, id_produto, id_processo, id_usuario, situacao)
-      values(${orderID}, ${productID[i].id}, ${processID[0].id_processo}, 1 , 0)`)
+      (id_pedido, id_produto, id_processo, situacao)
+      values(${orderID}, ${productID[i].id}, ${processID[0].id_processo}, 0)`)
     }
     return res.json().status(200)
   },
 
   async startProduction(req, res) {
     let { id } = req.params;
+    //let { id_usuario } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao set situacao = 1 where id = ${id}`)
+    await connectionPG.query(`update producao set situacao = 1  where id = ${id}`)//aqui devo adicionar o usuário que está iniciando o serviço
     await connectionPG.query(`insert into producao_tempo
     (id_producao, inicio)
     values(${id}, '${datetime.toISOString()}')`)

@@ -49,11 +49,11 @@ routes.put('/api/select/users_by_sector/:id', UsersBySectorController.selectUser
 routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBySector);
 
 routes.post('/api/insert/production', ProductionController.insertProduction);
-routes.put('/api/start/production/:id', ProductionController.startProduction);
+routes.post('/api/start/production/:id', ProductionController.startProduction);
 routes.put('/api/pause/production/:id', ProductionController.pauseProduction);
 routes.put('/api/resume/production/:id', ProductionController.resumeProduction);
 routes.put('/api/finish/production/:id', ProductionController.finishProduction);
-routes.get('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
+routes.post('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
 routes.get('/api/select/production_started', ProductionController.selectProductionStarted);
 routes.get('/api/select/production_paused', ProductionController.selectProductionPaused);
 routes.post('/api/start/many_productions', ProductionController.startManyProductions);
