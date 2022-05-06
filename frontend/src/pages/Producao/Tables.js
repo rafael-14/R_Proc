@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {getIdSetor} from '../../services/auth';
+import { getIdSetor } from '../../services/auth';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -95,20 +95,20 @@ export default function Tables() {
     let [productionPaused, setProductionPaused] = useState([])
     useEffect(() => {
         async function loadProductionNotStarted() {
-            let response = await api.post('/api/select/production_not_started', {id_setor : getIdSetor()})
+            let response = await api.post('/api/select/production_not_started', { id_setor: getIdSetor() })
             console.log(response.data)
             setProductionNotStarted(response.data)
         }
         loadProductionNotStarted()
 
         async function loadProductionStarted() {
-            let response = await api.get('/api/select/production_started')
+            let response = await api.post('/api/select/production_started', { id_setor: getIdSetor() })
             setProductionStarted(response.data)
         }
         loadProductionStarted()
 
         async function loadProductionPaused() {
-            let response = await api.get('/api/select/production_paused')
+            let response = await api.post('/api/select/production_paused', { id_setor: getIdSetor() })
             setProductionPaused(response.data)
         }
         loadProductionPaused()

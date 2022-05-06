@@ -20,31 +20,20 @@ module.exports = {
       productionNotStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id)
     }
     let dataProcessesBySector = await processesBySector.processesBySector(id_setor)
-    let returnProductionNotStarter = []
+    let returnProductionNotStarted = []
     for (let i = 0; i < productionNotStarted.length; i++) {
       for (let j = 0; j < dataProcessesBySector.length; j++) {
         if (productionNotStarted[i].id_processo === dataProcessesBySector[j].id_processo) {
-          returnProductionNotStarter[returnProductionNotStarter.length] = productionNotStarted[i]
+          returnProductionNotStarted[returnProductionNotStarted.length] = productionNotStarted[i]
           break
         }
       }
     }
-    console.log(returnProductionNotStarter)
-    /*let x = new Object()
-    for (let i = 0; i < productionNotStarted.length; i++) {
-      try {
-        x = [productionNotStarted.find(productionNotStarted => productionNotStarted.id_processo == dataProcessesBySector[i].id_processo)]
-        console.log("passei aqui1")
-      } catch (e) {
-        console.log("passei aqui2")
-        x = []
-      }
-    }
-    console.log(x)*/
-    return res.json(returnProductionNotStarter)
+    return res.json(returnProductionNotStarted)
   },
 
   async selectProductionStarted(req, res) {
+    let { id_setor } = req.body;
     await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo,prod_ped.observacao
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
@@ -57,10 +46,21 @@ module.exports = {
       productionStarted[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome)
       productionStarted[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id)
     }
-    return res.json(productionStarted)
+    let dataProcessesBySector = await processesBySector.processesBySector(id_setor)
+    let returnProductionStarted = []
+    for (let i = 0; i < productionStarted.length; i++) {
+      for (let j = 0; j < dataProcessesBySector.length; j++) {
+        if (productionStarted[i].id_processo === dataProcessesBySector[j].id_processo) {
+          returnProductionStarted[returnProductionStarted.length] = productionStarted[i]
+          break
+        }
+      }
+    }
+    return res.json(returnProductionStarted)
   },
 
   async selectProductionPaused(req, res) {
+    let { id_setor } = req.body;
     await connectionPG.query(`select prodc.*, prod.nome as nome_produto, proc.nome as nome_processo, prod_ped.observacao
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
@@ -73,7 +73,17 @@ module.exports = {
       productionPaused[i].nome_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].nome)
       productionPaused[i].id_proximo_processo = (dataNextProcess[0] === undefined ? null : dataNextProcess[0].id)
     }
-    return res.json(productionPaused)
+    let dataProcessesBySector = await processesBySector.processesBySector(id_setor)
+    let returnProductionPaused = []
+    for (let i = 0; i < productionPaused.length; i++) {
+      for (let j = 0; j < dataProcessesBySector.length; j++) {
+        if (productionPaused[i].id_processo === dataProcessesBySector[j].id_processo) {
+          returnProductionPaused[returnProductionPaused.length] = productionPaused[i]
+          break
+        }
+      }
+    }
+    return res.json(returnProductionPaused)
   },
 
   async insertProduction(req, res) {
