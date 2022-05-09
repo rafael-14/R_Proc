@@ -63,13 +63,14 @@ export default function Login() {
             color="secondary"
             value={sector}
             onChange={e => setSector(e.target.value)}
+            onKeyDown={e => e.key === "Enter" ? alert("dei enter"):null}
           />
           <TextField
             margin="normal"
             required
             fullWidth
             label="Senha"
-            //type="password"
+            type="password"
             color="secondary"
             value={password}
             onChange={e => setPassword(e.target.value)}

@@ -3,8 +3,10 @@ import api from '../../services/api';
 import {
     Button, Checkbox, TableBody, Card, styled, tableCellClasses,
     Typography, TableCell, CardHeader, CardContent, Container, Grid, TableRow,
-    Box, Toolbar, CardActions, createTheme, ThemeProvider, Table, TableHead
+    Box, Toolbar, CardActions, createTheme, ThemeProvider, Table, TableHead,
+    Dialog, DialogTitle, TextField, DialogContent, DialogContentText, Avatar, ListItemText
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getIdSetor } from '../../services/auth';
@@ -18,6 +20,29 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14
     }
 }));
+
+function HandleDialog(props) {
+    return (
+        <Dialog open={props.open} onClose={() => props.setOpen(false)} >
+            <DialogTitle>Digite Seu Código:</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    <TextField
+                        autoFocus
+                        id="dialogTextField"
+                        margin="dense"
+                        required
+                        fullWidth
+                        label="Código"
+                        type="password"
+                        color="secondary"
+                        onKeyDown={e => e.key === "Enter" ? alert(e.target.value) : null}
+                    />
+                </DialogContentText>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 export default function Tables() {
 
@@ -53,20 +78,20 @@ export default function Tables() {
 
     const [productionStatus, setProductionStatus] = useState(null)
     async function handleStartProduction(id, nome_produto, id_pedido) {
-        setProductionStatus(await api.post(`/api/start/production/${id}`))
-        handleNotification(nome_produto, id_pedido, "Iniciada", toast.info)
+        //setProductionStatus(await api.post(`/api/start/production/${id}`))
+        //handleNotification(nome_produto, id_pedido, "Iniciada", toast.info)
     }
     async function handlePauseProduction(id, nome_produto, id_pedido) {
-        setProductionStatus(await api.put(`/api/pause/production/${id}`))
-        handleNotification(nome_produto, id_pedido, "Pausada", toast.error)
+        //setProductionStatus(await api.put(`/api/pause/production/${id}`))
+        //handleNotification(nome_produto, id_pedido, "Pausada", toast.error)
     }
     async function handleResumeProduction(id, nome_produto, id_pedido) {
-        setProductionStatus(await api.put(`/api/resume/production/${id}`))
-        handleNotification(nome_produto, id_pedido, "Retomada", toast.warning)
+        //setProductionStatus(await api.put(`/api/resume/production/${id}`))
+        //handleNotification(nome_produto, id_pedido, "Retomada", toast.warning)
     }
     async function handleFinishProduction(id, id_proximo_processo, nome_produto, id_pedido) {
-        setProductionStatus(await api.put(`/api/finish/production/${id}`, { id_proximo_processo }))
-        handleNotification(nome_produto, id_pedido, "Concluída", toast.success)
+        //setProductionStatus(await api.put(`/api/finish/production/${id}`, { id_proximo_processo }))
+        //handleNotification(nome_produto, id_pedido, "Concluída", toast.success)
     }
     async function handleStartManyProductions() {
         setProductionStatus(await api.post(`/api/start/many_productions`, { checkboxStartProduction }))
@@ -96,7 +121,6 @@ export default function Tables() {
     useEffect(() => {
         async function loadProductionNotStarted() {
             let response = await api.post('/api/select/production_not_started', { id_setor: getIdSetor() })
-            console.log(response.data)
             setProductionNotStarted(response.data)
         }
         loadProductionNotStarted()
@@ -149,10 +173,18 @@ export default function Tables() {
         }
     }
 
+    let [open, setOpen] = useState(false);
+
+    async function verifyCode(value) {
+        //setReturnVerifyCode(await api.post(`/api/select/user_by_code`, {code: value}))
+        let response = await api.post(`/api/select/user_by_code`, { code: value })
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
+                <HandleDialog open={open} setOpen={setOpen}/>
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Table size="medium" stickyHeader>
@@ -193,7 +225,7 @@ export default function Tables() {
                                                 <CardActions>
                                                     <Grid container justifyContent="left">
                                                         <Button
-                                                            onClick={() => {
+                                                            onClick={() => {setOpen(true);
                                                                 checkboxStartProduction.length === 0 ?
                                                                     handleStartProduction(row.id, row.nome_produto, row.id_pedido)
                                                                     : handleStartManyProductions()

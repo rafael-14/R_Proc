@@ -28,6 +28,7 @@ routes.get('/api/select/users', UserController.selectAllUsers);
 routes.post('/api/insert/user', UserController.insertUser);
 routes.put('/api/inactivate/user/:id', UserController.inactivateUser);
 routes.put('/api/activate/user/:id', UserController.activateUser);
+routes.post('/api/select/user_by_code', UserController.userByCode);
 
 routes.put('/api/select/processes_by_user/:id', ProcessesByUserController.selectProcessesByUser);
 routes.post('/api/insert/processes_by_user', ProcessesByUserController.insertProcessesByUser);

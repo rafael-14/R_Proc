@@ -28,5 +28,16 @@ module.exports = {
     let { id } = req.params;
     await connectionPG.query(`update processo set ativo=true, data_inativacao=null where id = ${id}`)
     return res.json().status(200)
+  },
+
+  async userByCode(req, res) {
+    let { code } = req.body;
+    let status = 400
+    await connectionPG.query(`select * from usuario where senha = '${code}'`)
+      .then(results => { userByCode = results.rows })
+    if (userByCode[0] !== undefined) { 
+      status = 200
+    }
+    return res.json({userByCode, status})
   }
 };
