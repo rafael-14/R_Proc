@@ -12,14 +12,31 @@ import { getIdSetor } from '../../services/auth';
 
 function HandleDialog(props) {
 
+    async function handleNotificationError() {
+        toast.error(`Código Inexistente!`, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+
     async function verifyCode(value) {
         //setReturnVerifyCode(await api.post(`/api/select/user_by_code`, {code: value})) 
         let response = await api.post(`/api/select/user_by_code`, { code: value })
         if (response.data.status === 200) {
             props.setOpen(false)
             props.switchFunction()
+        } else {
+            setCode("")
+            handleNotificationError()
         }
     }
+
+    let [code, setCode] = useState("")
 
     return (
         <Dialog open={props.open} onClose={() => props.setOpen(false)} >
@@ -35,7 +52,9 @@ function HandleDialog(props) {
                         label="Código"
                         type="password"
                         color="secondary"
-                        onKeyDown={e => e.key === "Enter" ? verifyCode(e.target.value) : null}
+                        value={code}
+                        onChange={e => setCode(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" ? verifyCode(code) : null}
                     />
                 </DialogContentText>
             </DialogContent>
