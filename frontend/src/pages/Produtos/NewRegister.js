@@ -321,7 +321,7 @@ export default function Register() {
                 <Button
                   variant="contained"
                   style={{
-                    background: '#D32F2F',
+                    background: '#E74C3C',
                     color: "#FFFFFF"
                   }}
                   href="/"

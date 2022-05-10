@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete, Table, Typography, IconButton,
+    Button, TextField, Autocomplete, Table, Typography, IconButton,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse,
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#E8927C",
-        color: theme.palette.common.white
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
-
-const StyledTableCellCollapse = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#FBECE8",
-        color: theme.palette.common.black
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
 
 function Row(props) {
 
@@ -64,8 +44,8 @@ function Row(props) {
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <StyledTableCellCollapse align="center">Produtos</StyledTableCellCollapse>
-                                        <StyledTableCellCollapse align="center">Quantidade</StyledTableCellCollapse>
+                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="center">Produtos</TableCell>
+                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="center">Quantidade</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -129,8 +109,8 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell align="left" width="1%" />
-                                                <StyledTableCell align="center">Pedidos</StyledTableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center">Pedidos</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, Checkbox, TableBody, Card, styled, tableCellClasses,
+    Button, Checkbox, TableBody, Card,
     Typography, TableCell, CardHeader, CardContent, Container, Grid, TableRow,
     Box, Toolbar, CardActions, createTheme, ThemeProvider, Table, TableHead,
     Dialog, DialogTitle, TextField, DialogContent, DialogContentText
@@ -9,16 +9,6 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getIdSetor } from '../../services/auth';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#E8927C",
-        color: theme.palette.common.white
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
 
 function HandleDialog(props) {
 
@@ -212,9 +202,9 @@ export default function Tables() {
                     <Table size="medium" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center" width="50%">
+                                <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>
                                     A Fazer
-                                </StyledTableCell>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -257,9 +247,9 @@ export default function Tables() {
                                                                     : "handleStartManyProductions")
                                                             }}
                                                             variant="contained"
-                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            style={{ background: checkboxStartProduction.length === 0 ? '#E8927C' : '#3498DB', color: '#FFFFFF' }}
                                                         >
-                                                            Iniciar
+                                                            {checkboxStartProduction.length === 0 ? "INICIAR" : "INICIAR VÁRIOS"}
                                                         </Button>
                                                     </Grid>
                                                 </CardActions>
@@ -278,7 +268,7 @@ export default function Tables() {
                     <Table size="medium" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center" width="50%">Fazendo</StyledTableCell>
+                                <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>Fazendo</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -316,7 +306,7 @@ export default function Tables() {
                                                     <Grid container justifyContent="space-between">
                                                         <Button
                                                             variant="contained"
-                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#E74C3C', color: '#FFFFFF' }}
                                                             onClick={() => {
                                                                 setOpen(true);
                                                                 setParamsID(rowProduction.id);
@@ -327,11 +317,11 @@ export default function Tables() {
                                                                     : "handlePauseManyProductions")
                                                             }}
                                                         >
-                                                            Pausar
+                                                            {checkboxPause_FinishProduction.length === 0 ? "PAUSAR" : "PAUSAR VÁRIOS"}
                                                         </Button>
                                                         <Button
                                                             variant="contained"
-                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#08BC0C', color: '#FFFFFF' }}
                                                             onClick={() => {
                                                                 setOpen(true);
                                                                 setParamsID(rowProduction.id);
@@ -343,7 +333,7 @@ export default function Tables() {
                                                                     : "handleFinishManyProductions")
                                                             }}
                                                         >
-                                                            Finalizar
+                                                            {checkboxPause_FinishProduction.length === 0 ? "FINALIZAR" : "FINALIZAR VÁRIOS"}
                                                         </Button>
                                                     </Grid>
                                                 </CardActions>
@@ -362,7 +352,7 @@ export default function Tables() {
                     <Table size="medium" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center" width="50%">Pausado</StyledTableCell>
+                                <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausado</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -396,7 +386,7 @@ export default function Tables() {
                                                     <Grid container justifyContent="right">
                                                         <Button
                                                             variant="contained"
-                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            style={{ background: checkboxResumeProduction.length === 0 ? '#E8927C' : '#F1C40F', color: '#FFFFFF' }}
                                                             onClick={() => {
                                                                 setOpen(true);
                                                                 setParamsID(rowProductionPaused.id);
@@ -407,7 +397,7 @@ export default function Tables() {
                                                                     : "handleResumeManyProductions")
                                                             }}
                                                         >
-                                                            Retomar
+                                                            {checkboxResumeProduction.length === 0 ? "RETOMAR" : "RETOMAR VÁRIOS"}
                                                         </Button>
                                                     </Grid>
                                                 </CardActions>

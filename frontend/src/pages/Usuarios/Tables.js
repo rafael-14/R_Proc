@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete, Table, Typography, IconButton,
+    Button, TextField, Autocomplete, Table, Typography, IconButton,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse,
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#E8927C",
-        color: theme.palette.common.white
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
 
 function Row(props) {
 
@@ -118,9 +108,9 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell align="left" width="1%" />
-                                                <StyledTableCell align="center">Usuários</StyledTableCell>
-                                                <StyledTableCell align="right"></StyledTableCell>
+                                                <TableCell align="left" width="1%" style={{ background: '#E8927C', color: '#FFFFFF' }}/>
+                                                <TableCell align="center" style={{ background: '#E8927C', color: '#FFFFFF' }}>Usuários</TableCell>
+                                                <TableCell align="right" style={{ background: '#E8927C', color: '#FFFFFF' }}></TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

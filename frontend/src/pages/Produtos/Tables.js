@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete, Table,
+    Button, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, Collapse, createTheme, Switch,
     IconButton, Typography, ThemeProvider, Chip
@@ -10,26 +10,6 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CreateIcon from '@mui/icons-material/Create';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#E8927C",
-        color: theme.palette.common.white
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
-
-const StyledTableCellCollapse = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#FBECE8",
-        color: theme.palette.common.black
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
 
 function Row(props) {
 
@@ -88,7 +68,12 @@ function Row(props) {
                                     <TableRow>
                                         {processesByProduct.map((row) => (
                                             row.sequencia ?
-                                                <StyledTableCellCollapse align="center">{row.sequencia}º Processo</StyledTableCellCollapse>
+                                                <TableCell
+                                                    align="center"
+                                                    style={{ background: '#FBECE8', color: '#000000' }}
+                                                >
+                                                    {row.sequencia}º Processo
+                                                </TableCell>
                                                 : null
                                         ))}
                                     </TableRow>
@@ -186,10 +171,10 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader >
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell align="left" width="1%" />
-                                                <StyledTableCell align="center" width="69%">Produtos</StyledTableCell>
-                                                <StyledTableCell align="center" width="15%">Situação</StyledTableCell>
-                                                <StyledTableCell align="right" width="15%" />
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center" width="69%">Produtos</TableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center" width="15%">Situação</TableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right" width="15%" />
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

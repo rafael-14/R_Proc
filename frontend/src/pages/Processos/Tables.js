@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, styled, tableCellClasses, TextField, Autocomplete, Table,
+    Button, TextField, Autocomplete, Table,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, createTheme, ThemeProvider
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "#E8927C",
-        color: theme.palette.common.white
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14
-    }
-}));
 
 export default function Tables() {
 
@@ -61,8 +51,8 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell align="left">Processos</StyledTableCell>
-                                                <StyledTableCell align="right"></StyledTableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Processos</TableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right"></TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

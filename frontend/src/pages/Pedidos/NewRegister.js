@@ -241,7 +241,7 @@ export default function Register() {
 
                           </TableCell>
                           <TableCell align="center">
-                            <Fab onClick={() => handleRemoveOrderProduct(row)} size="small" style={{ backgroundColor: '#D32F2F', color: "#FFFFFF" }}>
+                            <Fab onClick={() => handleRemoveOrderProduct(row)} size="small" style={{ backgroundColor: '#E74C3C', color: "#FFFFFF" }}>
                               <RemoveIcon />
                             </Fab>
                           </TableCell>
@@ -259,7 +259,7 @@ export default function Register() {
                 <Button
                   variant="contained"
                   style={{
-                    background: '#D32F2F',
+                    background: '#E74C3C',
                     color: "#FFFFFF"
                   }}
                   href="/pedidos"
