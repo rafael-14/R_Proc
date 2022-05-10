@@ -19,7 +19,7 @@ export default function Login() {
 
   const theme = createTheme({
     palette: {
-      primary: { main: '#FF7A40' },
+      primary: { main: '#E8927C' },
       secondary: { main: '#000000' }
     }
   })
@@ -52,7 +52,7 @@ export default function Login() {
             alignItems: 'center',
           }}
         >
-          <Avatar style={{ color: '#FFFFFF', backgroundColor: "#FF7A40" }}>
+          <Avatar style={{ color: '#FFFFFF', backgroundColor: "#E8927C" }}>
             <LockOutlinedIcon />
           </Avatar>
           <TextField
@@ -80,7 +80,7 @@ export default function Login() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             style={{
-              background: '#FF7A40',
+              background: '#E8927C',
               color: "#FFFFFF",
             }}
             onClick={() => handleSubmit()}
