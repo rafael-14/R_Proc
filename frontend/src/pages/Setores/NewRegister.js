@@ -177,20 +177,25 @@ export default function Register() {
                   </Table>
                 </TableContainer>
               </Grid>
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewSector()}>
-                Salvar
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  background: '#D32F2F',
-                  color: "#FFFFFF",
-                  marginInlineStart: 15
-                }}
-                href="/setores"
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-end"
               >
-                Cancelar
-              </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    background: '#D32F2F',
+                    color: "#FFFFFF"
+                  }}
+                  href="/setores"
+                >
+                  Cancelar
+                </Button>
+                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewSector()}>
+                  Salvar
+                </Button>
+              </Grid>
             </Grid>
           </Paper>
         </Container>

@@ -104,20 +104,25 @@ export default function Register() {
                 />
               </FormGroup>
               <br />
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProcess()}>
-                Salvar
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  background: '#D32F2F',
-                  color: "#FFFFFF",
-                  marginInlineStart: 15
-                }}
-                href="/processos"
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-end"
               >
-                Cancelar
-              </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    background: '#D32F2F',
+                    color: "#FFFFFF"
+                  }}
+                  href="/processos"
+                >
+                  Cancelar
+                </Button>
+                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProcess()}>
+                  Salvar
+                </Button>
+              </Grid>
             </Grid>
           </Paper>
         </Container>

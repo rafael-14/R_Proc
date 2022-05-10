@@ -113,7 +113,7 @@ export default function Register() {
             if (response.status === 200) {
               handleNotificationSuccess(productName)
             }
-          } catch (e) {}
+          } catch (e) { }
           if (cleanFabricationOrder) {
             setFabricationOrder([])
           }
@@ -313,20 +313,25 @@ export default function Register() {
                   </TableContainer>
                 </Grid>
               </Grid>
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewProduct()}>
-                Salvar
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  background: '#D32F2F',
-                  color: "#FFFFFF",
-                  marginInlineStart: 15
-                }}
-                href="/"
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-end"
               >
-                Cancelar
-              </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    background: '#D32F2F',
+                    color: "#FFFFFF"
+                  }}
+                  href="/"
+                >
+                  Cancelar
+                </Button>
+                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProduct()}>
+                  Salvar
+                </Button>
+              </Grid>
             </Grid>
           </Paper>
         </Container>

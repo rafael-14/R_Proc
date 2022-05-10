@@ -231,20 +231,25 @@ export default function Register() {
                   </Table>
                 </TableContainer>
               </Grid>
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => checkFields()}>
-                Salvar
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  background: '#D32F2F',
-                  color: "#FFFFFF",
-                  marginInlineStart: 15
-                }}
-                href="/processos"
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-end"
               >
-                Cancelar
-              </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    background: '#D32F2F',
+                    color: "#FFFFFF"
+                  }}
+                  href="/processos"
+                >
+                  Cancelar
+                </Button>
+                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => checkFields()}>
+                  Salvar
+                </Button>
+              </Grid>
             </Grid>
           </Paper>
         </Container>

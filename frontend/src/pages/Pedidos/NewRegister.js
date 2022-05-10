@@ -230,7 +230,7 @@ export default function Register() {
                             />
                           </TableCell>
                           <TableCell align="center">
-                            
+
                             {row.productNote ? (<TextField
                               multiline
                               value={row.productNote}
@@ -251,20 +251,25 @@ export default function Register() {
                   </Table>
                 </TableContainer>
               </Grid>) : null}
-              <Button variant="contained" style={{ color: '#FFFFFF' }} onClick={() => handleNewOrder()}>
-                Salvar
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  background: '#D32F2F',
-                  color: "#FFFFFF",
-                  marginInlineStart: 15
-                }}
-                href="/pedidos"
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-end"
               >
-                Cancelar
-              </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    background: '#D32F2F',
+                    color: "#FFFFFF"
+                  }}
+                  href="/pedidos"
+                >
+                  Cancelar
+                </Button>
+                <Button variant="contained" style={{ color: '#FFFFFF',marginInlineStart: 15 }} onClick={() => handleNewOrder()}>
+                  Salvar
+                </Button>
+              </Grid>
             </Grid>
           </Paper>
         </Container>

@@ -245,7 +245,7 @@ export default function Tables() {
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
-                                                    <Grid container justifyContent="left">
+                                                    <Grid container justifyContent="right">
                                                         <Button
                                                             onClick={() => {
                                                                 setOpen(true);
@@ -320,6 +320,21 @@ export default function Tables() {
                                                             onClick={() => {
                                                                 setOpen(true);
                                                                 setParamsID(rowProduction.id);
+                                                                setParamsName(rowProduction.nome_produto);
+                                                                setParamsOrder(rowProduction.id_pedido);
+                                                                setFunctionToBeExecuted(checkboxPause_FinishProduction.length === 0 ?
+                                                                    "handlePauseProduction"
+                                                                    : "handlePauseManyProductions")
+                                                            }}
+                                                        >
+                                                            Pausar
+                                                        </Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                                            onClick={() => {
+                                                                setOpen(true);
+                                                                setParamsID(rowProduction.id);
                                                                 setParamsIdNextProcess(rowProduction.id_proximo_processo)
                                                                 setParamsName(rowProduction.nome_produto);
                                                                 setParamsOrder(rowProduction.id_pedido);
@@ -329,21 +344,6 @@ export default function Tables() {
                                                             }}
                                                         >
                                                             Finalizar
-                                                        </Button>
-                                                        <Button
-                                                            variant="contained"
-                                                            style={{ background: '#E8927C', color: '#FFFFFF' }}
-                                                            onClick={() => {
-                                                                setOpen(true);
-                                                                setParamsID(rowProduction.id);
-                                                                setParamsName(rowProduction.nome_produto);
-                                                                setParamsOrder(rowProduction.id_pedido);
-                                                                setFunctionToBeExecuted(checkboxPause_FinishProduction.length === 0 ?
-                                                                    "handlePauseProduction"
-                                                                    : "handlePauseManyProductions")
-                                                            }}
-                                                        >
-                                                            Pausar
                                                         </Button>
                                                     </Grid>
                                                 </CardActions>
@@ -393,7 +393,7 @@ export default function Tables() {
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
-                                                    <Grid container justifyContent="center">
+                                                    <Grid container justifyContent="right">
                                                         <Button
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
