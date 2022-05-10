@@ -10,7 +10,7 @@ import {setIdSetor, login} from '../../services/auth';
 function Copyright() {
   return (
     <Typography variant="body2" align="center">
-      {`Virtual Jóias ${new Date().getFullYear()}.`}
+      {`Virtual Joias ${new Date().getFullYear()}.`}
     </Typography>
   );
 }

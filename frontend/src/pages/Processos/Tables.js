@@ -61,14 +61,14 @@ export default function Tables() {
                                     <Table size="medium" stickyHeader>
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell align="center">Processos</StyledTableCell>
+                                                <StyledTableCell align="left">Processos</StyledTableCell>
                                                 <StyledTableCell align="right"></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {processes.map((row) => (
                                                 <TableRow key={row.id}>
-                                                    <TableCell align="center">{row.nome}</TableCell>
+                                                    <TableCell align="left">{row.nome}</TableCell>
                                                     <TableCell align="right" size="small" width="1%">
                                                         <abbr title="Editar">
                                                             <Button style={{ color: '#000000' }}>

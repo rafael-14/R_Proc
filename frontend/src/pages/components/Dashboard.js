@@ -60,7 +60,7 @@ export default function Dashboard(props) {
 
   const Componente = props.componente;
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };

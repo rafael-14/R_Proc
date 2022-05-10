@@ -22,6 +22,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 function HandleDialog(props) {
+
+    async function verifyCode(value) {
+        //setReturnVerifyCode(await api.post(`/api/select/user_by_code`, {code: value})) 
+        let response = await api.post(`/api/select/user_by_code`, { code: value })
+        if (response.data.status === 200) {
+            props.setOpen(false)
+            props.switchFunction()
+        }
+    }
+
     return (
         <Dialog open={props.open} onClose={() => props.setOpen(false)} >
             <DialogTitle>Digite Seu Código:</DialogTitle>
@@ -36,7 +46,7 @@ function HandleDialog(props) {
                         label="Código"
                         type="password"
                         color="secondary"
-                        onKeyDown={e => e.key === "Enter" ? alert(e.target.value) : null}
+                        onKeyDown={e => e.key === "Enter" ? verifyCode(e.target.value) : null}
                     />
                 </DialogContentText>
             </DialogContent>
@@ -76,10 +86,13 @@ export default function Tables() {
         })
     }
 
-    const [productionStatus, setProductionStatus] = useState(null)
-    async function handleStartProduction(id, nome_produto, id_pedido) {
-        //setProductionStatus(await api.post(`/api/start/production/${id}`))
-        //handleNotification(nome_produto, id_pedido, "Iniciada", toast.info)
+    let [paramsID, setParamsID] = useState(null)
+    let [paramsName, setParamsName] = useState(null)
+    let [paramsOrder, setParamsOrder] = useState(null)
+    let [paramsIdNextProcess, setParamsIdNextProcess] = useState(null)
+    async function handleStartProduction() {
+        setProductionStatus(await api.post(`/api/start/production/${paramsID}`))
+        handleNotification(paramsName, paramsOrder, "Iniciada", toast.info)
     }
     async function handlePauseProduction(id, nome_produto, id_pedido) {
         //setProductionStatus(await api.put(`/api/pause/production/${id}`))
@@ -113,6 +126,21 @@ export default function Tables() {
         setCheckboxPause_FinishProduction([])
         setCheckboxNextProcesses([])
         handleNotificationManyProductions("Concluídas", toast.success)
+    }
+
+    const [productionStatus, setProductionStatus] = useState(null)
+    let [functionToBeExecuted, setFunctionToBeExecuted] = useState(null)
+    async function switchFunction() {
+        switch (functionToBeExecuted) {
+            case "handleStartProduction": handleStartProduction(); break
+            case "handlePauseProduction": handlePauseProduction(); break
+            case "handleResumeProduction": handleResumeProduction(); break
+            case "handleFinishProduction": handleFinishProduction(); break
+            case "handleStartManyProductions": handleStartManyProductions(); break
+            case "handlePauseManyProductions": handlePauseManyProductions(); break
+            case "handleResumeManyProductions": handleResumeManyProductions(); break
+            case "handleFinishManyProductions": handleFinishManyProductions(); break
+        }
     }
 
     let [productionNotStarted, setProductionNotStarted] = useState([])
@@ -175,16 +203,11 @@ export default function Tables() {
 
     let [open, setOpen] = useState(false);
 
-    async function verifyCode(value) {
-        //setReturnVerifyCode(await api.post(`/api/select/user_by_code`, {code: value}))
-        let response = await api.post(`/api/select/user_by_code`, { code: value })
-    }
-
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <HandleDialog open={open} setOpen={setOpen}/>
+                <HandleDialog open={open} setOpen={setOpen} functionToBeExecuted={functionToBeExecuted} switchFunction={switchFunction}/>
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Table size="medium" stickyHeader>
@@ -204,7 +227,7 @@ export default function Tables() {
                                                 <CardHeader
                                                     title={row.nome_processo}
                                                     titleTypographyProps={{ align: 'right' }}
-                                                    subheader={row.nome_proximo_processo}
+                                                    subheader={row.nome_proximo_processo ? row.nome_proximo_processo : <br />}
                                                     subheaderTypographyProps={{ align: 'right', }}
                                                     avatar={<Checkbox onClick={() => handleCheckboxStartProduction(row.id)} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
@@ -218,17 +241,27 @@ export default function Tables() {
                                                             {row.nome_produto}
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
-                                                            {row.observacao}
+                                                            {row.observacao ? row.observacao : <br />}
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
                                                     <Grid container justifyContent="left">
                                                         <Button
-                                                            onClick={() => {setOpen(true);
-                                                                checkboxStartProduction.length === 0 ?
-                                                                    handleStartProduction(row.id, row.nome_produto, row.id_pedido)
-                                                                    : handleStartManyProductions()
+                                                            //onClick={() => {
+                                                            //    setOpen(true);
+                                                            //    checkboxStartProduction.length === 0 ?
+                                                            //        handleStartProduction(row.id, row.nome_produto, row.id_pedido)
+                                                            //        : handleStartManyProductions()    
+                                                            //}}
+                                                            onClick={() => {
+                                                                setOpen(true);
+                                                                setParamsID(row.id);
+                                                                setParamsName(row.nome_produto);
+                                                                setParamsOrder(row.id_pedido);
+                                                                checkboxStartProduction.length === 0 ? 
+                                                                    setFunctionToBeExecuted("handleStartProduction")
+                                                                    : setFunctionToBeExecuted("handleStartManyProductions")
                                                             }}
                                                             variant="contained"
                                                             style={{ background: '#E8927C', color: '#FFFFFF' }}
