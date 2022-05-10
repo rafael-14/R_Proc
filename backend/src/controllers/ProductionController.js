@@ -128,16 +128,16 @@ module.exports = {
   },
 
   async finishProduction(req, res) {
-    let { id_proximo_processo } = req.body;
+    let { paramsIdNextProcess } = req.body;
     let { id } = req.params;
     let datetime = new Date
     await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
     await connectionPG.query(`update producao set situacao = 4 where id = ${id} returning *`)
       .then(results => { productFinished = results.rows })
-    if (id_proximo_processo) {
+    if (paramsIdNextProcess) {
       await connectionPG.query(`insert into producao
       (id_pedido, id_produto, id_processo, id_usuario, situacao)
-      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${id_proximo_processo}, 1 , 0)`)
+      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${paramsIdNextProcess}, 1 , 0)`)
     }
     return res.json().status(200)
   },
