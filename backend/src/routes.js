@@ -33,6 +33,7 @@ routes.post('/api/select/user_by_code', UserController.userByCode);
 routes.put('/api/select/processes_by_user/:id', ProcessesByUserController.selectProcessesByUser);
 routes.post('/api/insert/processes_by_user', ProcessesByUserController.insertProcessesByUser);
 routes.post('/api/verify/process_by_user', ProcessesByUserController.verifyProcessByUser);
+routes.post('/api/verify/processes_by_user', ProcessesByUserController.verifyProcessesByUser);
 
 routes.get('/api/select/orders', OrderController.selectAllOrders);
 routes.post('/api/insert/order', OrderController.insertOrder);

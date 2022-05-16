@@ -21,10 +21,24 @@ module.exports = {
 
   async verifyProcessByUser(req, res) {
     let { id, idProcess } = req.body;
+
     await connectionPG.query(`SELECT * FROM processos_por_usuario
     where id_usuario = ${id} and id_processo = ${idProcess}`)
       .then(results => { processByUser = results.rows })
     return res.json(processByUser)
+  },
+
+  async verifyProcessesByUser(req, res) {
+    let { id, idProcesses } = req.body;
+    for (let i = 0; i < idProcesses.length; i++) {
+      await connectionPG.query(`SELECT * FROM processos_por_usuario
+      where id_usuario = ${id} and id_processo = ${idProcesses[i]}`)
+        .then(results => { processByUser = results.rows })
+      if (processByUser.length === 0) {
+        return res.json({ status: 400 })
+      }
+    }
+    return res.json({ status: 200 })
   },
 
 };

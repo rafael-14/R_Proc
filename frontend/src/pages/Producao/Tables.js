@@ -208,16 +208,38 @@ export default function Tables() {
         }
     }
 
+    let [checkboxIdProcesses, setCheckboxIdProcesses] = useState([])
+    function handleCheckboxIdProcesses(id) {
+        let index = checkboxIdProcesses.indexOf(id)
+        if (index === -1) {
+            setCheckboxIdProcesses([...checkboxIdProcesses, id])
+        }
+
+    }
+
     let [open, setOpen] = useState(false);
     async function handleUser(data) {
-        let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
-        setOpen(false)
-        setCode("")
-        if (response.data.length === 0) {
-            handleNotificationError('Usuário Não Possui Permissão!')
+        if (checkboxStartProduction.length === 0 && checkboxPause_FinishProduction.length === 0 && checkboxResumeProduction.length === 0) {
+            let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
+            setOpen(false)
+            setCode("")
+            if (response.data.status === 400) {
+                handleNotificationError('Usuário Não Possui Permissão!')
+            }
+            else {
+                switchFunction()
+            }
         }
         else {
-            switchFunction()
+            let response = await api.post(`/api/verify/processes_by_user`, { id: data.id, idProcesses: checkboxIdProcesses })
+            setOpen(false)
+            setCode("")
+            if (response.data.status === 400) {
+                handleNotificationError('Usuário Não Possui Permissão!')
+            }
+            else {
+                switchFunction()
+            }
         }
     }
 
@@ -225,6 +247,7 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
+                <Button onClick={() => console.log(checkboxIdProcesses)}>asdjfbaji</Button>
                 <HandleDialog open={open} setOpen={setOpen} handleUser={handleUser} handleNotificationError={handleNotificationError} code={code} setCode={setCode} />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
@@ -247,7 +270,10 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={row.nome_proximo_processo ? row.nome_proximo_processo : <br />}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox onClick={() => handleCheckboxStartProduction(row.id)} />}
+                                                    avatar={<Checkbox onClick={() => {
+                                                        handleCheckboxStartProduction(row.id);
+                                                        handleCheckboxIdProcesses(parseInt(row.id_processo))
+                                                    }} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
                                                 <CardContent>
@@ -313,9 +339,10 @@ export default function Tables() {
                                                     subheader={rowProduction.nome_proximo_processo ? rowProduction.nome_proximo_processo : <br />}
                                                     subheaderTypographyProps={{ align: 'right', }}
                                                     avatar={
-                                                        <Checkbox onClick={
-                                                            () => handleCheckboxPause_FinishProduction(rowProduction.id, rowProduction.id_proximo_processo)
-                                                        } />
+                                                        <Checkbox onClick={() => {
+                                                            handleCheckboxPause_FinishProduction(rowProduction.id, rowProduction.id_proximo_processo);
+                                                            handleCheckboxIdProcesses(parseInt(rowProduction.id_processo))
+                                                        }} />
                                                     }
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
@@ -398,7 +425,10 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={rowProductionPaused.nome_proximo_processo ? rowProductionPaused.nome_proximo_processo : <br />}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox onClick={() => handleCheckboxResumeProduction(rowProductionPaused.id)} />}
+                                                    avatar={<Checkbox onClick={() => {
+                                                        handleCheckboxResumeProduction(rowProductionPaused.id);
+                                                        handleCheckboxIdProcesses(parseInt(rowProductionPaused.id_processo))
+                                                    }} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
                                                 <CardContent>
@@ -446,4 +476,3 @@ export default function Tables() {
         </ThemeProvider >
     );
 }
-
