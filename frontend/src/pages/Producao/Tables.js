@@ -12,34 +12,18 @@ import { getIdSetor } from '../../services/auth';
 
 function HandleDialog(props) {
 
-    async function handleNotificationError() {
-        toast.error(`Código Inexistente!`, {
-            position: "top-right",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-        })
-    }
-
     async function verifyCode(value) {
-        //setReturnVerifyCode(await api.post(`/api/select/user_by_code`, {code: value})) 
         let response = await api.post(`/api/select/user_by_code`, { code: value })
         if (response.data.status === 200) {
-            props.setOpen(false)
-            props.switchFunction()
+            props.handleUser(response.data.userByCode[0])
         } else {
-            setCode("")
-            handleNotificationError()
+            props.handleNotificationError('Código Inexistente!')
+            props.setCode("")
         }
     }
 
-    let [code, setCode] = useState("")
-
     return (
-        <Dialog open={props.open} onClose={() => props.setOpen(false)} >
+        <Dialog open={props.open} onClose={() => { props.setOpen(false); props.setCode("") }} >
             <DialogTitle>Digite Seu Código:</DialogTitle>
             <DialogContent>
                 <DialogContentText>
@@ -52,9 +36,9 @@ function HandleDialog(props) {
                         label="Código"
                         type="password"
                         color="secondary"
-                        value={code}
-                        onChange={e => setCode(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" ? verifyCode(code) : null}
+                        value={props.code}
+                        onChange={e => props.setCode(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" ? verifyCode(props.code) : null}
                     />
                 </DialogContentText>
             </DialogContent>
@@ -64,12 +48,26 @@ function HandleDialog(props) {
 
 export default function Tables() {
 
+    let [code, setCode] = useState("")
+
     const theme = createTheme({
         palette: {
             primary: { main: '#E8927C' },
             secondary: { main: '#000000' }
         }
     })
+
+    async function handleNotificationError(msg) {
+        toast.error(msg, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
 
     async function handleNotification(nome_produto, id_pedido, status, toast) {
         toast(`Produção do Produto: ${nome_produto} do Pedido: ${id_pedido} ${status}!`, {
@@ -98,6 +96,7 @@ export default function Tables() {
     let [paramsName, setParamsName] = useState(null)
     let [paramsOrder, setParamsOrder] = useState(null)
     let [paramsIdNextProcess, setParamsIdNextProcess] = useState(null)
+    let [paramsIdProcess, setParamsIdProcess] = useState(null)
     async function handleStartProduction() {
         setProductionStatus(await api.post(`/api/start/production/${paramsID}`))
         handleNotification(paramsName, paramsOrder, "Iniciada", toast.info)
@@ -210,12 +209,23 @@ export default function Tables() {
     }
 
     let [open, setOpen] = useState(false);
+    async function handleUser(data) {
+        let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
+        setOpen(false)
+        setCode("")
+        if (response.data.length === 0) {
+            handleNotificationError('Usuário Não Possui Permissão!')
+        }
+        else {
+            switchFunction()
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <HandleDialog open={open} setOpen={setOpen} functionToBeExecuted={functionToBeExecuted} switchFunction={switchFunction} />
+                <HandleDialog open={open} setOpen={setOpen} handleUser={handleUser} handleNotificationError={handleNotificationError} code={code} setCode={setCode} />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Table size="medium" stickyHeader>
@@ -261,6 +271,7 @@ export default function Tables() {
                                                                 setParamsID(row.id);
                                                                 setParamsName(row.nome_produto);
                                                                 setParamsOrder(row.id_pedido);
+                                                                setParamsIdProcess(row.id_processo);
                                                                 setFunctionToBeExecuted(checkboxStartProduction.length === 0 ?
                                                                     "handleStartProduction"
                                                                     : "handleStartManyProductions")
@@ -331,6 +342,7 @@ export default function Tables() {
                                                                 setParamsID(rowProduction.id);
                                                                 setParamsName(rowProduction.nome_produto);
                                                                 setParamsOrder(rowProduction.id_pedido);
+                                                                setParamsIdProcess(rowProduction.id_processo);
                                                                 setFunctionToBeExecuted(checkboxPause_FinishProduction.length === 0 ?
                                                                     "handlePauseProduction"
                                                                     : "handlePauseManyProductions")
@@ -347,6 +359,7 @@ export default function Tables() {
                                                                 setParamsIdNextProcess(rowProduction.id_proximo_processo)
                                                                 setParamsName(rowProduction.nome_produto);
                                                                 setParamsOrder(rowProduction.id_pedido);
+                                                                setParamsIdProcess(rowProduction.id_processo);
                                                                 setFunctionToBeExecuted(checkboxPause_FinishProduction.length === 0 ?
                                                                     "handleFinishProduction"
                                                                     : "handleFinishManyProductions")
@@ -411,6 +424,7 @@ export default function Tables() {
                                                                 setParamsID(rowProductionPaused.id);
                                                                 setParamsName(rowProductionPaused.nome_produto);
                                                                 setParamsOrder(rowProductionPaused.id_pedido);
+                                                                setParamsIdProcess(rowProductionPaused.id_processo);
                                                                 setFunctionToBeExecuted(checkboxResumeProduction.length === 0 ?
                                                                     "handleResumeProduction"
                                                                     : "handleResumeManyProductions")

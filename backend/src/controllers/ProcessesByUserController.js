@@ -18,5 +18,13 @@ module.exports = {
       .then(results => { processesByUser = results.rows })
     return res.json(processesByUser)
   },
-  
+
+  async verifyProcessByUser(req, res) {
+    let { id, idProcess } = req.body;
+    await connectionPG.query(`SELECT * FROM processos_por_usuario
+    where id_usuario = ${id} and id_processo = ${idProcess}`)
+      .then(results => { processByUser = results.rows })
+    return res.json(processByUser)
+  },
+
 };

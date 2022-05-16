@@ -37,6 +37,8 @@ module.exports = {
       .then(results => { userByCode = results.rows })
     if (userByCode[0] !== undefined) {
       status = 200
+      //await connectionPG.query(`select * from usuario where senha = '${code}'`)
+      //  .then(results => { userByCode = results.rows })
     }
     return res.json({ userByCode, status })
   }
