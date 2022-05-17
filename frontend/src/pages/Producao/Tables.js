@@ -208,13 +208,38 @@ export default function Tables() {
         }
     }
 
-    let [checkboxIdProcesses, setCheckboxIdProcesses] = useState([])
-    function handleCheckboxIdProcesses(id) {
-        let index = checkboxIdProcesses.indexOf(id)
+    let [checkboxIdProcessesStart, setCheckboxIdProcessesStart] = useState([])
+    function handleCheckboxIdProcessesStart(idProcess, id) {
+        let index = checkboxIdProcessesStart.indexOf(checkboxIdProcessesStart.find(checkboxIdProcessesStart => checkboxIdProcessesStart.id === id))
+        console.log(index)
         if (index === -1) {
-            setCheckboxIdProcesses([...checkboxIdProcesses, id])
+            setCheckboxIdProcessesStart([...checkboxIdProcessesStart, { idProcess, id }])
+        } else {
+            checkboxIdProcessesStart.splice(index, 1)
+            setCheckboxIdProcessesStart([...checkboxIdProcessesStart])
         }
-
+    }
+    let [checkboxIdProcessesPauseFinish, setCheckboxIdProcessesPauseFinish] = useState([])
+    function handleCheckboxIdProcessesPauseFinish(idProcess, id) {
+        let index = checkboxIdProcessesPauseFinish.indexOf(checkboxIdProcessesPauseFinish.find(checkboxIdProcessesPauseFinish => checkboxIdProcessesPauseFinish.id === id))
+        console.log(index)
+        if (index === -1) {
+            setCheckboxIdProcessesPauseFinish([...checkboxIdProcessesPauseFinish, { idProcess, id }])
+        } else {
+            checkboxIdProcessesPauseFinish.splice(index, 1)
+            setCheckboxIdProcessesPauseFinish([...checkboxIdProcessesPauseFinish])
+        }
+    }
+    let [checkboxIdProcessesResume, setCheckboxIdProcessesResume] = useState([])
+    function handleCheckboxIdProcessesResume(idProcess, id) {
+        let index = checkboxIdProcessesResume.indexOf(checkboxIdProcessesResume.find(checkboxIdProcessesResume => checkboxIdProcessesResume.id === id))
+        console.log(index)
+        if (index === -1) {
+            setCheckboxIdProcessesResume([...checkboxIdProcessesResume, { idProcess, id }])
+        } else {
+            checkboxIdProcessesResume.splice(index, 1)
+            setCheckboxIdProcessesResume([...checkboxIdProcessesResume])
+        }
     }
 
     let [open, setOpen] = useState(false);
@@ -231,7 +256,13 @@ export default function Tables() {
             }
         }
         else {
-            let response = await api.post(`/api/verify/processes_by_user`, { id: data.id, idProcesses: checkboxIdProcesses })
+            let idProcesses
+            switch (functionToBeExecuted) {
+                case "handleStartManyProductions": idProcesses = checkboxIdProcessesStart; break
+                case "handleResumeManyProductions": idProcesses = checkboxIdProcessesResume; break
+                default: idProcesses = checkboxIdProcessesPauseFinish; break
+            }
+            let response = await api.post(`/api/verify/processes_by_user`, { id: data.id, idProcesses })
             setOpen(false)
             setCode("")
             if (response.data.status === 400) {
@@ -247,7 +278,6 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <Button onClick={() => console.log(checkboxIdProcesses)}>asdjfbaji</Button>
                 <HandleDialog open={open} setOpen={setOpen} handleUser={handleUser} handleNotificationError={handleNotificationError} code={code} setCode={setCode} />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
@@ -272,7 +302,7 @@ export default function Tables() {
                                                     subheaderTypographyProps={{ align: 'right', }}
                                                     avatar={<Checkbox onClick={() => {
                                                         handleCheckboxStartProduction(row.id);
-                                                        handleCheckboxIdProcesses(parseInt(row.id_processo))
+                                                        handleCheckboxIdProcessesStart(parseInt(row.id_processo), row.id)
                                                     }} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />
@@ -341,7 +371,7 @@ export default function Tables() {
                                                     avatar={
                                                         <Checkbox onClick={() => {
                                                             handleCheckboxPause_FinishProduction(rowProduction.id, rowProduction.id_proximo_processo);
-                                                            handleCheckboxIdProcesses(parseInt(rowProduction.id_processo))
+                                                            handleCheckboxIdProcessesPauseFinish(parseInt(rowProduction.id_processo), rowProduction.id)
                                                         }} />
                                                     }
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
@@ -427,7 +457,7 @@ export default function Tables() {
                                                     subheaderTypographyProps={{ align: 'right', }}
                                                     avatar={<Checkbox onClick={() => {
                                                         handleCheckboxResumeProduction(rowProductionPaused.id);
-                                                        handleCheckboxIdProcesses(parseInt(rowProductionPaused.id_processo))
+                                                        handleCheckboxIdProcessesResume(parseInt(rowProductionPaused.id_processo), rowProductionPaused.id)
                                                     }} />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
                                                 />

@@ -32,7 +32,7 @@ module.exports = {
     let { id, idProcesses } = req.body;
     for (let i = 0; i < idProcesses.length; i++) {
       await connectionPG.query(`SELECT * FROM processos_por_usuario
-      where id_usuario = ${id} and id_processo = ${idProcesses[i]}`)
+      where id_usuario = ${id} and id_processo = ${idProcesses[i].idProcess}`)
         .then(results => { processByUser = results.rows })
       if (processByUser.length === 0) {
         return res.json({ status: 400 })
