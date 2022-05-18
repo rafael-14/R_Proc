@@ -211,7 +211,6 @@ export default function Tables() {
     let [checkboxIdProcessesStart, setCheckboxIdProcessesStart] = useState([])
     function handleCheckboxIdProcessesStart(idProcess, id) {
         let index = checkboxIdProcessesStart.indexOf(checkboxIdProcessesStart.find(checkboxIdProcessesStart => checkboxIdProcessesStart.id === id))
-        console.log(index)
         if (index === -1) {
             setCheckboxIdProcessesStart([...checkboxIdProcessesStart, { idProcess, id }])
         } else {
@@ -222,7 +221,6 @@ export default function Tables() {
     let [checkboxIdProcessesPauseFinish, setCheckboxIdProcessesPauseFinish] = useState([])
     function handleCheckboxIdProcessesPauseFinish(idProcess, id) {
         let index = checkboxIdProcessesPauseFinish.indexOf(checkboxIdProcessesPauseFinish.find(checkboxIdProcessesPauseFinish => checkboxIdProcessesPauseFinish.id === id))
-        console.log(index)
         if (index === -1) {
             setCheckboxIdProcessesPauseFinish([...checkboxIdProcessesPauseFinish, { idProcess, id }])
         } else {
@@ -233,7 +231,6 @@ export default function Tables() {
     let [checkboxIdProcessesResume, setCheckboxIdProcessesResume] = useState([])
     function handleCheckboxIdProcessesResume(idProcess, id) {
         let index = checkboxIdProcessesResume.indexOf(checkboxIdProcessesResume.find(checkboxIdProcessesResume => checkboxIdProcessesResume.id === id))
-        console.log(index)
         if (index === -1) {
             setCheckboxIdProcessesResume([...checkboxIdProcessesResume, { idProcess, id }])
         } else {
@@ -244,33 +241,44 @@ export default function Tables() {
 
     let [open, setOpen] = useState(false);
     async function handleUser(data) {
-        if (checkboxStartProduction.length === 0 && checkboxPause_FinishProduction.length === 0 && checkboxResumeProduction.length === 0) {
-            let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
-            setOpen(false)
-            setCode("")
-            if (response.data.status === 400) {
-                handleNotificationError('Usuário Não Possui Permissão!')
+        switch (functionToBeExecuted) {
+            case "handleStartProduction":
+            case "handlePauseProduction":
+            case "handleResumeProduction":
+            case "handleFinishProduction": {
+                let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
+                setOpen(false)
+                setCode("")
+                console.log(response.data)
+                if (response.data.status === 400) {
+                    handleNotificationError('Usuário Não Possui Permissão!')
+                }
+                else {
+                    switchFunction()
+                }
             }
-            else {
-                switchFunction()
+                break;
+            case "handleStartManyProductions":
+            case "handlePauseManyProductions":
+            case "handleResumeManyProductions":
+            case "handleFinishManyProductions": {
+                let idProcesses
+                switch (functionToBeExecuted) {
+                    case "handleStartManyProductions": idProcesses = checkboxIdProcessesStart; break
+                    case "handleResumeManyProductions": idProcesses = checkboxIdProcessesResume; break
+                    default: idProcesses = checkboxIdProcessesPauseFinish; break
+                }
+                let response = await api.post(`/api/verify/processes_by_user`, { id: data.id, idProcesses })
+                setOpen(false)
+                setCode("")
+                if (response.data.status === 400) {
+                    handleNotificationError('Usuário Não Possui Permissão!')
+                }
+                else {
+                    switchFunction()
+                }
             }
-        }
-        else {
-            let idProcesses
-            switch (functionToBeExecuted) {
-                case "handleStartManyProductions": idProcesses = checkboxIdProcessesStart; break
-                case "handleResumeManyProductions": idProcesses = checkboxIdProcessesResume; break
-                default: idProcesses = checkboxIdProcessesPauseFinish; break
-            }
-            let response = await api.post(`/api/verify/processes_by_user`, { id: data.id, idProcesses })
-            setOpen(false)
-            setCode("")
-            if (response.data.status === 400) {
-                handleNotificationError('Usuário Não Possui Permissão!')
-            }
-            else {
-                switchFunction()
-            }
+                break
         }
     }
 
@@ -278,7 +286,14 @@ export default function Tables() {
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <HandleDialog open={open} setOpen={setOpen} handleUser={handleUser} handleNotificationError={handleNotificationError} code={code} setCode={setCode} />
+                <HandleDialog
+                    open={open}
+                    setOpen={setOpen}
+                    handleUser={handleUser}
+                    handleNotificationError={handleNotificationError}
+                    code={code}
+                    setCode={setCode}
+                />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Table size="medium" stickyHeader>
