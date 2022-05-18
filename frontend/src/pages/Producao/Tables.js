@@ -296,7 +296,7 @@ export default function Tables() {
                 />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Table size="medium" stickyHeader>
+                    <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>
@@ -313,24 +313,26 @@ export default function Tables() {
                                                 <CardHeader
                                                     title={row.nome_processo}
                                                     titleTypographyProps={{ align: 'right' }}
-                                                    subheader={row.nome_proximo_processo ? row.nome_proximo_processo : <br />}
+                                                    subheader={row.nome_proximo_processo ? row.nome_proximo_processo : null/*<br />*/}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox onClick={() => {
-                                                        handleCheckboxStartProduction(row.id);
-                                                        handleCheckboxIdProcessesStart(parseInt(row.id_processo), row.id)
-                                                    }} />}
-                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
+                                                    avatar={<Checkbox
+                                                        onClick={() => {
+                                                            handleCheckboxStartProduction(row.id);
+                                                            handleCheckboxIdProcessesStart(parseInt(row.id_processo), row.id)
+                                                        }}
+                                                    />}
+                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
-                                                <CardContent>
+                                                <CardContent sx={{ maxHeight: 65}}>
                                                     <Box>
-                                                        <Typography variant="h6" align="left" color="text.secondary">
+                                                        <Typography variant="body2" align="left" color="text.secondary">
                                                             {row.id_pedido}
                                                         </Typography>
-                                                        <Typography variant="h5" align="center" color="text.primary">
+                                                        <Typography variant="body2" align="center" color="text.primary">
                                                             {row.nome_produto}
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
-                                                            {row.observacao ? row.observacao : <br />}
+                                                            {row.observacao ? row.observacao : null/*<br />*/}
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
@@ -348,7 +350,8 @@ export default function Tables() {
                                                                     : "handleStartManyProductions")
                                                             }}
                                                             variant="contained"
-                                                            style={{ background: checkboxStartProduction.length === 0 ? '#E8927C' : '#3498DB', color: '#FFFFFF' }}
+                                                            size="small"
+                                                            style={{ background: checkboxStartProduction.length === 0 ? '#E8927C' : '#3498DB', color: '#FFFFFF', maxHeight: 25 }}
                                                         >
                                                             {checkboxStartProduction.length === 0 ? "INICIAR" : "INICIAR VÁRIOS"}
                                                         </Button>
@@ -366,7 +369,7 @@ export default function Tables() {
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Table size="medium" stickyHeader>
+                    <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>Fazendo</TableCell>
@@ -380,35 +383,38 @@ export default function Tables() {
                                             <Card>
                                                 <CardHeader
                                                     title={rowProduction.nome_processo}
-                                                    titleTypographyProps={{ align: 'right' }}
-                                                    subheader={rowProduction.nome_proximo_processo ? rowProduction.nome_proximo_processo : <br />}
-                                                    subheaderTypographyProps={{ align: 'right', }}
+                                                    titleTypographyProps={{ align: 'right', variant: "body2" }}
+                                                    subheader={rowProduction.nome_proximo_processo ? rowProduction.nome_proximo_processo : null/*<br />*/}
+                                                    subheaderTypographyProps={{ align: 'right', variant: "body2" }}
                                                     avatar={
-                                                        <Checkbox onClick={() => {
-                                                            handleCheckboxPause_FinishProduction(rowProduction.id, rowProduction.id_proximo_processo);
-                                                            handleCheckboxIdProcessesPauseFinish(parseInt(rowProduction.id_processo), rowProduction.id)
-                                                        }} />
+                                                        <Checkbox
+                                                            onClick={() => {
+                                                                handleCheckboxPause_FinishProduction(rowProduction.id, rowProduction.id_proximo_processo);
+                                                                handleCheckboxIdProcessesPauseFinish(parseInt(rowProduction.id_processo), rowProduction.id)
+                                                            }}
+                                                        />
                                                     }
-                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
+                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
-                                                <CardContent>
+                                                <CardContent sx={{ maxHeight: 65}}>
                                                     <Box>
-                                                        <Typography variant="h6" align="left" color="text.secondary">
+                                                        <Typography variant="body2" align="left" color="text.secondary">
                                                             {rowProduction.id_pedido}
                                                         </Typography>
-                                                        <Typography variant="h5" align="center" color="text.primary">
+                                                        <Typography variant="body2" align="center" color="text.primary">
                                                             {rowProduction.nome_produto}
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
-                                                            {rowProduction.observacao ? rowProduction.observacao : <br />}
+                                                            {rowProduction.observacao ? rowProduction.observacao : null/*<br />*/}
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
                                                     <Grid container justifyContent="space-between">
                                                         <Button
+                                                            size="small"
                                                             variant="contained"
-                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#E74C3C', color: '#FFFFFF' }}
+                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#E74C3C', color: '#FFFFFF', maxHeight: 25 }}
                                                             onClick={() => {
                                                                 setOpen(true);
                                                                 setParamsID(rowProduction.id);
@@ -423,8 +429,9 @@ export default function Tables() {
                                                             {checkboxPause_FinishProduction.length === 0 ? "PAUSAR" : "PAUSAR VÁRIOS"}
                                                         </Button>
                                                         <Button
+                                                            size="small"
                                                             variant="contained"
-                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#08BC0C', color: '#FFFFFF' }}
+                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#08BC0C', color: '#FFFFFF', maxHeight: 25 }}
                                                             onClick={() => {
                                                                 setOpen(true);
                                                                 setParamsID(rowProduction.id);
@@ -453,7 +460,7 @@ export default function Tables() {
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Table size="medium" stickyHeader>
+                    <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausado</TableCell>
@@ -462,38 +469,42 @@ export default function Tables() {
                         <TableBody>
                             {productionPaused.map((rowProductionPaused) => (
                                 <TableRow key={rowProductionPaused.id}>
-                                    <TableCell align="center" width="50%" >
+                                    <TableCell align="center" width="50%">
                                         <Grid key={rowProductionPaused.id}>
                                             <Card>
                                                 <CardHeader
                                                     title={rowProductionPaused.nome_processo}
                                                     titleTypographyProps={{ align: 'right' }}
-                                                    subheader={rowProductionPaused.nome_proximo_processo ? rowProductionPaused.nome_proximo_processo : <br />}
+                                                    subheader={rowProductionPaused.nome_proximo_processo ? rowProductionPaused.nome_proximo_processo : null/*<br />*/}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox onClick={() => {
-                                                        handleCheckboxResumeProduction(rowProductionPaused.id);
-                                                        handleCheckboxIdProcessesResume(parseInt(rowProductionPaused.id_processo), rowProductionPaused.id)
-                                                    }} />}
-                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000" }}
+                                                    avatar={<Checkbox
+                                                        onClick={() => {
+                                                            handleCheckboxResumeProduction(rowProductionPaused.id);
+                                                            handleCheckboxIdProcessesResume(parseInt(rowProductionPaused.id_processo), rowProductionPaused.id)
+                                                        }}
+                                                        size="small"
+                                                    />}
+                                                    sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
-                                                <CardContent>
+                                                <CardContent sx={{ maxHeight: 65}}>
                                                     <Box>
-                                                        <Typography variant="h6" align="left" color="text.secondary">
+                                                        <Typography variant="body2" align="left" color="text.secondary">
                                                             {rowProductionPaused.id_pedido}
                                                         </Typography>
-                                                        <Typography variant="h5" align="center" color="text.primary">
+                                                        <Typography variant="body2" align="center" color="text.primary">
                                                             {rowProductionPaused.nome_produto}
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
-                                                            {rowProductionPaused.observacao ? rowProductionPaused.observacao : <br />}
+                                                            {rowProductionPaused.observacao ? rowProductionPaused.observacao : null/*<br />*/}
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
                                                 <CardActions>
                                                     <Grid container justifyContent="right">
                                                         <Button
+                                                            size="small"
                                                             variant="contained"
-                                                            style={{ background: checkboxResumeProduction.length === 0 ? '#E8927C' : '#F1C40F', color: '#FFFFFF' }}
+                                                            style={{ background: checkboxResumeProduction.length === 0 ? '#E8927C' : '#F1C40F', color: '#FFFFFF', maxHeight: 25 }}
                                                             onClick={() => {
                                                                 setOpen(true);
                                                                 setParamsID(rowProductionPaused.id);
