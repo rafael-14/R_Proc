@@ -68,7 +68,7 @@ export default function Register() {
           try {
             let response = await api.post('/api/insert/products_by_order', data)
             if (response.status === 200) {
-              let data = { orderID: responseOrder.id, productID: orderProducts }
+              let data = { orderID: responseOrder.id, orderProducts }
               try {
                 let response = await api.post('/api/insert/production', data)
               } catch (e) { }

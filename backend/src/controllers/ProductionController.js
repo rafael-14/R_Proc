@@ -87,13 +87,18 @@ module.exports = {
   },
 
   async insertProduction(req, res) {
-    let { orderID, productID } = req.body;
-    for (let i = 0; i < productID.length; i++) {
-      await connectionPG.query(`select * from processos_por_produto where id_produto = ${productID[i].id} order by sequencia limit 1`)
-        .then(results => processID = results.rows)
-      await connectionPG.query(`insert into producao
+    let { orderID, orderProducts } = req.body;
+    console.log(orderProducts)
+    console.log(orderProducts[0])
+    for (let i = 0; i < orderProducts.length; i++) {
+      for (let j = 0; j < orderProducts[i].productQuantity; j++) {
+        await connectionPG.query(`select * from processos_por_produto where id_produto = ${orderProducts[i].id} order by sequencia limit 1`)
+          .then(results => processID = results.rows)
+        await connectionPG.query(`insert into producao
       (id_pedido, id_produto, id_processo, situacao)
-      values(${orderID}, ${productID[i].id}, ${processID[0].id_processo}, 0)`)
+      values(${orderID}, ${orderProducts[i].id}, ${processID[0].id_processo}, 0)`)
+      }
+
     }
     return res.json().status(200)
   },
