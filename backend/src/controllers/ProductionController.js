@@ -88,8 +88,6 @@ module.exports = {
 
   async insertProduction(req, res) {
     let { orderID, orderProducts } = req.body;
-    console.log(orderProducts)
-    console.log(orderProducts[0])
     for (let i = 0; i < orderProducts.length; i++) {
       for (let j = 0; j < orderProducts[i].productQuantity; j++) {
         await connectionPG.query(`select * from processos_por_produto where id_produto = ${orderProducts[i].id} order by sequencia limit 1`)
