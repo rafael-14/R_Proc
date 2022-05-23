@@ -30,8 +30,15 @@ function Row(props) {
 
   let [checked, setChecked] = useState(false)
 
-  async function setDirectlyFabricationOrder(id) {
-    props.setFabricationOrder([...props.fabricationOrder, { id, order: (props.fabricationOrder.length + 1) * 10 }])
+  async function setDirectlyFabricationOrder(id, nome) {
+    props.setFabricationOrder([...props.fabricationOrder,
+    {
+      id,
+      order: (props.fabricationOrder.length === 0 ?
+        10 :
+        parseInt(Math.max.apply(null, props.fabricationOrder.map(fabricationOrder => fabricationOrder.order)) / 10 + 1) * 10),
+      nome
+    }])
   }
 
   return (
@@ -39,12 +46,12 @@ function Row(props) {
       <TableRow key={row.id}>
         <TableCell
           align="center"
-          onDoubleClick={() => row.ativo ? setDirectlyFabricationOrder(row.id) : null}
+          onDoubleClick={() => row.ativo ? setDirectlyFabricationOrder(row.id, row.nome) : null}
         >
           <Checkbox
             color="secondary"
             checked={checked}
-            onClick={() => { props.handleSelectedProcesses(row.id); setChecked(!checked) }}
+            onClick={() => { props.handleSelectedProcesses(row.id, row.nome); setChecked(!checked) }}
             disabled={row.ativo ? false : true}
           />
           {row.nome}
@@ -136,10 +143,10 @@ export default function Register() {
   }, [])
 
   let [selectedProcesses, setSelectedProcesses] = useState([])
-  async function handleSelectedProcesses(id) {
+  async function handleSelectedProcesses(id, nome) {
     let insert = true;
     if (selectedProcesses.length == 0) {
-      setSelectedProcesses([{ id }])
+      setSelectedProcesses([{ id, nome }])
     } else {
       for (let i = 0; i < selectedProcesses.length; i++) {
         if (selectedProcesses[i].id == id) {
@@ -148,28 +155,34 @@ export default function Register() {
         }
       }
       if (insert) {
-        setSelectedProcesses([...selectedProcesses, { id }])
+        setSelectedProcesses([...selectedProcesses, { id, nome }])
       }
     }
   }
   let [fabricationOrder, setFabricationOrder] = useState([])
   async function handleFabricationOrder() {
-    if (fabricationOrder.length === 0) {
-      setFabricationOrder(selectedProcesses.map((selectedProcesses, position) => ({ ...selectedProcesses, order: (position + 1) * 10 })))
-    } else {
-      setFabricationOrder([...fabricationOrder, ...selectedProcesses.map((selectedProcesses, position) => ({ ...selectedProcesses, order: (fabricationOrder.length + 1 + position) * 10 }))])
-    }
+    setFabricationOrder([...fabricationOrder,
+    ...selectedProcesses.map((selectedProcesses, position) => ({
+      ...selectedProcesses,
+      order: fabricationOrder.length === 0 ? (position + 1) * 10 :
+        parseInt((Math.max.apply(null,fabricationOrder.map(fabricationOrder => fabricationOrder.order))) / 10 + 1 + position) * 10 
+    }))])
     setSelectedProcesses([])
   }
 
-  async function handleNewOrder(newOrder, newRowPosition, id) {
+  async function handleNewOrder(newOrder, newRowPosition, id, nome) {
     let orderExist = fabricationOrder.find(fabricationOrder => fabricationOrder.order === parseInt(newOrder))
     if (!orderExist) {
-      let newProcessOrder = { id, order: parseInt(newOrder) }
+      let newProcessOrder = { id, order: parseInt(newOrder), nome }
       setFabricationOrder(fabricationOrder.map((fabricationOrder, position) => position === newRowPosition ? { ...newProcessOrder } : fabricationOrder))
     } else {
       handleNotificationError("Ordem já Existente!")
     }
+  }
+
+  function setRemoveProductionDirectly(position) {
+    fabricationOrder.splice(position, 1)
+    setFabricationOrder([...fabricationOrder])
   }
 
   return (
@@ -208,6 +221,7 @@ export default function Register() {
                       onChange={() => setManyRegisters(!manyRegisters)}
                     />}
                     label="Cadastrar Vários"
+                    onClick={() => console.log(fabricationOrder)}
                   />
                 </FormGroup>
                 {manyRegisters ? (<FormGroup>
@@ -294,15 +308,15 @@ export default function Register() {
                       <TableBody>
                         {fabricationOrder.map((newRow, newRowPosition) => (
                           <TableRow key={newRow.id + newRowPosition}>
-                            <TableCell align="center">
+                            <TableCell align="center" onDoubleClick={() => setRemoveProductionDirectly(newRowPosition)}>
                               <Checkbox color="secondary" /*onClick={() => setUnselectedProcess(newRow.id)}*/ />
-                              {newRow.id}
+                              {newRow.nome}
                             </TableCell>
                             <TableCell>
                               <TextField
                                 size="small"
                                 value={newRow.order}
-                                onChange={e => handleNewOrder(e.target.value, newRowPosition, newRow.id)}
+                                onChange={e => handleNewOrder(e.target.value, newRowPosition, newRow.id, newRow.nome)}
                                 align="right"
                               />
                             </TableCell>
