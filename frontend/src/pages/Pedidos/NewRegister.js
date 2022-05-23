@@ -205,7 +205,6 @@ export default function Register() {
                   />
                 </FormGroup>) : null}
               </Grid>
-              <br />
               {orderProducts.length > 0 ? (<Grid item xs={5} >
                 <TableContainer >
                   <Table size="medium" stickyHeader>
@@ -230,15 +229,13 @@ export default function Register() {
                             />
                           </TableCell>
                           <TableCell align="center">
-
-                            {row.productNote ? (<TextField
+                            <TextField
                               multiline
                               value={row.productNote}
                               onChange={e => handleChangeProductNote(e.target.value, rowPosition)}
                               size="small"
                               align="center"
-                            />) : null}
-
+                            />
                           </TableCell>
                           <TableCell align="center">
                             <Fab onClick={() => handleRemoveOrderProduct(row)} size="small" style={{ backgroundColor: '#E74C3C', color: "#FFFFFF" }}>
@@ -256,17 +253,10 @@ export default function Register() {
                 direction="row"
                 justifyContent="flex-end"
               >
-                <Button
-                  variant="contained"
-                  style={{
-                    background: '#E74C3C',
-                    color: "#FFFFFF"
-                  }}
-                  href="/pedidos"
-                >
+                <Button variant="contained" style={{background: '#E74C3C', color: "#FFFFFF"}} href="/pedidos">
                   Cancelar
                 </Button>
-                <Button variant="contained" style={{ color: '#FFFFFF',marginInlineStart: 15 }} onClick={() => handleNewOrder()}>
+                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewOrder()}>
                   Salvar
                 </Button>
               </Grid>
