@@ -165,7 +165,7 @@ export default function Register() {
     ...selectedProcesses.map((selectedProcesses, position) => ({
       ...selectedProcesses,
       order: fabricationOrder.length === 0 ? (position + 1) * 10 :
-        parseInt((Math.max.apply(null,fabricationOrder.map(fabricationOrder => fabricationOrder.order))) / 10 + 1 + position) * 10 
+        parseInt((Math.max.apply(null, fabricationOrder.map(fabricationOrder => fabricationOrder.order))) / 10 + 1 + position) * 10
     }))])
     setSelectedProcesses([])
   }
@@ -184,6 +184,47 @@ export default function Register() {
     fabricationOrder.splice(position, 1)
     setFabricationOrder([...fabricationOrder])
   }
+
+  let [unselectedProcesses, setUnselectedProcesses] = useState([])
+  function handleCheckboxUnselectedProcess(processToBeRemoved) {
+    let position = unselectedProcesses.indexOf(processToBeRemoved)
+    if (position !== -1) {
+      unselectedProcesses.splice(position, 1)
+      setUnselectedProcesses([...unselectedProcesses])
+    } else {
+      setUnselectedProcesses([...unselectedProcesses, processToBeRemoved])
+    }
+  }
+
+  function handleUnselectedProcess() {
+    //for (let i = 0; i < fabricationOrder.length; i++) {
+    //  console.log(fabricationOrder[i])
+    //  console.log(unselectedProcesses[i])
+    //  let position = fabricationOrder.indexOf(unselectedProcesses)
+    //  console.log(position)
+    //  if (position !== -1) {
+    //    console.log("entrei")
+    //    fabricationOrder.splice(position, 1)
+    //    setFabricationOrder([...fabricationOrder])
+    //  }
+    //}
+
+    //fabricationOrder => fabricationOrder === unselectedProcesses.map(unselectedProcesses)
+    //fabricationOrder.splice(index, 1)
+    //setFabricationOrder([...fabricationOrder])
+
+    for (let i = 0; i < fabricationOrder.length; i++) {
+      for (let j = 0; j < unselectedProcesses.length; j++) {
+        if (unselectedProcesses[j] === fabricationOrder[i]) {
+          fabricationOrder.splice(i, 1)
+          console.log(fabricationOrder)
+        }
+      }
+    }
+    setFabricationOrder([...fabricationOrder])
+    setUnselectedProcesses([])
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -221,7 +262,6 @@ export default function Register() {
                       onChange={() => setManyRegisters(!manyRegisters)}
                     />}
                     label="Cadastrar Vários"
-                    onClick={() => console.log(fabricationOrder)}
                   />
                 </FormGroup>
                 {manyRegisters ? (<FormGroup>
@@ -279,9 +319,8 @@ export default function Register() {
                       sx={{ my: 0.5 }}
                       size="small"
                       variant="outlined"
-                      //onClick={() => handleUnselectedProcesses()}
-                      onClick={() => console.log(fabricationOrder)}
-                      disabled={fabricationOrder.length === 0 ? true : false}
+                      onClick={() => handleUnselectedProcess()}
+                      disabled={unselectedProcesses.length === 0 ? true : false}
                     >
                       &lt;
                     </Button>
@@ -309,7 +348,7 @@ export default function Register() {
                         {fabricationOrder.map((newRow, newRowPosition) => (
                           <TableRow key={newRow.id + newRowPosition}>
                             <TableCell align="center" onDoubleClick={() => setRemoveProductionDirectly(newRowPosition)}>
-                              <Checkbox color="secondary" /*onClick={() => setUnselectedProcess(newRow.id)}*/ />
+                              <Checkbox color="secondary" onClick={() => handleCheckboxUnselectedProcess(newRow, newRowPosition)} />
                               {newRow.nome}
                             </TableCell>
                             <TableCell>
