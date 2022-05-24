@@ -23,7 +23,7 @@ function Row(props) {
   const { row } = props;
 
   useEffect(() => {
-    if (props.selectedProcesses.length == 0) {
+    if (props.selectedProcesses.length === 0) {
       setChecked(false)
     }
   }, [props.fabricationOrder])
@@ -58,6 +58,40 @@ function Row(props) {
         </TableCell>
         <TableCell align="right">
           <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
+        </TableCell>
+      </TableRow>
+    </>
+  )
+}
+
+function NewRow(props) {
+
+  let [checked, setChecked] = useState(false)
+
+  useEffect(() => {
+    if (props.unselectedProcesses.length === 0) {
+      setChecked(false)
+    }
+  }, [props.unselectedProcesses])
+
+  return (
+    <>
+      <TableRow key={props.newRow.id + props.newRowPosition}>
+        <TableCell align="center" onDoubleClick={() => props.setRemoveProductionDirectly(props.newRowPosition)}>
+          <Checkbox
+            color="secondary"
+            onClick={() => { props.handleCheckboxUnselectedProcess(props.newRow, props.newRowPosition); setChecked(!checked) }}
+            checked={checked}
+          />
+          {props.newRow.nome}
+        </TableCell>
+        <TableCell>
+          <TextField
+            size="small"
+            value={props.newRow.order}
+            onChange={e => props.handleNewOrder(e.target.value, props.newRowPosition, props.newRow.id, props.newRow.nome)}
+            align="right"
+          />
         </TableCell>
       </TableRow>
     </>
@@ -197,27 +231,10 @@ export default function Register() {
   }
 
   function handleUnselectedProcess() {
-    //for (let i = 0; i < fabricationOrder.length; i++) {
-    //  console.log(fabricationOrder[i])
-    //  console.log(unselectedProcesses[i])
-    //  let position = fabricationOrder.indexOf(unselectedProcesses)
-    //  console.log(position)
-    //  if (position !== -1) {
-    //    console.log("entrei")
-    //    fabricationOrder.splice(position, 1)
-    //    setFabricationOrder([...fabricationOrder])
-    //  }
-    //}
-
-    //fabricationOrder => fabricationOrder === unselectedProcesses.map(unselectedProcesses)
-    //fabricationOrder.splice(index, 1)
-    //setFabricationOrder([...fabricationOrder])
-
     for (let i = 0; i < fabricationOrder.length; i++) {
       for (let j = 0; j < unselectedProcesses.length; j++) {
         if (unselectedProcesses[j] === fabricationOrder[i]) {
           fabricationOrder.splice(i, 1)
-          console.log(fabricationOrder)
         }
       }
     }
@@ -346,20 +363,14 @@ export default function Register() {
                       </TableHead>
                       <TableBody>
                         {fabricationOrder.map((newRow, newRowPosition) => (
-                          <TableRow key={newRow.id + newRowPosition}>
-                            <TableCell align="center" onDoubleClick={() => setRemoveProductionDirectly(newRowPosition)}>
-                              <Checkbox color="secondary" onClick={() => handleCheckboxUnselectedProcess(newRow, newRowPosition)} />
-                              {newRow.nome}
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                size="small"
-                                value={newRow.order}
-                                onChange={e => handleNewOrder(e.target.value, newRowPosition, newRow.id, newRow.nome)}
-                                align="right"
-                              />
-                            </TableCell>
-                          </TableRow>
+                          <NewRow
+                            newRowPosition={newRowPosition}
+                            newRow={newRow}
+                            setRemoveProductionDirectly={setRemoveProductionDirectly}
+                            handleNewOrder={handleNewOrder}
+                            handleCheckboxUnselectedProcess={handleCheckboxUnselectedProcess}
+                            unselectedProcesses={unselectedProcesses}
+                          />
                         ))}
                       </TableBody>
                     </Table>
