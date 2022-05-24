@@ -242,7 +242,6 @@ export default function Register() {
     setUnselectedProcesses([])
   }
 
-
   return (
     <ThemeProvider theme={theme}>
       <Box
