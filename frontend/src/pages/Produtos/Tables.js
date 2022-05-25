@@ -35,7 +35,7 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center" width="69%">
+                <TableCell align="left" width="69%">
                     {row.nome}
                 </TableCell>
                 <TableCell align="center" width="15%">
@@ -46,13 +46,13 @@ function Row(props) {
                         <Button style={{ color: '#000000' }}>
                             <CreateIcon />
                         </Button>
-                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
-                            <Switch
-                                color="success"
-                                onClick={() => { row.ativo ? props.handleInactivation(row.id, row.nome) : props.handleActivation(row.id, row.nome) }}
-                                defaultChecked={row.ativo ? true : false}
-                            />
-                        </abbr>
+                    </abbr>
+                    <abbr title={row.ativo ? "Inativar" : "Ativar"}>
+                        <Switch
+                            color="success"
+                            onClick={() => props.handleSituation(row.id, row.nome, row.ativo)}
+                            defaultChecked={row.ativo ? true : false}
+                        />
                     </abbr>
                 </TableCell>
             </TableRow>
@@ -102,19 +102,8 @@ export default function Tables() {
         }
     })
 
-    async function handleNotificationSuccess(productName) {
-        toast.success(`Produto: ${productName} Ativado com Sucesso!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-        })
-    }
-    async function handleNotificationError(productName) {
-        toast.error(`Produto: ${productName} Inativado com Sucesso!`, {
+    async function handleNotification(productName, situation) {
+        (situation === "Inativado" ? toast.error : toast.success)(`Produto: ${productName} ${situation} com Sucesso!`, {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -126,13 +115,9 @@ export default function Tables() {
     }
 
     const [productSituation, setProductSituation] = useState(null)
-    async function handleInactivation(id, name) {
-        setProductSituation(await api.put(`/api/inactivate/product/${id}`))
-        handleNotificationError(name)
-    }
-    async function handleActivation(id, name) {
-        setProductSituation(await api.put(`/api/activate/product/${id}`))
-        handleNotificationSuccess(name)
+    async function handleSituation(id, nome, ativo) {
+        setProductSituation(await api.put(`/api/${ativo ? "inactivate" : "activate"}/product/${id}`))
+        handleNotification(nome, ativo ? "Inativado" : "Ativado")
     }
 
     let [products, setProducts] = useState([])
@@ -172,7 +157,7 @@ export default function Tables() {
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
-                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center" width="69%">Produtos</TableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="69%">Produtos</TableCell>
                                                 <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center" width="15%">Situação</TableCell>
                                                 <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right" width="15%" />
                                             </TableRow>
@@ -182,8 +167,7 @@ export default function Tables() {
                                                 <Row
                                                     key={row.id}
                                                     row={row}
-                                                    handleActivation={handleActivation}
-                                                    handleInactivation={handleInactivation}
+                                                    handleSituation={handleSituation}
                                                 />
                                             ))}
                                         </TableBody>

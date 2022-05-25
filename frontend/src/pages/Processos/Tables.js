@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, TextField, Autocomplete, Table,
+    Button, TextField, Autocomplete, Table, Switch,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
     Box, Toolbar, TableContainer, createTheme, ThemeProvider
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Tables() {
 
@@ -16,6 +18,23 @@ export default function Tables() {
         }
     })
 
+    async function handleNotification(processName, processSituation) {
+        (processSituation === "Inativado" ? toast.error : toast.success)(`Processo: ${processName} ${processSituation} com Sucesso!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+        })
+    }
+    const [situation, setSituation] = useState(null)
+    async function handleSituation(id, nome, ativo) {
+        setSituation(await api.put(`/api/${ativo ? "inactivate" : "activate"}/process/${id}`))
+        handleNotification(nome, ativo ? "Inativado" : "Ativado")
+    }
+
     let [processes, setProcesses] = useState([])
     useEffect(() => {
         async function loadProcesses() {
@@ -23,12 +42,13 @@ export default function Tables() {
             setProcesses(response.data)
         }
         loadProcesses()
-    }, [])
+    }, [situation])
 
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
+                <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Paper>
                         <Grid
@@ -59,11 +79,18 @@ export default function Tables() {
                                             {processes.map((row) => (
                                                 <TableRow key={row.id}>
                                                     <TableCell align="left">{row.nome}</TableCell>
-                                                    <TableCell align="right" size="small" width="1%">
+                                                    <TableCell align="right" size="small" width="15%">
                                                         <abbr title="Editar">
                                                             <Button style={{ color: '#000000' }}>
                                                                 <CreateIcon />
                                                             </Button>
+                                                        </abbr>
+                                                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
+                                                            <Switch
+                                                                color="success"
+                                                                onClick={() => handleSituation(row.id, row.nome, row.ativo)}
+                                                                defaultChecked={row.ativo ? true : false}
+                                                            />
                                                         </abbr>
                                                     </TableCell>
                                                 </TableRow>
