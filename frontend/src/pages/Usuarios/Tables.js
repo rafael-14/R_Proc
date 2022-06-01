@@ -33,7 +33,7 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center">{row.nome} {row.sobrenome}</TableCell>
+                <TableCell align="left">{row.nome} {row.sobrenome}</TableCell>
                 <TableCell align="right" size="small" width="1%">
                     <abbr title="Editar">
                         <Button style={{ color: '#000000' }}>
@@ -52,7 +52,7 @@ function Row(props) {
                             <Table size="small" aria-label="purchases">
                                 <TableBody>
                                     {processesByUser.map((row) => (
-                                        <TableRow align="left" >{row.id_processo}</TableRow>
+                                        <TableRow align="left" >{row.nome}</TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
@@ -109,7 +109,7 @@ export default function Tables() {
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell align="left" width="1%" style={{ background: '#E8927C', color: '#FFFFFF' }}/>
-                                                <TableCell align="center" style={{ background: '#E8927C', color: '#FFFFFF' }}>Usuários</TableCell>
+                                                <TableCell align="left" style={{ background: '#E8927C', color: '#FFFFFF' }}>Usuários</TableCell>
                                                 <TableCell align="right" style={{ background: '#E8927C', color: '#FFFFFF' }}></TableCell>
                                             </TableRow>
                                         </TableHead>

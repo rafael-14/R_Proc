@@ -143,7 +143,7 @@ export default function Register() {
                       checked={cleanProcesses}
                       onChange={() => setCleanProcesses(!cleanProcesses)}
                     />}
-                    label="Limpar Processos"
+                    label="Limpar Usuários"
                   />
                 </FormGroup>) : null}
               </Grid>

@@ -3,7 +3,9 @@ const connectionPG = require('../database');
 module.exports = {
   async selectProcessesByProduct(req, res) {
     let { id } = req.params;
-    await connectionPG.query(`SELECT * FROM processos_por_produto where id_produto = ${id}`)
+    await connectionPG.query(`SELECT * FROM processos_por_produto proc_prod
+    join processo proc on proc.id = proc_prod.id_processo
+    where proc_prod.id_produto = ${id}`)
       .then(results => { processesByProduct = results.rows })
     return res.json(processesByProduct)
   },
@@ -19,9 +21,9 @@ module.exports = {
     }
     return res.json().status(200)
   },
-  
+
   async nextProcess(req, res) {
-    let {productID, processByProduct_Sequence} = req.body;
+    let { productID, processByProduct_Sequence } = req.body;
     await connectionPG.query(`select * from processos_por_produto
         where id_produto = ${productID}
         and sequencia = ${processByProduct_Sequence + 1}`)

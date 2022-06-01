@@ -69,7 +69,7 @@ function Row(props) {
                                         {processesByProduct.map((row) => (
                                             row.sequencia ?
                                                 <TableCell
-                                                    align="center"
+                                                    align="left"
                                                     style={{ background: '#FBECE8', color: '#000000' }}
                                                 >
                                                     {row.sequencia}º Processo
@@ -80,7 +80,7 @@ function Row(props) {
                                 </TableHead>
                                 <TableBody>
                                     {processesByProduct.map((row) => (
-                                        <TableCell align="center" >{row.id_processo}</TableCell>
+                                        <TableCell align="left" >{row.nome}</TableCell>
                                     ))}
                                 </TableBody>
                             </Table>

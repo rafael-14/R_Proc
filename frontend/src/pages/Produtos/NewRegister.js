@@ -45,7 +45,7 @@ function Row(props) {
     <>
       <TableRow key={row.id}>
         <TableCell
-          align="center"
+          align="left"
           onDoubleClick={() => row.ativo ? setDirectlyFabricationOrder(row.id, row.nome) : null}
         >
           <Checkbox
@@ -77,7 +77,7 @@ function NewRow(props) {
   return (
     <>
       <TableRow key={props.newRow.id + props.newRowPosition}>
-        <TableCell align="center" onDoubleClick={() => props.setRemoveProductionDirectly(props.newRowPosition)}>
+        <TableCell align="left" onDoubleClick={() => props.setRemoveProductionDirectly(props.newRowPosition)}>
           <Checkbox
             color="secondary"
             onClick={() => { props.handleCheckboxUnselectedProcess(props.newRow, props.newRowPosition); setChecked(!checked) }}
@@ -300,7 +300,7 @@ export default function Register() {
                     <Table size="medium" stickyHeader>
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell align="center">Processos</StyledTableCell>
+                          <StyledTableCell align="left">Processos</StyledTableCell>
                           <StyledTableCell align="right">Situação</StyledTableCell>
                         </TableRow>
                       </TableHead>
@@ -356,7 +356,7 @@ export default function Register() {
                     <Table size="medium" stickyHeader>
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell align="center" style={{ width: '70%' }}>Ordem de Fabricação</StyledTableCell>
+                          <StyledTableCell align="left" style={{ width: '70%' }}>Ordem de Fabricação</StyledTableCell>
                           <StyledTableCell align="right">Ordem</StyledTableCell>
                         </TableRow>
                       </TableHead>

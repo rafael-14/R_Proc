@@ -14,7 +14,9 @@ module.exports = {
 
   async selectProcessesByUser(req, res) {
     let { id } = req.params;
-    await connectionPG.query(`SELECT * FROM processos_por_usuario where id_usuario = ${id}`)
+    await connectionPG.query(`SELECT * FROM processos_por_usuario proc_user
+    join processo proc on proc.id = proc_user.id_processo
+    where proc_user.id_usuario = ${id}`)
       .then(results => { processesByUser = results.rows })
     return res.json(processesByUser)
   },
@@ -28,7 +30,7 @@ module.exports = {
     if (processByUser.length === 0) {
       status = 400
     }
-    return res.json({status})
+    return res.json({ status })
   },
 
   async verifyProcessesByUser(req, res) {

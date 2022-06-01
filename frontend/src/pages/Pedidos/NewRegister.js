@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -98,7 +98,7 @@ export default function Register() {
   let [productQuantity, setProductQuantity] = useState(1)
   let [productNote, setProductNote] = useState("")
   let [product, setProduct] = useState(null)
-  async function handleOrderProduct() {
+  const handleOrderProduct = useCallback(() => {
     productNote = productNote.trim()
     if (!product) {
       handleNotificationError("Preencha o Produto Corretamente", "product")
@@ -108,7 +108,7 @@ export default function Register() {
     setProduct(null)
     setProductQuantity(1)
     setProductNote("")
-  }
+  }, [productNote, product, orderProducts, products, productQuantity, productNote])
   async function handleRemoveOrderProduct(row) {
     orderProducts.splice(orderProducts.indexOf(row), 1)
     setOrderProducts([...orderProducts])
@@ -124,6 +124,8 @@ export default function Register() {
     orderProducts[rowPosition].productNote = newProductNote
     setOrderProducts([...orderProducts])
   }
+
+  const orderProductsLength = useMemo(() => orderProducts.length, [orderProducts])
 
   return (
     <ThemeProvider theme={theme}>
@@ -205,7 +207,7 @@ export default function Register() {
                   />
                 </FormGroup>) : null}
               </Grid>
-              {orderProducts.length > 0 ? (<Grid item xs={5} >
+              {orderProductsLength > 0 ? (<Grid item xs={5} >
                 <TableContainer >
                   <Table size="medium" stickyHeader>
                     <TableHead>

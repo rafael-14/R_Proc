@@ -33,7 +33,7 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center">{row.nome}</TableCell>
+                <TableCell align="left">{row.nome}</TableCell>
                 <TableCell align="right" size="small" width="1%">
                     <abbr title="Editar">
                         <Button style={{ color: '#000000' }}>
@@ -109,7 +109,7 @@ export default function Tables() {
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
-                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center">Setores</TableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Setores</TableCell>
                                                 <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right"></TableCell>
                                             </TableRow>
                                         </TableHead>

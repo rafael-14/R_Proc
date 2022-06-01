@@ -32,7 +32,7 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="center">{row.id}</TableCell>
+                <TableCell align="left">{row.id}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -44,15 +44,15 @@ function Row(props) {
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="center">Produtos</TableCell>
-                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="center">Quantidade</TableCell>
+                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Produtos</TableCell>
+                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Quantidade</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {productsByOrder.map((row) => (
                                         <TableRow key={row.id}>
-                                            <TableCell align="center">{row.id_produto}</TableCell>
-                                            <TableCell align="center">{row.quantidade}</TableCell>
+                                            <TableCell align="left">{row.nome}</TableCell>
+                                            <TableCell align="left">{row.quantidade}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -110,7 +110,7 @@ export default function Tables() {
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
-                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center">Pedidos</TableCell>
+                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Pedidos</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>

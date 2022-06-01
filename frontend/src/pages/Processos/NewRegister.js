@@ -18,7 +18,8 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/processos" : setProcessName(''),
+      onClose: () => !manyRegisters ? window.location.href = "/processos" : null,
+      onOpen: setProcessName("")
     })
   }
 
