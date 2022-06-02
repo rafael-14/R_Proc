@@ -52,16 +52,18 @@ routes.put('/api/select/users_by_sector/:id', UsersBySectorController.selectUser
 routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBySector);
 
 routes.post('/api/insert/production', ProductionController.insertProduction);
-routes.post('/api/start/production/:id', ProductionController.startProduction);
+routes.put('/api/start/production/:id', ProductionController.startProduction);
 routes.put('/api/pause/production/:id', ProductionController.pauseProduction);
 routes.put('/api/resume/production/:id', ProductionController.resumeProduction);
-routes.post('/api/finish/production/:id', ProductionController.finishProduction);
+routes.put('/api/finish/production/:id', ProductionController.finishProduction);
 routes.post('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
 routes.post('/api/select/production_started', ProductionController.selectProductionStarted);
 routes.post('/api/select/production_paused', ProductionController.selectProductionPaused);
-routes.post('/api/start/many_productions', ProductionController.startManyProductions);
-routes.post('/api/pause/many_productions', ProductionController.pauseManyProductions);
-routes.post('/api/resume/many_productions', ProductionController.resumeManyProductions);
-routes.post('/api/finish/many_productions', ProductionController.finishManyProductions);
+routes.put('/api/start/many_productions', ProductionController.startManyProductions);
+routes.put('/api/pause/many_productions', ProductionController.pauseManyProductions);
+routes.put('/api/resume/many_productions', ProductionController.resumeManyProductions);
+routes.put('/api/finish/many_productions', ProductionController.finishManyProductions);
+routes.post('/api/verify/user', ProductionController.verifyUser);
+routes.post('/api/verify/users', ProductionController.verifyUsers);
 
 module.exports = routes;

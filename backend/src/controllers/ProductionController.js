@@ -96,16 +96,17 @@ module.exports = {
       (id_pedido, id_produto, id_processo, situacao)
       values(${orderID}, ${orderProducts[i].id}, ${processID[0].id_processo}, 0)`)
       }
-
     }
     return res.json().status(200)
   },
 
   async startProduction(req, res) {
     let { id } = req.params;
-    //let { id_usuario } = req.body;
+    let { id_user } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao set situacao = 1  where id = ${id}`)//aqui devo adicionar o usuário que está iniciando o serviço
+    await connectionPG.query(`update producao 
+      set situacao = 1, id_usuario = ${id_user}
+      where id = ${id}`)
     await connectionPG.query(`insert into producao_tempo
     (id_producao, inicio)
     values(${id}, '${datetime.toISOString()}')`)
@@ -122,8 +123,11 @@ module.exports = {
 
   async resumeProduction(req, res) {
     let { id } = req.params;
+    let { id_user } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao set situacao = 3 where id = ${id}`)
+    await connectionPG.query(`update producao
+    set situacao = 3, id_usuario = ${id_user}
+    where id = ${id}`)
     await connectionPG.query(`insert into producao_tempo
     (id_producao, inicio)
     values(${id}, '${datetime.toISOString()}')`)
@@ -146,10 +150,12 @@ module.exports = {
   },
 
   async startManyProductions(req, res) {
-    let { checkboxStartProduction } = req.body;
+    let { checkboxStartProduction, id_user } = req.body;
     let datetime = new Date
     for (let i = 0; i < checkboxStartProduction.length; i++) {
-      await connectionPG.query(`update producao set situacao = 1 where id = ${checkboxStartProduction[i]}`)
+      await connectionPG.query(`update producao
+      set situacao = 1, id_usuario = ${id_user.id_user}
+      where id = ${checkboxStartProduction[i]}`)
       await connectionPG.query(`insert into producao_tempo
       (id_producao, inicio)
       values(${checkboxStartProduction[i]}, '${datetime.toISOString()}')`)
@@ -168,10 +174,12 @@ module.exports = {
   },
 
   async resumeManyProductions(req, res) {
-    let { checkboxResumeProduction } = req.body;
+    let { checkboxResumeProduction, id_user } = req.body;
     let datetime = new Date
     for (let i = 0; i < checkboxResumeProduction.length; i++) {
-      await connectionPG.query(`update producao set situacao = 3 where id = ${checkboxResumeProduction[i]}`)
+      await connectionPG.query(`update producao
+      set situacao = 3, id_usuario = ${id_user.id_user}
+      where id = ${checkboxResumeProduction[i]}`)
       await connectionPG.query(`insert into producao_tempo
       (id_producao, inicio)
       values(${checkboxResumeProduction[i]}, '${datetime.toISOString()}')`)
@@ -193,7 +201,32 @@ module.exports = {
       }
     }
     return res.json().status(200)
-  }
+  },
+
+  async verifyUser(req, res) {
+    let { paramsID, id_user } = req.body;
+    let status = 400
+    await connectionPG.query(`select * from producao where id = ${paramsID} and id_usuario = ${id_user.id_user}`)
+      .then(results => { production = results.rows })
+    if (production[0]) {
+      status = 200
+    }
+    return res.json({ status })
+  },
+
+  async verifyUsers(req, res) {
+    let { checkboxPause_FinishProduction, id_user } = req.body;
+    let status = 200
+    for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
+      await connectionPG.query(`select * from producao where id = ${checkboxPause_FinishProduction[i]} and id_usuario = ${id_user.id_user}`)
+        .then(results => { production = results.rows })
+      if (!production[0]) {
+        status = 400
+        break
+      }
+    }
+    return res.json({ status })
+  },
 
 };
 

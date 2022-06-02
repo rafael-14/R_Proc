@@ -97,56 +97,76 @@ export default function Tables() {
     let [paramsOrder, setParamsOrder] = useState(null)
     let [paramsIdNextProcess, setParamsIdNextProcess] = useState(null)
     let [paramsIdProcess, setParamsIdProcess] = useState(null)
-    async function handleStartProduction() {
-        setProductionStatus(await api.post(`/api/start/production/${paramsID}`))
+    async function handleStartProduction(id_user) {
+        setProductionStatus(await api.put(`/api/start/production/${paramsID}`, id_user))
         handleNotification(paramsName, paramsOrder, "Iniciada", toast.info)
     }
-    async function handlePauseProduction() {
-        setProductionStatus(await api.put(`/api/pause/production/${paramsID}`))
-        handleNotification(paramsName, paramsOrder, "Pausada", toast.error)
+    async function handlePauseProduction(id_user) {
+        let response = await api.post(`/api/verify/user`, { paramsID, id_user })
+        if (response.data.status === 200) {
+            setProductionStatus(await api.put(`/api/pause/production/${paramsID}`))
+            handleNotification(paramsName, paramsOrder, "Pausada", toast.error)
+        } else {
+            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
+        }
     }
-    async function handleResumeProduction() {
-        setProductionStatus(await api.put(`/api/resume/production/${paramsID}`))
+    async function handleResumeProduction(id_user) {
+        setProductionStatus(await api.put(`/api/resume/production/${paramsID}`, id_user))
         handleNotification(paramsName, paramsOrder, "Retomada", toast.warning)
     }
-    async function handleFinishProduction() {
-        setProductionStatus(await api.post(`/api/finish/production/${paramsID}`, { paramsIdNextProcess }))
-        handleNotification(paramsName, paramsOrder, "Concluída", toast.success)
+    async function handleFinishProduction(id_user) {
+        let response = await api.post(`/api/verify/user`, { paramsID, id_user })
+        if (response.data.status === 200) {
+            setProductionStatus(await api.put(`/api/finish/production/${paramsID}`, { paramsIdNextProcess }))
+            handleNotification(paramsName, paramsOrder, "Concluída", toast.success)
+        } else {
+            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
+        }
     }
-    async function handleStartManyProductions() {
-        setProductionStatus(await api.post(`/api/start/many_productions`, { checkboxStartProduction }))
+    async function handleStartManyProductions(id_user) {
+        setProductionStatus(await api.put(`/api/start/many_productions`, { checkboxStartProduction, id_user }))
         setCheckboxStartProduction([])
         handleNotificationManyProductions("Iniciadas", toast.info)
     }
-    async function handlePauseManyProductions() {
-        setProductionStatus(await api.post(`/api/pause/many_productions`, { checkboxPause_FinishProduction }))
-        setCheckboxPause_FinishProduction([])
-        handleNotificationManyProductions("Pausadas", toast.error)
+    async function handlePauseManyProductions(id_user) {
+        let response = await api.post(`/api/verify/users`, { checkboxPause_FinishProduction, id_user })
+        if (response.data.status === 200) {
+            setProductionStatus(await api.put(`/api/pause/many_productions`, { checkboxPause_FinishProduction }))
+            setCheckboxPause_FinishProduction([])
+            handleNotificationManyProductions("Pausadas", toast.error)
+        } else {
+            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
+        }
     }
-    async function handleResumeManyProductions() {
-        setProductionStatus(await api.post(`/api/resume/many_productions`, { checkboxResumeProduction }))
+    async function handleResumeManyProductions(id_user) {
+        setProductionStatus(await api.put(`/api/resume/many_productions`, { checkboxResumeProduction, id_user }))
         setCheckboxResumeProduction([])
         handleNotificationManyProductions("Retomadas", toast.warning)
     }
-    async function handleFinishManyProductions() {
-        setProductionStatus(await api.post(`/api/finish/many_productions`, { checkboxPause_FinishProduction, checkboxNextProcesses }))
-        setCheckboxPause_FinishProduction([])
-        setCheckboxNextProcesses([])
-        handleNotificationManyProductions("Concluídas", toast.success)
+    async function handleFinishManyProductions(id_user) {
+        let response = await api.post(`/api/verify/users`, { checkboxPause_FinishProduction, id_user })
+        if (response.data.status === 200) {
+            setProductionStatus(await api.put(`/api/finish/many_productions`, { checkboxPause_FinishProduction, checkboxNextProcesses }))
+            setCheckboxPause_FinishProduction([])
+            setCheckboxNextProcesses([])
+            handleNotificationManyProductions("Concluídas", toast.success)
+        } else {
+            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
+        }
     }
 
     const [productionStatus, setProductionStatus] = useState(null)
     let [functionToBeExecuted, setFunctionToBeExecuted] = useState(null)
-    async function switchFunction() {
+    async function switchFunction(id_user) {
         switch (functionToBeExecuted) {
-            case "handleStartProduction": handleStartProduction(); break
-            case "handlePauseProduction": handlePauseProduction(); break
-            case "handleResumeProduction": handleResumeProduction(); break
-            case "handleFinishProduction": handleFinishProduction(); break
-            case "handleStartManyProductions": handleStartManyProductions(); break
-            case "handlePauseManyProductions": handlePauseManyProductions(); break
-            case "handleResumeManyProductions": handleResumeManyProductions(); break
-            case "handleFinishManyProductions": handleFinishManyProductions(); break
+            case "handleStartProduction": handleStartProduction(id_user); break
+            case "handlePauseProduction": handlePauseProduction(id_user); break
+            case "handleResumeProduction": handleResumeProduction(id_user); break
+            case "handleFinishProduction": handleFinishProduction(id_user); break
+            case "handleStartManyProductions": handleStartManyProductions(id_user); break
+            case "handlePauseManyProductions": handlePauseManyProductions(id_user); break
+            case "handleResumeManyProductions": handleResumeManyProductions(id_user); break
+            case "handleFinishManyProductions": handleFinishManyProductions(id_user); break
         }
     }
 
@@ -249,12 +269,11 @@ export default function Tables() {
                 let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
                 setOpen(false)
                 setCode("")
-                console.log(response.data)
                 if (response.data.status === 400) {
                     handleNotificationError('Usuário Não Possui Permissão!')
                 }
                 else {
-                    switchFunction()
+                    switchFunction({ id_user: data.id })
                 }
             }
                 break;
@@ -275,7 +294,7 @@ export default function Tables() {
                     handleNotificationError('Usuário Não Possui Permissão!')
                 }
                 else {
-                    switchFunction()
+                    switchFunction({ id_user: data.id })
                 }
             }
                 break
@@ -323,7 +342,7 @@ export default function Tables() {
                                                     />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
-                                                <CardContent sx={{ maxHeight: 65}}>
+                                                <CardContent sx={{ maxHeight: 65 }}>
                                                     <Box>
                                                         <Typography variant="body2" align="left" color="text.secondary">
                                                             {row.id_pedido}
@@ -396,7 +415,7 @@ export default function Tables() {
                                                     }
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
-                                                <CardContent sx={{ maxHeight: 65}}>
+                                                <CardContent sx={{ maxHeight: 65 }}>
                                                     <Box>
                                                         <Typography variant="body2" align="left" color="text.secondary">
                                                             {rowProduction.id_pedido}
@@ -486,7 +505,7 @@ export default function Tables() {
                                                     />}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
-                                                <CardContent sx={{ maxHeight: 65}}>
+                                                <CardContent sx={{ maxHeight: 65 }}>
                                                     <Box>
                                                         <Typography variant="body2" align="left" color="text.secondary">
                                                             {rowProductionPaused.id_pedido}
