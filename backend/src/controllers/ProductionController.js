@@ -104,12 +104,10 @@ module.exports = {
     let { id } = req.params;
     let { id_user } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao 
-      set situacao = 1, id_usuario = ${id_user}
-      where id = ${id}`)
+    await connectionPG.query(`update producao set situacao = 1 where id = ${id}`)
     await connectionPG.query(`insert into producao_tempo
-    (id_producao, inicio)
-    values(${id}, '${datetime.toISOString()}')`)
+    (id_producao, inicio, id_usuario)
+    values(${id}, '${datetime.toISOString()}', ${id_user})`)
     return res.json().status(200)
   },
 
@@ -117,7 +115,9 @@ module.exports = {
     let { id } = req.params;
     let datetime = new Date
     await connectionPG.query(`update producao set situacao = 2 where id = ${id}`)
-    await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${id}`)
+    await connectionPG.query(`update producao_tempo
+      set fim = '${datetime.toISOString()}', interrupcao = true
+      where id_producao = ${id}`)
     return res.json().status(200)
   },
 
@@ -125,12 +125,10 @@ module.exports = {
     let { id } = req.params;
     let { id_user } = req.body;
     let datetime = new Date
-    await connectionPG.query(`update producao
-    set situacao = 3, id_usuario = ${id_user}
-    where id = ${id}`)
+    await connectionPG.query(`update producao set situacao = 3 where id = ${id}`)
     await connectionPG.query(`insert into producao_tempo
-    (id_producao, inicio)
-    values(${id}, '${datetime.toISOString()}')`)
+    (id_producao, inicio, id_usuario, interrupcao)
+    values(${id}, '${datetime.toISOString()}', ${id_user}, true)`)
     return res.json().status(200)
   },
 
@@ -143,8 +141,8 @@ module.exports = {
       .then(results => { productFinished = results.rows })
     if (paramsIdNextProcess) {
       await connectionPG.query(`insert into producao
-      (id_pedido, id_produto, id_processo, id_usuario, situacao)
-      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${paramsIdNextProcess}, 1 , 0)`)
+      (id_pedido, id_produto, id_processo, situacao)
+      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${paramsIdNextProcess}, 0)`)
     }
     return res.json().status(200)
   },
@@ -153,12 +151,10 @@ module.exports = {
     let { checkboxStartProduction, id_user } = req.body;
     let datetime = new Date
     for (let i = 0; i < checkboxStartProduction.length; i++) {
-      await connectionPG.query(`update producao
-      set situacao = 1, id_usuario = ${id_user.id_user}
-      where id = ${checkboxStartProduction[i]}`)
+      await connectionPG.query(`update producao set situacao = 1 where id = ${checkboxStartProduction[i]}`)
       await connectionPG.query(`insert into producao_tempo
-      (id_producao, inicio)
-      values(${checkboxStartProduction[i]}, '${datetime.toISOString()}')`)
+      (id_producao, inicio, id_usuario)
+      values(${checkboxStartProduction[i]}, '${datetime.toISOString()}', ${id_user.id_user})`)
     }
     return res.json().status(200)
   },
@@ -168,7 +164,9 @@ module.exports = {
     let datetime = new Date
     for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
       await connectionPG.query(`update producao set situacao = 2 where id = ${checkboxPause_FinishProduction[i]}`)
-      await connectionPG.query(`update producao_tempo set fim = '${datetime.toISOString()}' where id_producao = ${checkboxPause_FinishProduction[i]}`)
+      await connectionPG.query(`update producao_tempo
+      set fim = '${datetime.toISOString()}', interrupcao = true
+      where id_producao = ${checkboxPause_FinishProduction[i]}`)
     }
     return res.json().status(200)
   },
@@ -177,12 +175,10 @@ module.exports = {
     let { checkboxResumeProduction, id_user } = req.body;
     let datetime = new Date
     for (let i = 0; i < checkboxResumeProduction.length; i++) {
-      await connectionPG.query(`update producao
-      set situacao = 3, id_usuario = ${id_user.id_user}
-      where id = ${checkboxResumeProduction[i]}`)
+      await connectionPG.query(`update producao set situacao = 3 where id = ${checkboxResumeProduction[i]}`)
       await connectionPG.query(`insert into producao_tempo
-      (id_producao, inicio)
-      values(${checkboxResumeProduction[i]}, '${datetime.toISOString()}')`)
+      (id_producao, inicio, id_usuario, interrupcao)
+      values(${checkboxResumeProduction[i]}, '${datetime.toISOString()}', ${id_user.id_user}, true)`)
     }
     return res.json().status(200)
   },
@@ -196,8 +192,8 @@ module.exports = {
         .then(results => { productFinished = results.rows })
       if (checkboxNextProcesses[i]) {
         await connectionPG.query(`insert into producao
-      (id_pedido, id_produto, id_processo, id_usuario, situacao)
-      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${checkboxNextProcesses[i]}, 1 , 0)`)
+        (id_pedido, id_produto, id_processo, situacao)
+        values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${checkboxNextProcesses[i]}, 0)`)
       }
     }
     return res.json().status(200)
@@ -206,7 +202,7 @@ module.exports = {
   async verifyUser(req, res) {
     let { paramsID, id_user } = req.body;
     let status = 400
-    await connectionPG.query(`select * from producao where id = ${paramsID} and id_usuario = ${id_user.id_user}`)
+    await connectionPG.query(`select * from producao_tempo where id_producao = ${paramsID} and id_usuario = ${id_user.id_user}`)
       .then(results => { production = results.rows })
     if (production[0]) {
       status = 200
@@ -218,7 +214,7 @@ module.exports = {
     let { checkboxPause_FinishProduction, id_user } = req.body;
     let status = 200
     for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
-      await connectionPG.query(`select * from producao where id = ${checkboxPause_FinishProduction[i]} and id_usuario = ${id_user.id_user}`)
+      await connectionPG.query(`select * from producao_tempo where id_producao = ${checkboxPause_FinishProduction[i]} and id_usuario = ${id_user.id_user}`)
         .then(results => { production = results.rows })
       if (!production[0]) {
         status = 400
@@ -227,6 +223,4 @@ module.exports = {
     }
     return res.json({ status })
   },
-
 };
-

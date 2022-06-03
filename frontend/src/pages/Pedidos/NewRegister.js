@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
   Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody,
-  Autocomplete, Fab, InputAdornment
+  Autocomplete, Fab, InputAdornment, CircularProgress
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -31,7 +31,11 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyOrders ? window.location.href = "/pedidos" : null//cleanFields(''),
+      onClose: () => {
+        setProgress(false)
+        (!manyOrders ? window.location.href = "/pedidos" : setOrderProducts([]))
+      },
+      onOpen: () => setProgress(true)
     })
   }
 
@@ -56,12 +60,11 @@ export default function Register() {
   })
 
   let [manyOrders, setManyOrders] = useState(false)
-  let [cleanProducts, setCleanProducts] = useState(false)
 
   async function handleNewOrder() {
     if (orderProducts.length > 0) {
       try {
-        let response = await api.post('/api/insert/order') //verificar qual a rota correta --- verificar se é a rota get
+        let response = await api.post('/api/insert/order')
         let responseOrder = response.data
         if (response.status === 200) {
           let data = { orderID: responseOrder.id, orderProducts }
@@ -124,6 +127,8 @@ export default function Register() {
     orderProducts[rowPosition].productNote = newProductNote
     setOrderProducts([...orderProducts])
   }
+
+  let [progress, setProgress] = useState(false)
 
   const orderProductsLength = useMemo(() => orderProducts.length, [orderProducts])
 
@@ -197,22 +202,13 @@ export default function Register() {
                     label="Vários Pedidos"
                   />
                 </FormGroup>
-                {manyOrders ? (<FormGroup>
-                  <FormControlLabel
-                    control={<Switch
-                      checked={cleanProducts}
-                      onChange={() => setCleanProducts(!cleanProducts)}
-                    />}
-                    label="Limpar Produtos"
-                  />
-                </FormGroup>) : null}
               </Grid>
               {orderProductsLength > 0 ? (<Grid item xs={5} >
                 <TableContainer >
                   <Table size="medium" stickyHeader>
                     <TableHead>
                       <TableRow>
-                        <StyledTableCell align="center">Produtos</StyledTableCell>
+                        <StyledTableCell align="center" onClick={() => console.log(orderProducts)}>Produtos</StyledTableCell>
                         <StyledTableCell align="center">Quantidade</StyledTableCell>
                         <StyledTableCell align="center">Observação</StyledTableCell>
                         <StyledTableCell />
@@ -255,12 +251,18 @@ export default function Register() {
                 direction="row"
                 justifyContent="flex-end"
               >
-                <Button variant="contained" style={{background: '#E74C3C', color: "#FFFFFF"}} href="/pedidos">
-                  Cancelar
-                </Button>
-                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewOrder()}>
-                  Salvar
-                </Button>
+                {!progress ?
+                  (<>
+                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/pedidos">
+                      Cancelar
+                    </Button>
+                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewOrder()}>
+                      Salvar
+                    </Button>
+                  </>) :
+                  (<Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                  </Box>)}
               </Grid>
             </Grid>
           </Paper>
