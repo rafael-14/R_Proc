@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
   Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
-  Checkbox
+  Checkbox, CircularProgress
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -29,7 +29,14 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/setores" : setSector(""),
+      onClose: () => {
+        setProgress(false)
+        (!manyRegisters ? window.location.href = "/setores" : null)
+      },
+      onOpen: () => {
+        setProgress(true)
+        setSector("")
+      }
     })
   }
 
@@ -98,6 +105,8 @@ export default function Register() {
       setVinculatedUser([...vinculatedUser, id])
     }
   }
+
+  let [progress, setProgress] = useState(false)
 
   return (
     <ThemeProvider theme={theme}>
@@ -182,19 +191,25 @@ export default function Register() {
                 direction="row"
                 justifyContent="flex-end"
               >
-                <Button
-                  variant="contained"
-                  style={{
-                    background: '#E74C3C',
-                    color: "#FFFFFF"
-                  }}
-                  href="/setores"
-                >
-                  Cancelar
-                </Button>
-                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewSector()}>
-                  Salvar
-                </Button>
+                {!progress ?
+                  (<>
+                    <Button
+                      variant="contained"
+                      style={{
+                        background: '#E74C3C',
+                        color: "#FFFFFF"
+                      }}
+                      href="/setores"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewSector()}>
+                      Salvar
+                    </Button>
+                  </>) :
+                  (<Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                  </Box>)}
               </Grid>
             </Grid>
           </Paper>

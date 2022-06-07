@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
   Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
-  Checkbox
+  Checkbox, CircularProgress
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -29,7 +29,14 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/usuarios" : cleanFields(''),
+      onClose: () => {
+        setProgress(false)
+        (!manyRegisters ? window.location.href = "/usuarios" : null)
+      },
+      onOpen: () => {
+        setProgress(true)
+        cleanFields("")
+      }
     })
   }
 
@@ -124,6 +131,8 @@ export default function Register() {
       setVinculatedProcess([...vinculatedProcess, id])
     }
   }
+
+  let [progress, setProgress] = useState(false)
 
   return (
     <ThemeProvider theme={theme}>
@@ -236,19 +245,23 @@ export default function Register() {
                 direction="row"
                 justifyContent="flex-end"
               >
-                <Button
-                  variant="contained"
-                  style={{
-                    background: '#E74C3C',
-                    color: "#FFFFFF"
-                  }}
-                  href="/processos"
-                >
-                  Cancelar
-                </Button>
-                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => checkFields()}>
-                  Salvar
-                </Button>
+                {!progress ?
+                  (<><Button
+                    variant="contained"
+                    style={{
+                      background: '#E74C3C',
+                      color: "#FFFFFF"
+                    }}
+                    href="/processos"
+                  >
+                    Cancelar
+                  </Button>
+                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => checkFields()}>
+                      Salvar
+                    </Button></>) :
+                  (<Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                  </Box>)}
               </Grid>
             </Grid>
           </Paper>

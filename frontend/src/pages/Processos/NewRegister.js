@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel,
-  Container, Grid, Paper, Box, TextField, Toolbar
+  Container, Grid, Paper, Box, TextField, Toolbar, CircularProgress
 } from "@mui/material";
 
 export default function Register() {
@@ -18,8 +18,14 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/processos" : null,
-      onOpen: setProcessName("")
+      onClose: () => {
+        setProgress(false)
+          (!manyRegisters ? window.location.href = "/processos" : null)
+      },
+      onOpen: () => {
+        setProcessName("")
+        setProgress(true)
+      }
     })
   }
 
@@ -67,6 +73,8 @@ export default function Register() {
     }
   }
 
+  let [progress, setProgress] = useState(false)
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -110,19 +118,18 @@ export default function Register() {
                 direction="row"
                 justifyContent="flex-end"
               >
-                <Button
-                  variant="contained"
-                  style={{
-                    background: '#E74C3C',
-                    color: "#FFFFFF"
-                  }}
-                  href="/processos"
-                >
-                  Cancelar
-                </Button>
-                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProcess()}>
-                  Salvar
-                </Button>
+                {!progress ?
+                  (<>
+                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/processos">
+                      Cancelar
+                    </Button>
+                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProcess()}>
+                      Salvar
+                    </Button>
+                  </>) :
+                  (<Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                  </Box>)}
               </Grid>
             </Grid>
           </Paper>

@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
   Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
-  Checkbox
+  Checkbox, CircularProgress
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -109,7 +109,14 @@ export default function Register() {
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      onClose: () => !manyRegisters ? window.location.href = "/" : setProductName(''),
+      onClose: () => {
+        setProgress(false)
+          (!manyRegisters ? window.location.href = "/" : null)
+      },
+      onOpen: () => {
+        setProgress(true)
+        setProductName("")
+      }
     })
   }
 
@@ -241,6 +248,8 @@ export default function Register() {
     setFabricationOrder([...fabricationOrder])
     setUnselectedProcesses([])
   }
+
+  let [progress, setProgress] = useState(false)
 
   return (
     <ThemeProvider theme={theme}>
@@ -381,19 +390,18 @@ export default function Register() {
                 direction="row"
                 justifyContent="flex-end"
               >
-                <Button
-                  variant="contained"
-                  style={{
-                    background: '#E74C3C',
-                    color: "#FFFFFF"
-                  }}
-                  href="/"
-                >
-                  Cancelar
-                </Button>
-                <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProduct()}>
-                  Salvar
-                </Button>
+                {!progress ?
+                  (<>
+                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/">
+                      Cancelar
+                    </Button>
+                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProduct()}>
+                      Salvar
+                    </Button>
+                  </>) :
+                  (<Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                  </Box>)}
               </Grid>
             </Grid>
           </Paper>
