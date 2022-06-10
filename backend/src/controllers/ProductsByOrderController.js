@@ -13,12 +13,15 @@ module.exports = {
   async insertProductsByOrder(req, res) {
     let { orderID, orderProducts } = req.body;
     let datetime = new Date
+    let insertProductsByOrder = [];
     for (let i = 0; i < orderProducts.length; i++) {
       await connectionPG.query(`insert into produtos_por_pedido
       (id_pedido, id_produto, sequencia, quantidade, data_pedido, observacao)
       values(${orderID}, ${orderProducts[i].id}, ${i + 1}, ${orderProducts[i].productQuantity},
-      '${datetime.toISOString().slice(0, 10)}', ${orderProducts[i].productNote !== "" ? `'${orderProducts[i].productNote}'` : null})`)
+      '${datetime.toISOString().slice(0, 10)}', ${orderProducts[i].productNote !== "" ? `'${orderProducts[i].productNote}'` : null})
+      returning id as id_produto_pedido, id_produto`)
+        .then(results => { insertProductsByOrder = [...insertProductsByOrder, ...results.rows] })
     }
-    return res.json().status(200)
+    return res.json(insertProductsByOrder).status(200)
   }
 };

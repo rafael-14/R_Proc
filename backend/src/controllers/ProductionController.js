@@ -10,8 +10,7 @@ module.exports = {
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
     join processo proc on proc.id = prodc.id_processo
-    --join processos_por_produto proc_prod on proc_prod.id_produto = prodc.id_produto
-    join produtos_por_pedido prod_ped on prod_ped.id_pedido = prodc.id_pedido and prod_ped.id_produto = prodc.id_produto
+    join produtos_por_pedido prod_ped on prod_ped.id = prodc.id_produto_pedido
     where prodc.situacao = 0`)
       .then(results => { productionNotStarted = results.rows })
     for (let i = 0; i < productionNotStarted.length; i++) {
@@ -38,7 +37,7 @@ module.exports = {
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
     join processo proc on proc.id = prodc.id_processo
-    join produtos_por_pedido prod_ped on prod_ped.id_pedido = prodc.id_pedido and prod_ped.id_produto = prodc.id_produto
+    join produtos_por_pedido prod_ped on prod_ped.id = prodc.id_produto_pedido
     where prodc.situacao in (1, 3)`)
       .then(results => { productionStarted = results.rows })
     for (let i = 0; i < productionStarted.length; i++) {
@@ -65,7 +64,7 @@ module.exports = {
     from producao prodc
     join produto prod on prod.id = prodc.id_produto
     join processo proc on proc.id = prodc.id_processo
-    join produtos_por_pedido prod_ped on prod_ped.id_pedido = prodc.id_pedido and prod_ped.id_produto = prodc.id_produto
+    join produtos_por_pedido prod_ped on prod_ped.id = prodc.id_produto_pedido
     where prodc.situacao = 2`)
       .then(results => { productionPaused = results.rows })
     for (let i = 0; i < productionPaused.length; i++) {
@@ -93,8 +92,8 @@ module.exports = {
         await connectionPG.query(`select * from processos_por_produto where id_produto = ${orderProducts[i].id} order by sequencia limit 1`)
           .then(results => processID = results.rows)
         await connectionPG.query(`insert into producao
-      (id_pedido, id_produto, id_processo, situacao)
-      values(${orderID}, ${orderProducts[i].id}, ${processID[0].id_processo}, 0)`)
+      (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
+      values(${orderID}, ${orderProducts[i].id}, ${processID[0].id_processo}, ${orderProducts[i].id_produto_pedido}, 0)`)
       }
     }
     return res.json().status(200)
@@ -141,8 +140,8 @@ module.exports = {
       .then(results => { productFinished = results.rows })
     if (paramsIdNextProcess) {
       await connectionPG.query(`insert into producao
-      (id_pedido, id_produto, id_processo, situacao)
-      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${paramsIdNextProcess}, 0)`)
+      (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
+      values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${paramsIdNextProcess}, ${productFinished[0].id_produto_pedido}, 0)`)
     }
     return res.json().status(200)
   },
@@ -192,8 +191,8 @@ module.exports = {
         .then(results => { productFinished = results.rows })
       if (checkboxNextProcesses[i]) {
         await connectionPG.query(`insert into producao
-        (id_pedido, id_produto, id_processo, situacao)
-        values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${checkboxNextProcesses[i]}, 0)`)
+        (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
+        values(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${checkboxNextProcesses[i]}, ${productFinished[0].id_produto_pedido}, 0)`)
       }
     }
     return res.json().status(200)

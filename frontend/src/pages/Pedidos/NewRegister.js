@@ -33,7 +33,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-        (!manyOrders ? window.location.href = "/pedidos" : setOrderProducts([]))
+          (!manyOrders ? window.location.href = "/pedidos" : setOrderProducts([]))
       },
       onOpen: () => setProgress(true)
     })
@@ -69,11 +69,17 @@ export default function Register() {
         if (response.status === 200) {
           let data = { orderID: responseOrder.id, orderProducts }
           try {
-            let response = await api.post('/api/insert/products_by_order', data)
+            response = await api.post('/api/insert/products_by_order', data)
             if (response.status === 200) {
-              let data = { orderID: responseOrder.id, orderProducts }
+              let newOrderProducts = orderProducts.map((orderProducts, position) => {
+                return orderProducts.id === parseInt(response.data[position].id_produto) ?
+                  { ...orderProducts, ...response.data[position] }
+                  : { ...orderProducts }
+              })
+              data = { orderID: responseOrder.id, orderProducts: newOrderProducts }
+
               try {
-                let response = await api.post('/api/insert/production', data)
+                await api.post('/api/insert/production', data)
               } catch (e) { }
               handleNotificationSuccess(responseOrder.id)
             }
@@ -208,7 +214,7 @@ export default function Register() {
                   <Table size="medium" stickyHeader>
                     <TableHead>
                       <TableRow>
-                        <StyledTableCell align="center" onClick={() => console.log(orderProducts)}>Produtos</StyledTableCell>
+                        <StyledTableCell align="center">Produtos</StyledTableCell>
                         <StyledTableCell align="center">Quantidade</StyledTableCell>
                         <StyledTableCell align="center">Observação</StyledTableCell>
                         <StyledTableCell />
