@@ -111,7 +111,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-          (!manyRegisters ? window.location.href = "/" : null)
+          (!manyRegisters ? window.location.href = "/produtos" : null)
       },
       onOpen: () => {
         setProgress(true)
@@ -392,7 +392,7 @@ export default function Register() {
               >
                 {!progress ?
                   (<>
-                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/">
+                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/produtos">
                       Cancelar
                     </Button>
                     <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProduct()}>

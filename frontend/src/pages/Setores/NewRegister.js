@@ -146,7 +146,7 @@ export default function Register() {
                     label="Cadastrar Vários"
                   />
                 </FormGroup>
-                {manyRegisters ? (<FormGroup>
+                {/*{manyRegisters ? (<FormGroup>
                   <FormControlLabel
                     control={<Switch
                       checked={cleanProcesses}
@@ -154,7 +154,7 @@ export default function Register() {
                     />}
                     label="Limpar Usuários"
                   />
-                </FormGroup>) : null}
+                    </FormGroup>) : null}*/}
               </Grid>
               <br />
               <Grid item xs={5} >

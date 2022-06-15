@@ -100,7 +100,7 @@ export default function Dashboard(props) {
               direction="row"
               justifyContent="space-between"
             >
-              <Button style={{ color: 'inherit', hover: '#FFFFFF' }} href="/"><strong>R_Proc</strong></Button>
+              <Button style={{ color: 'inherit', hover: '#FFFFFF' }} href="/"><strong>Virtual Joias ERP</strong></Button>
               <Button style={{ color: 'inherit', hover: '#FFFFFF' }} onClick={() => handleLogout()}><strong>Sair</strong></Button>
             </Grid>
           </Toolbar>

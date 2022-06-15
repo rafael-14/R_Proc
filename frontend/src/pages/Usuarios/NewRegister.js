@@ -199,7 +199,7 @@ export default function Register() {
                     label="Cadastrar Vários"
                   />
                 </FormGroup>
-                {manyRegisters ? (<FormGroup>
+                {/*{manyRegisters ? (<FormGroup>
                   <FormControlLabel
                     control={<Switch
                       checked={cleanProcesses}
@@ -207,7 +207,7 @@ export default function Register() {
                     />}
                     label="Limpar Processos"
                   />
-                </FormGroup>) : null}
+                    </FormGroup>) : null}*/}
               </Grid>
               <br />
 
@@ -252,7 +252,7 @@ export default function Register() {
                       background: '#E74C3C',
                       color: "#FFFFFF"
                     }}
-                    href="/processos"
+                    href="/usuarios"
                   >
                     Cancelar
                   </Button>

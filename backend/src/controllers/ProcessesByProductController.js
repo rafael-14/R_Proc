@@ -5,7 +5,8 @@ module.exports = {
     let { id } = req.params;
     await connectionPG.query(`SELECT * FROM processos_por_produto proc_prod
     join processo proc on proc.id = proc_prod.id_processo
-    where proc_prod.id_produto = ${id}`)
+    where proc_prod.id_produto = ${id}
+    order by 1`)
       .then(results => { processesByProduct = results.rows })
     return res.json(processesByProduct)
   },
