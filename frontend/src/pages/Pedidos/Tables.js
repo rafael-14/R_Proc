@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
     Button, TextField, Autocomplete, Table, Typography, IconButton,
-    TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
+    TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip,
     Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse,
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -32,7 +32,10 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="left">{row.id}</TableCell>
+                <TableCell align="left" onClick={() => console.log(row)}>{row.id}</TableCell>
+                <TableCell align="left">
+                    <Chip size="small" label={row.status} color={row.status === "Concluído" ? "success" : "error"} />
+                </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -46,6 +49,7 @@ function Row(props) {
                                     <TableRow>
                                         <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Produtos</TableCell>
                                         <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Quantidade</TableCell>
+                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Status</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -53,6 +57,7 @@ function Row(props) {
                                         <TableRow key={row.id}>
                                             <TableCell align="left">{row.nome}</TableCell>
                                             <TableCell align="left">{row.quantidade}</TableCell>
+                                            <TableCell align="left">status</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -88,44 +93,43 @@ export default function Tables() {
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Paper>
-                        <Grid
-                            container
-                            direction="row"
-                            justifyContent="space-between"
-                        >
-                            <Autocomplete
-                                disablePortal
-                                options={orders.map((row) => row.id)}
-                                sx={{ width: 500 }}
-                                renderInput={(params) => <TextField color="secondary" {...params} label="Pedidos" />}
-                            />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="space-between"
+                    >
+                        <Autocomplete
+                            disablePortal
+                            options={orders.map((row) => row.id)}
+                            sx={{ width: 500 }}
+                            renderInput={(params) => <TextField color="secondary" {...params} label="Pedidos" />}
+                        />
+                        <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
+                    </Grid>
+                    <br />
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <TableContainer>
+                                <Table size="medium" stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
+                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Pedidos</TableCell>
+                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Status</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {orders.map((row) => (
+                                            <Row
+                                                key={row.id}
+                                                row={row}
+                                            />
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Grid>
-                        <br />
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <TableContainer>
-                                    <Table size="medium" stickyHeader>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
-                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Pedidos</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {orders.map((row) => (
-                                                <Row
-                                                    key={row.id}
-                                                    row={row}
-                                                />
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </Grid>
-                        </Grid>
-                    </Paper>
+                    </Grid>
                 </Container>
             </Box>
         </ThemeProvider >
