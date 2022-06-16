@@ -32,16 +32,16 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell align="left" onClick={() => console.log(row)}>{row.id}</TableCell>
+                <TableCell align="left">{row.id}</TableCell>
                 <TableCell align="left">
-                    <Chip size="small" label={row.status} color={row.status === "Concluído" ? "success" : "error"} />
+                    <Chip size="small" label={row.status ? row.status : "Concluído"} color={row.status ? "error" : "success"} />
                 </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6" onClick={() => console.log(productsByOrder)}>
+                            <Typography variant="h6">
                                 Produtos
                             </Typography>
                             <Table size="small" aria-label="purchases">
