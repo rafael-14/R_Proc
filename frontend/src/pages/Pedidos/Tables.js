@@ -11,7 +11,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 function Row(props) {
 
     const { row } = props;
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     let [productsByOrder, setProductsByOrder] = useState([])
     useEffect(() => {
@@ -57,7 +57,9 @@ function Row(props) {
                                         <TableRow key={row.id}>
                                             <TableCell align="left">{row.nome}</TableCell>
                                             <TableCell align="left">{row.quantidade}</TableCell>
-                                            <TableCell align="left">status</TableCell>
+                                            <TableCell align="left">
+                                                <Chip size="small" label={row.status ? row.status : "Concluído"} color={row.status ? "error" : "success"} />
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

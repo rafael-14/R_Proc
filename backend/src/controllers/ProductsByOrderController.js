@@ -1,13 +1,28 @@
 const connectionPG = require('../database');
+const lastProcess = require('../functions/lastProcess');
 
 module.exports = {
   async selectProductsByOrder(req, res) {
     let { id } = req.params;
-    await connectionPG.query(`SELECT * FROM produtos_por_pedido prod_ped
+    await connectionPG.query(`SELECT prod_ped.*, prod.nome
+    FROM produtos_por_pedido prod_ped
     JOIN produto prod ON prod.id = prod_ped.id_produto
     WHERE prod_ped.id_pedido = ${id}`)
       .then(results => { productsByOrder = results.rows })
-    console.log(productsByOrder)
+    let dataLastProcess = await lastProcess.lastProcess(productsByOrder)
+    //A função chamada acima, retornará o último Processo de cada Produto
+    for (let i = 0; i < dataLastProcess.length; i++) {
+      await connectionPG.query(`SELECT * FROM producao
+        WHERE id_processo = ${dataLastProcess[i].id_processo}
+        AND id_produto = ${productsByOrder[i].id_produto}
+        AND id_produto_pedido = ${productsByOrder[i].id}
+        AND situacao = 4
+        ORDER BY id DESC`)
+        .then(results => { productionStatus = results.rows, productionStatusQuantity = results.rowCount })
+      if (!productionStatus[0] || (productionStatusQuantity != productsByOrder[i].quantidade)) {
+        productsByOrder[i].status = "Em Andamento"
+      }
+    }
     return res.json(productsByOrder)
   },
 
