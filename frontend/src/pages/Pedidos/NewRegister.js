@@ -262,9 +262,10 @@ export default function Register() {
                     <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/pedidos">
                       Cancelar
                     </Button>
-                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewOrder()}>
-                      Salvar
-                    </Button>
+                    {orderProductsLength > 0 ?
+                      (<Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewOrder()}>
+                        Salvar
+                      </Button>) : null}
                   </>) :
                   (<Box sx={{ display: 'flex' }}>
                     <CircularProgress />
