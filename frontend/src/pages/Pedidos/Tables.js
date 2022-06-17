@@ -79,6 +79,9 @@ export default function Tables() {
 
     let [direction, setDirection] = useState(true)
     let [searchFor, setSearchFor] = useState("orderNumber")
+    let [startDate, setStartDate] = useState(null)
+    let [endDate, setEndDate] = useState(null)
+    let [orderStatus, setOrderStatus] = useState(null)
 
     const theme = createTheme({
         palette: {
@@ -111,12 +114,41 @@ export default function Tables() {
                         direction="row"
                         justifyContent="space-between"
                     >
-                        <Autocomplete
-                            disablePortal
-                            options={orders.map((row) => row.id)}
-                            sx={{ width: 500 }}
-                            renderInput={(params) => <TextField color="secondary" {...params} label="Pedidos" />}
-                        />
+                        {searchFor === "orderNumber" ? (
+                            <TextField
+                                color="secondary"
+                                sx={{ width: 500 }}
+                                //value={nameCompanyToBeFound}
+                                //onChange={e => { requestSearch(e.target.value); setPage(0) }}
+                                label="Pedidos"
+                            />) : (<Grid>
+                                <TextField
+                                    color="secondary"
+                                    label="Data Início"
+                                    required
+                                    //value={startDate}
+                                    //onChange={e => { setStartDate(e.target.value); setPage(0) }}
+                                    type="date"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    sx={{ width: 225 }}
+                                />
+                                <TextField
+                                    color="secondary"
+                                    style={{ marginInlineStart: 15 }}
+                                    label="Data Fim"
+                                    //disabled={startDate ? false : true}
+                                    //value={endDate}
+                                    //onChange={e => { setEndDate(e.target.value); setPage(0) }}
+                                    type="date"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    sx={{ width: 225 }}
+                                />
+                            </Grid>)}
+
                         <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
                     </Grid>
                     <Grid container direction="row" justifyContent="space-between">
@@ -162,24 +194,23 @@ export default function Tables() {
                                 />
                             </RadioGroup>
                         </Grid>
-
                         <Grid>
-                            <RadioGroup row defaultValue={"Name"}>
+                            <RadioGroup row defaultValue={"All"}>
                                 <FormControlLabel
                                     id="setSearchByName"
-                                    value="Name"
+                                    value="All"
                                     //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
                                     control={<Radio />}
                                     label="Todos"
                                 />
                                 <FormControlLabel
-                                    value="creationDate"
+                                    value="Concluded"
                                     //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
                                     control={<Radio />}
                                     label="Concluídos"
                                 />
                                 <FormControlLabel
-                                    value="creationDate"
+                                    value="InProgress"
                                     //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
                                     control={<Radio />}
                                     label="Em Andamento"
