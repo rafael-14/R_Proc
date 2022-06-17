@@ -31,7 +31,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-        (!manyRegisters ? window.location.href = "/setores" : null)
+          (!manyRegisters ? window.location.href = "/setores" : null)
       },
       onOpen: () => {
         setProgress(true)
@@ -62,7 +62,6 @@ export default function Register() {
 
   let [sector, setSector] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
-  let [cleanProcesses, setCleanProcesses] = useState(false)
 
   async function handleNewSector() {
     if (!sector) {
@@ -146,15 +145,6 @@ export default function Register() {
                     label="Cadastrar Vários"
                   />
                 </FormGroup>
-                {/*{manyRegisters ? (<FormGroup>
-                  <FormControlLabel
-                    control={<Switch
-                      checked={cleanProcesses}
-                      onChange={() => setCleanProcesses(!cleanProcesses)}
-                    />}
-                    label="Limpar Usuários"
-                  />
-                    </FormGroup>) : null}*/}
               </Grid>
               <br />
               <Grid item xs={5} >
@@ -175,7 +165,7 @@ export default function Register() {
                               onClick={() => handleVinculatedUser(row.id)}
                               disabled={row.ativo ? false : true}
                             />
-                            {row.nome}
+                            {row.nome} {row.sobrenome}
                           </TableCell>
                           <TableCell align="right">
                             <Chip size="small" label={row.ativo ? "Ativo" : "Inativo"} color={row.ativo ? "success" : "error"} />

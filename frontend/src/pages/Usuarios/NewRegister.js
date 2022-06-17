@@ -31,7 +31,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-        (!manyRegisters ? window.location.href = "/usuarios" : null)
+          (!manyRegisters ? window.location.href = "/usuarios" : null)
       },
       onOpen: () => {
         setProgress(true)
@@ -91,7 +91,6 @@ export default function Register() {
   let [userLogin, setUserLogin] = useState("")
   let [userPassword, setUserPassword] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
-  let [cleanProcesses, setCleanProcesses] = useState(false)
 
   async function handleNewUser() {
     let data = { userName, userSurname, userLogin, userPassword }
@@ -199,18 +198,8 @@ export default function Register() {
                     label="Cadastrar Vários"
                   />
                 </FormGroup>
-                {/*{manyRegisters ? (<FormGroup>
-                  <FormControlLabel
-                    control={<Switch
-                      checked={cleanProcesses}
-                      onChange={() => setCleanProcesses(!cleanProcesses)}
-                    />}
-                    label="Limpar Processos"
-                  />
-                    </FormGroup>) : null}*/}
               </Grid>
               <br />
-
               <Grid item xs={5} >
                 <TableContainer >
                   <Table size="medium" stickyHeader>
