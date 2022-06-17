@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
     Button, TextField, Autocomplete, Table, Typography, IconButton, RadioGroup,
-    TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip, Radio,
+    TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip, Radio, TableSortLabel,
     Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse, FormControlLabel
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -77,6 +77,9 @@ function Row(props) {
 
 export default function Tables() {
 
+    let [direction, setDirection] = useState(true)
+    let [searchFor, setSearchFor] = useState("orderNumber")
+
     const theme = createTheme({
         palette: {
             primary: { main: '#FF7A40' },
@@ -91,13 +94,18 @@ export default function Tables() {
             setOrders(response.data)
         }
         loadOrders()
-    }, [])
+
+    }, [direction])
+    useEffect(() => {
+        setDirection(true)
+    }, [searchFor])
 
     return (
         <ThemeProvider theme={theme}>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+                    <Button onClick={() => console.log(searchFor)}>teste</Button>
                     <Grid
                         container
                         direction="row"
@@ -111,24 +119,74 @@ export default function Tables() {
                         />
                         <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
                     </Grid>
-                    <Grid>
-                        <RadioGroup row defaultValue={"Name"}>
-                            <FormControlLabel
-                                id="setSearchByName"
-                                value="Name"
-                                //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
-                                control={<Radio />}
-                                label="Número Pedido"
-                            />
-                            <FormControlLabel
-                                value="creationDate"
-                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
-                                control={<Radio />}
-                                label="Data Pedido"
-                            />
-                        </RadioGroup>
-                    </Grid>
+                    <Grid container direction="row" justifyContent="space-between">
+                        <Grid>
+                            <RadioGroup row defaultValue={searchFor}>
+                                <FormControlLabel
+                                    value="orderNumber"
+                                    //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
+                                    onClick={() => { setSearchFor("orderNumber") }}
+                                    control={<Radio />}
+                                    label={
+                                        <Grid container direction="row" justifyContent="flex-end">
+                                            <Typography>
+                                                Número Pedido
+                                            </Typography>
+                                            {searchFor === "orderNumber" ?
+                                                (<TableSortLabel
+                                                    direction={direction ? "asc" : "desc"}
+                                                    active
+                                                    onClick={() => setDirection(!direction)}
+                                                />) : null}
+                                        </ Grid>
+                                    }
+                                />
+                                <FormControlLabel
+                                    value="orderDate"
+                                    //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                    onClick={() => { setSearchFor("orderDate") }}
+                                    control={<Radio />}
+                                    label={
+                                        <Grid container direction="row" justifyContent="flex-end">
+                                            <Typography>
+                                                Data Pedido
+                                            </Typography>
+                                            {searchFor === "orderDate" ?
+                                                (<TableSortLabel
+                                                    direction={direction ? "asc" : "desc"}
+                                                    active
+                                                    onClick={() => setDirection(!direction)}
+                                                />) : null}
+                                        </ Grid>
+                                    }
+                                />
+                            </RadioGroup>
+                        </Grid>
 
+                        <Grid>
+                            <RadioGroup row defaultValue={"Name"}>
+                                <FormControlLabel
+                                    id="setSearchByName"
+                                    value="Name"
+                                    //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
+                                    control={<Radio />}
+                                    label="Todos"
+                                />
+                                <FormControlLabel
+                                    value="creationDate"
+                                    //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                    control={<Radio />}
+                                    label="Concluídos"
+                                />
+                                <FormControlLabel
+                                    value="creationDate"
+                                    //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                    control={<Radio />}
+                                    label="Em Andamento"
+                                />
+                            </RadioGroup>
+                        </Grid>
+                    </Grid>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TableContainer>
