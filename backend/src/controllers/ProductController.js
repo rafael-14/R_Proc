@@ -2,7 +2,7 @@ const connectionPG = require('../database');
 
 module.exports = {
   async selectAllProducts(req, res) {
-    await connectionPG.query(`select * from produto order by 1`)
+    await connectionPG.query(`SELECT * FROM produto ORDER BY 1`)
       .then(results => { allProducts = results.rows })
     return res.json(allProducts)
   },
@@ -10,21 +10,25 @@ module.exports = {
   async insertProduct(req, res) {
     let { productName } = req.body;
     let datetime = new Date
-    await connectionPG.query(`insert into produto(nome,data_criacao) values('${productName}', '${datetime.toISOString().slice(0, 10)}')
-    returning *`).then(results => { insertProduct = results.rows })
+    await connectionPG.query(`INSERT INTO produto(nome,data_criacao)
+    VALUES('${productName}', '${datetime.toISOString().slice(0, 10)}')
+    RETURNING *`).then(results => { insertProduct = results.rows })
     return res.json(insertProduct[0]).status(200)
   },
 
   async inactivateProduct(req, res) {
     let { id } = req.params;
     let datetime = new Date
-    await connectionPG.query(`update produto set ativo=false, data_inativacao='${datetime.toISOString().slice(0, 10)}' where id = ${id}`)
+    await connectionPG.query(`UPDATE produto
+    SET ativo=false, data_inativacao='${datetime.toISOString().slice(0, 10)}'
+    WHERE id = ${id}`)
     return res.json().status(200)
   },
 
   async activateProduct(req, res) {
     let { id } = req.params;
-    await connectionPG.query(`update produto set ativo=true, data_inativacao=null where id = ${id}`)
+    await connectionPG.query(`UPDATE produto SET ativo=true, data_inativacao=null
+    WHERE id = ${id}`)
     return res.json().status(200)
   }
 };

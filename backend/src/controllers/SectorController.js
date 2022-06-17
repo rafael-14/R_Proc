@@ -4,7 +4,7 @@ const secret = "mysecret"
 
 module.exports = {
   async selectAllSectors(req, res) {
-    await connectionPG.query(`SELECT * FROM setor order by 1`)
+    await connectionPG.query(`SELECT * FROM setor ORDER BY 1`)
       .then(results => { allSectors = results.rows })
     return res.json(allSectors)
   },
@@ -12,16 +12,16 @@ module.exports = {
   async insertSector(req, res) {
     let { sector } = req.body;
     let datetime = new Date
-    await connectionPG.query(`insert into setor
+    await connectionPG.query(`INSERT INTO setor
       (nome, data_criacao)
-      values('${sector}', '${datetime.toISOString().slice(0, 10)}')
-      returning *`).then(results => { insertSector = results.rows })
+      VALUES('${sector}', '${datetime.toISOString().slice(0, 10)}')
+      RETURNING *`).then(results => { insertSector = results.rows })
     return res.json(insertSector[0]).status(200)
   },
 
   async login(req, res) {
     let { nome } = req.body;
-    await connectionPG.query(`select * from setor where nome ilike '${nome}'`)
+    await connectionPG.query(`SELECT * FROM setor WHERE nome ILIKE '${nome}'`)
       .then(results => { login = results.rows })
     if (login[0] === undefined) {
       return res.json({ status: 500 })
