@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, TextField, Autocomplete, Table, Typography, IconButton,
-    TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip,
-    Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse,
+    Button, TextField, Autocomplete, Table, Typography, IconButton, RadioGroup,
+    TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip, Radio,
+    Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse, FormControlLabel
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -33,6 +33,9 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell align="left">{row.id}</TableCell>
+                <TableCell align="left">
+                    {new Date(row.data_pedido).toLocaleString('pt-br', { dateStyle: "short", timeStyle: "short" })}
+                </TableCell>
                 <TableCell align="left">
                     <Chip size="small" label={row.status ? row.status : "Concluído"} color={row.status ? "error" : "success"} />
                 </TableCell>
@@ -108,7 +111,24 @@ export default function Tables() {
                         />
                         <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
                     </Grid>
-                    <br />
+                    <Grid>
+                        <RadioGroup row defaultValue={"Name"}>
+                            <FormControlLabel
+                                id="setSearchByName"
+                                value="Name"
+                                //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
+                                control={<Radio />}
+                                label="Número Pedido"
+                            />
+                            <FormControlLabel
+                                value="creationDate"
+                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                control={<Radio />}
+                                label="Data Pedido"
+                            />
+                        </RadioGroup>
+                    </Grid>
+
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TableContainer>
@@ -117,6 +137,7 @@ export default function Tables() {
                                         <TableRow>
                                             <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
                                             <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Pedidos</TableCell>
+                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Data Pedido</TableCell>
                                             <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Status</TableCell>
                                         </TableRow>
                                     </TableHead>

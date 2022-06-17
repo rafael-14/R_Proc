@@ -32,7 +32,7 @@ module.exports = {
     let datetime = new Date
     await connectionPG.query(`INSERT INTO pedido
       (data_pedido)
-      VALUES('${datetime.toISOString().slice(0, 10)}')
+      VALUES('${datetime.toISOString()}')
       RETURNING id`).then(results => { insertOrder = results.rows })
     return res.json(insertOrder[0]).status(200)
   }
