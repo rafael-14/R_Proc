@@ -11,13 +11,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Tables() {
 
-    const theme = createTheme({
-        palette: {
-            primary: { main: '#FF7A40' },
-            secondary: { main: '#000000' }
-        }
-    })
-
     async function handleNotification(processName, processSituation) {
         (processSituation === "Inativado" ? toast.error : toast.success)(`Processo: ${processName} ${processSituation} com Sucesso!`, {
             position: "top-right",
@@ -45,65 +38,63 @@ export default function Tables() {
     }, [situation])
 
     return (
-        <ThemeProvider theme={theme}>
-            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
-                <Toolbar />
-                <ToastContainer />
-                <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Paper>
-                        <Grid
-                            container
-                            direction="row"
-                            justifyContent="space-between"
-                        >
-                            <Autocomplete
-                                disablePortal
-                                options={processes.map((row) => row.nome)}
-                                sx={{ width: 500 }}
-                                renderInput={(params) => <TextField color="secondary" {...params} label="Processos" />}
-                            />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/processos'>Novo</Button>
-                        </Grid>
-                        <br />
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <TableContainer>
-                                    <Table size="medium" stickyHeader>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Processos</TableCell>
-                                                <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right"></TableCell>
+        <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+            <Toolbar />
+            <ToastContainer />
+            <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+                <Paper>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="space-between"
+                    >
+                        <Autocomplete
+                            disablePortal
+                            options={processes.map((row) => row.nome)}
+                            sx={{ width: 500 }}
+                            renderInput={(params) => <TextField color="secondary" {...params} label="Processos" />}
+                        />
+                        <Button style={{ background: "#E8927C", color: "#FFFFFF", width: "10%" }} href="/cadastrar/processos">Novo</Button>
+                    </Grid>
+                    <br />
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <TableContainer>
+                                <Table size="medium" stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell style={{ background: "#E8927C", color: "#FFFFFF" }} align="left">Processos</TableCell>
+                                            <TableCell style={{ background: "#E8927C", color: "#FFFFFF" }} align="right"></TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {processes.map((row) => (
+                                            <TableRow key={row.id}>
+                                                <TableCell align="left">{row.nome}</TableCell>
+                                                <TableCell align="right" size="small" width="15%">
+                                                    <abbr title="Editar">
+                                                        <Button style={{ color: "#000000" }}>
+                                                            <CreateIcon />
+                                                        </Button>
+                                                    </abbr>
+                                                    <abbr title={row.ativo ? "Inativar" : "Ativar"}>
+                                                        <Switch
+                                                            color="success"
+                                                            onClick={() => handleSituation(row.id, row.nome, row.ativo)}
+                                                            defaultChecked={row.ativo ? true : false}
+                                                        />
+                                                    </abbr>
+                                                </TableCell>
                                             </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {processes.map((row) => (
-                                                <TableRow key={row.id}>
-                                                    <TableCell align="left">{row.nome}</TableCell>
-                                                    <TableCell align="right" size="small" width="15%">
-                                                        <abbr title="Editar">
-                                                            <Button style={{ color: '#000000' }}>
-                                                                <CreateIcon />
-                                                            </Button>
-                                                        </abbr>
-                                                        <abbr title={row.ativo ? "Inativar" : "Ativar"}>
-                                                            <Switch
-                                                                color="success"
-                                                                onClick={() => handleSituation(row.id, row.nome, row.ativo)}
-                                                                defaultChecked={row.ativo ? true : false}
-                                                            />
-                                                        </abbr>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </Grid>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Grid>
-                    </Paper>
-                </Container>
-            </Box>
-        </ThemeProvider >
+                    </Grid>
+                </Paper>
+            </Container>
+        </Box>
     );
 }
 

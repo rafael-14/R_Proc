@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
     Button, Checkbox, TableBody, Card,
-    Typography, TableCell, CardHeader, CardContent, Container, Grid, TableRow,
-    Box, Toolbar, CardActions, createTheme, ThemeProvider, Table, TableHead,
-    Dialog, DialogTitle, TextField, DialogContent, DialogContentText
+    Typography, TableCell, CardHeader, CardContent, Container, Grid, TableRow, List, ListItem,
+    Box, Toolbar, CardActions, Table, TableHead, CircularProgress,
+    Dialog, DialogTitle, TextField, DialogContent, DialogContentText, DialogActions, ListItemText
 } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getIdSetor } from '../../services/auth';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
 
-function HandleDialog(props) {
+function HandleDialogUserCode(props) {
 
     async function verifyCode(value) {
         let response = await api.post(`/api/select/user_by_code`, { code: value })
@@ -46,16 +47,75 @@ function HandleDialog(props) {
     )
 }
 
+function HandleDialogQrCode(props) {
+
+    let [progress, setProgress] = useState(false)
+
+    useEffect(() => {
+        props.setQrCode("")
+    }, [props.listQrCode])
+
+    function handleListQrCode(value) {
+        if (value !== "" && props.listQrCode.indexOf(value) === -1) {
+            props.setListQrCode([...props.listQrCode, value])
+        } else {
+            props.handleNotificationError("QR Code Já Inserido!")
+            props.setQrCode("")
+        }
+    }
+
+    return (
+        //<Dialog open={props.open} onClose={() => { props.setOpen(false); props.setCode("") }} >
+        <Dialog open={props.openQrCode} onClose={() => { props.setOpenQrCode(false); props.setListQrCode([]) }} fullWidth>
+            <List>
+                {props.listQrCode.map((row) => (
+                    <ListItem>
+                        <ListItemText primary={new String(row).substring(0, 50)} />
+                        <Button>teste</Button>
+                    </ListItem>
+                ))}
+            </List>
+            <DialogContent>
+                <DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        fullWidth
+                        label="Leia aqui o QR Code:"
+                        color="secondary"
+                        value={props.qrCode}
+                        onChange={e => props.setQrCode(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" ? handleListQrCode(e.target.value.trim()) : null}
+                    />
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="flex-end"
+                >
+                    {!progress ?
+                        (<>
+                            <Button variant="contained" style={{ background: "#E74C3C", color: "#FFFFFF" }}>
+                                Cancelar
+                            </Button>
+                            <Button variant="contained" style={{ color: "#FFFFFF", marginInlineStart: 15 }} onClick={() => setProgress(true)}>
+                                Iniciar
+                            </Button>
+                        </>) :
+                        (<Box sx={{ display: 'flex' }}>
+                            <CircularProgress />
+                        </Box>)}
+                </Grid>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
 export default function Tables() {
 
     let [code, setCode] = useState("")
-
-    const theme = createTheme({
-        palette: {
-            primary: { main: '#E8927C' },
-            secondary: { main: '#000000' }
-        }
-    })
 
     async function handleNotificationError(msg) {
         toast.error(msg, {
@@ -301,11 +361,15 @@ export default function Tables() {
         }
     }
 
+    let [openQrCode, setOpenQrCode] = useState(false);
+    let [listQrCode, setListQrCode] = useState([])
+    let [qrCode, setQrCode] = useState("")
+
     return (
-        <ThemeProvider theme={theme}>
+        <>
             <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
                 <Toolbar />
-                <HandleDialog
+                <HandleDialogUserCode
                     open={open}
                     setOpen={setOpen}
                     handleUser={handleUser}
@@ -313,13 +377,33 @@ export default function Tables() {
                     code={code}
                     setCode={setCode}
                 />
+                <HandleDialogQrCode
+                    openQrCode={openQrCode}
+                    setOpenQrCode={setOpenQrCode}
+                    listQrCode={listQrCode}
+                    setListQrCode={setListQrCode}
+                    qrCode={qrCode}
+                    setQrCode={setQrCode}
+                    handleNotificationError={handleNotificationError}
+                />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
                     <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>
-                                    A Fazer
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="space-between"
+                                    >
+                                        <div />
+                                        A Fazer
+                                        <QrCode2Icon
+                                            style={{ color: '#000000' }}
+                                            onClick={() => setOpenQrCode(true)}
+                                        />
+                                    </Grid>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -391,7 +475,21 @@ export default function Tables() {
                     <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>Fazendo</TableCell>
+                                <TableCell
+                                    align="center"
+                                    width="50%"
+                                    style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                >
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="space-between"
+                                    >
+                                        <QrCode2Icon style={{ color: '#000000' }} onClick={() => alert("2")} />
+                                        Fazendo
+                                        <QrCode2Icon style={{ color: '#000000' }} onClick={() => alert("2")} />
+                                    </Grid>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -482,7 +580,21 @@ export default function Tables() {
                     <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>Pausado</TableCell>
+                                <TableCell
+                                    align="center"
+                                    width="50%"
+                                    style={{ background: '#E8927C', color: '#FFFFFF' }}
+                                >
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="space-between"
+                                    >
+                                        <div />
+                                        Pausado
+                                        <QrCode2Icon style={{ color: '#000000' }} onClick={() => alert("3")} />
+                                    </Grid>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -548,6 +660,6 @@ export default function Tables() {
                     </Table>
                 </Container>
             </Box >
-        </ThemeProvider >
+        </>
     );
 }

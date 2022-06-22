@@ -3,20 +3,10 @@ import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
-  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
+  Button, Switch, FormGroup, FormControlLabel, TableCell, Chip, TableRow, TableBody,
+  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead,
   Checkbox, CircularProgress
 } from "@mui/material";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#E8927C",
-    color: theme.palette.common.white
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14
-  }
-}));
 
 function Row(props) {
 
@@ -133,13 +123,6 @@ export default function Register() {
     })
   }
 
-  const theme = createTheme({
-    palette: {
-      primary: { main: '#E8927C' },
-      secondary: { main: '#000000' }
-    }
-  })
-
   let [productName, setProductName] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
   let [cleanFabricationOrder, setCleanFabricationOrder] = useState(false)
@@ -252,161 +235,159 @@ export default function Register() {
   let [progress, setProgress] = useState(false)
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          height: '100vh',
-          overflow: 'auto',
-        }}
-      >
-        <Toolbar />
-        <ToastContainer />
-        <Container maxWidth="lg" sx={{ mt: 2 }}>
-          <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
-            <Grid >
-              <Grid container spacing={3}>
-                <Grid item xs={12} >
-                  <TextField
-                    id="productName"
-                    required
-                    label="Produto"
-                    fullWidth
-                    color="secondary"
-                    value={productName}
-                    onChange={e => setProductName(e.target.value)}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Switch
-                      checked={manyRegisters}
-                      onChange={() => setManyRegisters(!manyRegisters)}
-                    />}
-                    label="Cadastrar Vários"
-                  />
-                </FormGroup>
-                {manyRegisters ? (<FormGroup>
-                  <FormControlLabel
-                    control={<Switch
-                      checked={cleanFabricationOrder}
-                      onChange={() => setCleanFabricationOrder(!cleanFabricationOrder)}
-                    />}
-                    label="Limpar Ordem de Fabricação"
-                  />
-                </FormGroup>) : null}
-              </Grid>
-              <br />
-              <Grid
-                container
-                justifyContent="space-between"
-              >
-                <Grid item xs={5} >
-                  <TableContainer >
-                    <Table size="medium" stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          <StyledTableCell align="left">Processos</StyledTableCell>
-                          <StyledTableCell align="right">Situação</StyledTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {processes.map((row) => (
-                          <Row
-                            key={row.id}
-                            row={row}
-                            handleSelectedProcesses={handleSelectedProcesses}
-                            setFabricationOrder={setFabricationOrder}
-                            fabricationOrder={fabricationOrder}
-                            handleFabricationOrder={handleFabricationOrder}
-                            selectedProcesses={selectedProcesses}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Grid>
-                <Grid item>
-                  <Grid container direction="column" alignItems="center">
-                    <Button
-                      sx={{ my: 0.5 }}
-                      size="small"
-                      disabled={selectedProcesses.length == 0 ? true : false}
-                      variant="outlined"
-                      onClick={() => handleFabricationOrder()}
-                    >
-                      &gt;
-                    </Button>
-                    <Button
-                      sx={{ my: 0.5 }}
-                      size="small"
-                      variant="outlined"
-                      onClick={() => handleUnselectedProcess()}
-                      disabled={unselectedProcesses.length === 0 ? true : false}
-                    >
-                      &lt;
-                    </Button>
-                    <Button
-                      sx={{ my: 0.5 }}
-                      size="small"
-                      variant="outlined"
-                      onClick={() => setFabricationOrder([])}
-                      disabled={fabricationOrder.length === 0 ? true : false}
-                    >
-                      &lt;&lt;
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Grid item xs={5} >
-                  <TableContainer>
-                    <Table size="medium" stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          <StyledTableCell align="left" style={{ width: '70%' }}>Ordem de Fabricação</StyledTableCell>
-                          <StyledTableCell align="right">Ordem</StyledTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {fabricationOrder.map((newRow, newRowPosition) => (
-                          <NewRow
-                            newRowPosition={newRowPosition}
-                            newRow={newRow}
-                            setRemoveProductionDirectly={setRemoveProductionDirectly}
-                            handleNewOrder={handleNewOrder}
-                            handleCheckboxUnselectedProcess={handleCheckboxUnselectedProcess}
-                            unselectedProcesses={unselectedProcesses}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-end"
-              >
-                {!progress ?
-                  (<>
-                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/produtos">
-                      Cancelar
-                    </Button>
-                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProduct()}>
-                      Salvar
-                    </Button>
-                  </>) :
-                  (<Box sx={{ display: 'flex' }}>
-                    <CircularProgress />
-                  </Box>)}
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        height: '100vh',
+        overflow: 'auto',
+      }}
+    >
+      <Toolbar />
+      <ToastContainer />
+      <Container maxWidth="lg" sx={{ mt: 2 }}>
+        <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
+          <Grid >
+            <Grid container spacing={3}>
+              <Grid item xs={12} >
+                <TextField
+                  id="productName"
+                  required
+                  label="Produto"
+                  fullWidth
+                  color="secondary"
+                  value={productName}
+                  onChange={e => setProductName(e.target.value)}
+                />
               </Grid>
             </Grid>
-          </Paper>
-        </Container>
-      </Box>
-    </ThemeProvider>
+            <Grid container>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Switch
+                    checked={manyRegisters}
+                    onChange={() => setManyRegisters(!manyRegisters)}
+                  />}
+                  label="Cadastrar Vários"
+                />
+              </FormGroup>
+              {manyRegisters ? (<FormGroup>
+                <FormControlLabel
+                  control={<Switch
+                    checked={cleanFabricationOrder}
+                    onChange={() => setCleanFabricationOrder(!cleanFabricationOrder)}
+                  />}
+                  label="Limpar Ordem de Fabricação"
+                />
+              </FormGroup>) : null}
+            </Grid>
+            <br />
+            <Grid
+              container
+              justifyContent="space-between"
+            >
+              <Grid item xs={5} >
+                <TableContainer >
+                  <Table size="medium" stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell style={{ background: "#E8927C", color: "#FFFFFF" }} align="left">Processos</TableCell>
+                        <TableCell style={{ background: "#E8927C", color: "#FFFFFF" }} align="right">Situação</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {processes.map((row) => (
+                        <Row
+                          key={row.id}
+                          row={row}
+                          handleSelectedProcesses={handleSelectedProcesses}
+                          setFabricationOrder={setFabricationOrder}
+                          fabricationOrder={fabricationOrder}
+                          handleFabricationOrder={handleFabricationOrder}
+                          selectedProcesses={selectedProcesses}
+                        />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              <Grid item>
+                <Grid container direction="column" alignItems="center">
+                  <Button
+                    sx={{ my: 0.5 }}
+                    size="small"
+                    disabled={selectedProcesses.length == 0 ? true : false}
+                    variant="outlined"
+                    onClick={() => handleFabricationOrder()}
+                  >
+                    &gt;
+                  </Button>
+                  <Button
+                    sx={{ my: 0.5 }}
+                    size="small"
+                    variant="outlined"
+                    onClick={() => handleUnselectedProcess()}
+                    disabled={unselectedProcesses.length === 0 ? true : false}
+                  >
+                    &lt;
+                  </Button>
+                  <Button
+                    sx={{ my: 0.5 }}
+                    size="small"
+                    variant="outlined"
+                    onClick={() => setFabricationOrder([])}
+                    disabled={fabricationOrder.length === 0 ? true : false}
+                  >
+                    &lt;&lt;
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item xs={5} >
+                <TableContainer>
+                  <Table size="medium" stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="left" style={{ background: "#E8927C", color: "#FFFFFF", width: "70%" }}>Ordem de Fabricação</TableCell>
+                        <TableCell align="right" style={{ background: "#E8927C", color: "#FFFFFF" }}>Ordem</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {fabricationOrder.map((newRow, newRowPosition) => (
+                        <NewRow
+                          newRowPosition={newRowPosition}
+                          newRow={newRow}
+                          setRemoveProductionDirectly={setRemoveProductionDirectly}
+                          handleNewOrder={handleNewOrder}
+                          handleCheckboxUnselectedProcess={handleCheckboxUnselectedProcess}
+                          unselectedProcesses={unselectedProcesses}
+                        />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+            >
+              {!progress ?
+                (<>
+                  <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/produtos">
+                    Cancelar
+                  </Button>
+                  <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProduct()}>
+                    Salvar
+                  </Button>
+                </>) :
+                (<Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+                </Box>)}
+            </Grid>
+          </Grid>
+        </Paper>
+      </Container>
+    </Box>
   );
 }

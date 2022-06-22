@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, TextField, Autocomplete, Table, Typography, IconButton, RadioGroup,
-    TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip, Radio, TableSortLabel,
-    Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse, FormControlLabel
+    Button, TextField, Table, Typography, IconButton, RadioGroup, TableSortLabel,
+    TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip, Radio,
+    Box, Toolbar, TableContainer, Collapse, FormControlLabel
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -50,9 +50,9 @@ function Row(props) {
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Produtos</TableCell>
-                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Quantidade</TableCell>
-                                        <TableCell style={{ background: '#FBECE8', color: '#000000' }} align="left">Status</TableCell>
+                                        <TableCell style={{ background: "#FBECE8", color: "#000000" }} align="left">Produtos</TableCell>
+                                        <TableCell style={{ background: "#FBECE8", color: "#000000" }} align="left">Quantidade</TableCell>
+                                        <TableCell style={{ background: "#FBECE8", color: "#000000" }} align="left">Status</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -83,13 +83,6 @@ export default function Tables() {
     let [endDate, setEndDate] = useState(null)
     let [orderStatus, setOrderStatus] = useState(null)
 
-    const theme = createTheme({
-        palette: {
-            primary: { main: '#FF7A40' },
-            secondary: { main: '#000000' }
-        }
-    })
-
     let [orders, setOrders] = useState([])
     useEffect(() => {
         async function loadOrders() {
@@ -104,147 +97,147 @@ export default function Tables() {
     }, [searchFor])
 
     return (
-        <ThemeProvider theme={theme}>
-            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
-                <Toolbar />
-                <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Button onClick={() => console.log(searchFor)}>teste</Button>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="space-between"
-                    >
-                        {searchFor === "orderNumber" ? (
+
+        <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+            <Toolbar />
+            <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+                <Button onClick={() => console.log(searchFor)}>teste</Button>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="space-between"
+                >
+                    {searchFor === "orderNumber" ? (
+                        <TextField
+                            color="secondary"
+                            sx={{ width: 500 }}
+                            //value={nameCompanyToBeFound}
+                            //onChange={e => { requestSearch(e.target.value); setPage(0) }}
+                            label="Pedidos"
+                        />) : (<Grid>
                             <TextField
                                 color="secondary"
-                                sx={{ width: 500 }}
-                                //value={nameCompanyToBeFound}
-                                //onChange={e => { requestSearch(e.target.value); setPage(0) }}
-                                label="Pedidos"
-                            />) : (<Grid>
-                                <TextField
-                                    color="secondary"
-                                    label="Data Início"
-                                    required
-                                    //value={startDate}
-                                    //onChange={e => { setStartDate(e.target.value); setPage(0) }}
-                                    type="date"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    sx={{ width: 225 }}
-                                />
-                                <TextField
-                                    color="secondary"
-                                    style={{ marginInlineStart: 15 }}
-                                    label="Data Fim"
-                                    //disabled={startDate ? false : true}
-                                    //value={endDate}
-                                    //onChange={e => { setEndDate(e.target.value); setPage(0) }}
-                                    type="date"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    sx={{ width: 225 }}
-                                />
-                            </Grid>)}
+                                label="Data Início"
+                                required
+                                //value={startDate}
+                                //onChange={e => { setStartDate(e.target.value); setPage(0) }}
+                                type="date"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                sx={{ width: 225 }}
+                            />
+                            <TextField
+                                color="secondary"
+                                style={{ marginInlineStart: 15 }}
+                                label="Data Fim"
+                                //disabled={startDate ? false : true}
+                                //value={endDate}
+                                //onChange={e => { setEndDate(e.target.value); setPage(0) }}
+                                type="date"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                sx={{ width: 225 }}
+                            />
+                        </Grid>)}
 
-                        <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
+                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
+                </Grid>
+                <Grid container direction="row" justifyContent="space-between">
+                    <Grid>
+                        <RadioGroup row defaultValue={searchFor}>
+                            <FormControlLabel
+                                value="orderNumber"
+                                //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
+                                onClick={() => { setSearchFor("orderNumber") }}
+                                control={<Radio />}
+                                label={
+                                    <Grid container direction="row" justifyContent="flex-end">
+                                        <Typography>
+                                            Número Pedido
+                                        </Typography>
+                                        {searchFor === "orderNumber" ?
+                                            (<TableSortLabel
+                                                direction={direction ? "asc" : "desc"}
+                                                active
+                                                onClick={() => setDirection(!direction)}
+                                            />) : null}
+                                    </ Grid>
+                                }
+                            />
+                            <FormControlLabel
+                                value="orderDate"
+                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                onClick={() => { setSearchFor("orderDate") }}
+                                control={<Radio />}
+                                label={
+                                    <Grid container direction="row" justifyContent="flex-end">
+                                        <Typography>
+                                            Data Pedido
+                                        </Typography>
+                                        {searchFor === "orderDate" ?
+                                            (<TableSortLabel
+                                                direction={direction ? "asc" : "desc"}
+                                                active
+                                                onClick={() => setDirection(!direction)}
+                                            />) : null}
+                                    </ Grid>
+                                }
+                            />
+                        </RadioGroup>
                     </Grid>
-                    <Grid container direction="row" justifyContent="space-between">
-                        <Grid>
-                            <RadioGroup row defaultValue={searchFor}>
-                                <FormControlLabel
-                                    value="orderNumber"
-                                    //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
-                                    onClick={() => { setSearchFor("orderNumber") }}
-                                    control={<Radio />}
-                                    label={
-                                        <Grid container direction="row" justifyContent="flex-end">
-                                            <Typography>
-                                                Número Pedido
-                                            </Typography>
-                                            {searchFor === "orderNumber" ?
-                                                (<TableSortLabel
-                                                    direction={direction ? "asc" : "desc"}
-                                                    active
-                                                    onClick={() => setDirection(!direction)}
-                                                />) : null}
-                                        </ Grid>
-                                    }
-                                />
-                                <FormControlLabel
-                                    value="orderDate"
-                                    //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
-                                    onClick={() => { setSearchFor("orderDate") }}
-                                    control={<Radio />}
-                                    label={
-                                        <Grid container direction="row" justifyContent="flex-end">
-                                            <Typography>
-                                                Data Pedido
-                                            </Typography>
-                                            {searchFor === "orderDate" ?
-                                                (<TableSortLabel
-                                                    direction={direction ? "asc" : "desc"}
-                                                    active
-                                                    onClick={() => setDirection(!direction)}
-                                                />) : null}
-                                        </ Grid>
-                                    }
-                                />
-                            </RadioGroup>
-                        </Grid>
-                        <Grid>
-                            <RadioGroup row defaultValue={"All"}>
-                                <FormControlLabel
-                                    id="setSearchByName"
-                                    value="All"
-                                    //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
-                                    control={<Radio />}
-                                    label="Todos"
-                                />
-                                <FormControlLabel
-                                    value="Concluded"
-                                    //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
-                                    control={<Radio />}
-                                    label="Concluídos"
-                                />
-                                <FormControlLabel
-                                    value="InProgress"
-                                    //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
-                                    control={<Radio />}
-                                    label="Em Andamento"
-                                />
-                            </RadioGroup>
-                        </Grid>
+                    <Grid>
+                        <RadioGroup row defaultValue={"All"}>
+                            <FormControlLabel
+                                id="setSearchByName"
+                                value="All"
+                                //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
+                                control={<Radio />}
+                                label="Todos"
+                            />
+                            <FormControlLabel
+                                value="Concluded"
+                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                control={<Radio />}
+                                label="Concluídos"
+                            />
+                            <FormControlLabel
+                                value="InProgress"
+                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                control={<Radio />}
+                                label="Em Andamento"
+                            />
+                        </RadioGroup>
                     </Grid>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TableContainer>
-                                <Table size="medium" stickyHeader>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Pedidos</TableCell>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Data Pedido</TableCell>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Status</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {orders.map((row) => (
-                                            <Row
-                                                key={row.id}
-                                                row={row}
-                                            />
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
+                </Grid>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <TableContainer>
+                            <Table size="medium" stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Pedidos</TableCell>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Data Pedido</TableCell>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Status</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {orders.map((row) => (
+                                        <Row
+                                            key={row.id}
+                                            row={row}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </Grid>
-                </Container>
-            </Box>
-        </ThemeProvider >
+                </Grid>
+            </Container>
+        </Box>
+
     );
 }
 

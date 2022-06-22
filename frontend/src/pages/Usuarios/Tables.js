@@ -3,7 +3,7 @@ import api from '../../services/api';
 import {
     Button, TextField, Autocomplete, Table, Typography, IconButton,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
-    Box, Toolbar, TableContainer, createTheme, ThemeProvider, Collapse,
+    Box, Toolbar, TableContainer, Collapse
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -66,13 +66,6 @@ function Row(props) {
 
 export default function Tables() {
 
-    const theme = createTheme({
-        palette: {
-            primary: { main: '#FF7A40' },
-            secondary: { main: '#000000' }
-        }
-    })
-
     let [users, setUsers] = useState([])
     useEffect(() => {
         async function loadUsers() {
@@ -83,52 +76,50 @@ export default function Tables() {
     }, [])
 
     return (
-        <ThemeProvider theme={theme}>
-            <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
-                <Toolbar />
-                <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                    <Paper>
-                        <Grid
-                            container
-                            direction="row"
-                            justifyContent="space-between"
-                        >
-                            <Autocomplete
-                                disablePortal
-                                options={users.map((row) => row.nome)}
-                                sx={{ width: 500 }}
-                                renderInput={(params) => <TextField color="secondary" {...params} label="Usuários" />}
-                            />
-                            <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
+        <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+            <Toolbar />
+            <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+                <Paper>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="space-between"
+                    >
+                        <Autocomplete
+                            disablePortal
+                            options={users.map((row) => row.nome)}
+                            sx={{ width: 500 }}
+                            renderInput={(params) => <TextField color="secondary" {...params} label="Usuários" />}
+                        />
+                        <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
+                    </Grid>
+                    <br />
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <TableContainer>
+                                <Table size="medium" stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="left" width="1%" style={{ background: "#E8927C", color: "#FFFFFF" }} />
+                                            <TableCell align="left" style={{ background: "#E8927C", color: "#FFFFFF" }}>Usuários</TableCell>
+                                            <TableCell align="right" style={{ background: "#E8927C", color: "#FFFFFF" }}></TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {users.map((row) => (
+                                            <Row
+                                                key={row.id}
+                                                row={row}
+                                            />
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Grid>
-                        <br />
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <TableContainer>
-                                    <Table size="medium" stickyHeader>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell align="left" width="1%" style={{ background: '#E8927C', color: '#FFFFFF' }}/>
-                                                <TableCell align="left" style={{ background: '#E8927C', color: '#FFFFFF' }}>Usuários</TableCell>
-                                                <TableCell align="right" style={{ background: '#E8927C', color: '#FFFFFF' }}></TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {users.map((row) => (
-                                                <Row
-                                                    key={row.id}
-                                                    row={row}
-                                                />
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                </Container>
-            </Box>
-        </ThemeProvider >
+                    </Grid>
+                </Paper>
+            </Container>
+        </Box>
     );
 }
 

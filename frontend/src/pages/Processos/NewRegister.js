@@ -3,7 +3,7 @@ import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel,
+  Button, Switch, FormGroup, FormControlLabel,
   Container, Grid, Paper, Box, TextField, Toolbar, CircularProgress
 } from "@mui/material";
 
@@ -42,17 +42,6 @@ export default function Register() {
     })
   }
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#E8927C'
-      },
-      secondary: {
-        main: '#000000'
-      }
-    }
-  })
-
   let [processName, setProcessName] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
 
@@ -76,7 +65,6 @@ export default function Register() {
   let [progress, setProgress] = useState(false)
 
   return (
-    <ThemeProvider theme={theme}>
       <Box
         component="main"
         sx={{
@@ -123,7 +111,7 @@ export default function Register() {
                     <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/processos">
                       Cancelar
                     </Button>
-                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProcess()}>
+                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15, backgroundColor: "#E8927C" }} onClick={() => handleNewProcess()}>
                       Salvar
                     </Button>
                   </>) :
@@ -135,6 +123,5 @@ export default function Register() {
           </Paper>
         </Container>
       </Box>
-    </ThemeProvider>
   );
 }

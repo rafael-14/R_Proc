@@ -3,20 +3,10 @@ import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  Button, createTheme, Switch, FormGroup, ThemeProvider, FormControlLabel, styled, TableCell, tableCellClasses,
-  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow, TableBody, Chip,
+  Button, Switch, FormGroup, FormControlLabel, TableCell, TableRow, TableBody, Chip,
+  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, 
   Checkbox, CircularProgress
 } from "@mui/material";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#E8927C",
-    color: theme.palette.common.white
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14
-  }
-}));
 
 export default function Register() {
 
@@ -79,13 +69,6 @@ export default function Register() {
     }
   }
 
-  const theme = createTheme({
-    palette: {
-      primary: { main: '#E8927C' },
-      secondary: { main: '#000000' }
-    }
-  })
-
   let [userName, setUserName] = useState("")
   let [userSurname, setUserSurname] = useState("")
   let [userLogin, setUserLogin] = useState("")
@@ -134,128 +117,126 @@ export default function Register() {
   let [progress, setProgress] = useState(false)
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          height: '100vh',
-          overflow: 'auto',
-        }}
-      >
-        <Toolbar />
-        <ToastContainer />
-        <Container maxWidth="lg" sx={{ mt: 2 }}>
-          <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
-            <Grid >
-              <Grid container spacing={3}>
-                <Grid item xs={12} >
-                  <TextField
-                    id="userName"
-                    required
-                    label="Nome"
-                    color="secondary"
-                    value={userName}
-                    onChange={e => setUserName(e.target.value)}
-                  />
-                  <TextField
-                    id="userSurname"
-                    required
-                    style={{ marginInlineStart: 15 }}
-                    label="Sobrenome"
-                    color="secondary"
-                    value={userSurname}
-                    onChange={e => setUserSurname(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} >
-                  <TextField
-                    id="userLogin"
-                    required
-                    label="Login"
-                    color="secondary"
-                    value={userLogin}
-                    onChange={e => setUserLogin(e.target.value)}
-                  />
-                  <TextField
-                    id="userPassword"
-                    required
-                    style={{ marginInlineStart: 15 }}
-                    label="Senha"
-                    color="secondary"
-                    value={userPassword}
-                    onChange={e => setUserPassword(e.target.value)}
-                  />
-                </Grid>
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        height: '100vh',
+        overflow: 'auto',
+      }}
+    >
+      <Toolbar />
+      <ToastContainer />
+      <Container maxWidth="lg" sx={{ mt: 2 }}>
+        <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
+          <Grid >
+            <Grid container spacing={3}>
+              <Grid item xs={12} >
+                <TextField
+                  id="userName"
+                  required
+                  label="Nome"
+                  color="secondary"
+                  value={userName}
+                  onChange={e => setUserName(e.target.value)}
+                />
+                <TextField
+                  id="userSurname"
+                  required
+                  style={{ marginInlineStart: 15 }}
+                  label="Sobrenome"
+                  color="secondary"
+                  value={userSurname}
+                  onChange={e => setUserSurname(e.target.value)}
+                />
               </Grid>
-              <Grid container>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Switch
-                      checked={manyRegisters}
-                      onChange={() => setManyRegisters(!manyRegisters)}
-                    />}
-                    label="Cadastrar Vários"
-                  />
-                </FormGroup>
-              </Grid>
-              <br />
-              <Grid item xs={5} >
-                <TableContainer >
-                  <Table size="medium" stickyHeader>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell align="left">Processos</StyledTableCell>
-                        <StyledTableCell align="right">Situação</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {processes.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell align="left">
-                            <Checkbox
-                              color="secondary"
-                              onClick={() => handleVinculatedProcesses(row.id)}
-                              disabled={row.ativo ? false : true}
-                            />
-                            {row.nome}
-                          </TableCell>
-                          <TableCell align="right">
-                            <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-end"
-              >
-                {!progress ?
-                  (<><Button
-                    variant="contained"
-                    style={{
-                      background: '#E74C3C',
-                      color: "#FFFFFF"
-                    }}
-                    href="/usuarios"
-                  >
-                    Cancelar
-                  </Button>
-                    <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => checkFields()}>
-                      Salvar
-                    </Button></>) :
-                  (<Box sx={{ display: 'flex' }}>
-                    <CircularProgress />
-                  </Box>)}
+              <Grid item xs={12} >
+                <TextField
+                  id="userLogin"
+                  required
+                  label="Login"
+                  color="secondary"
+                  value={userLogin}
+                  onChange={e => setUserLogin(e.target.value)}
+                />
+                <TextField
+                  id="userPassword"
+                  required
+                  style={{ marginInlineStart: 15 }}
+                  label="Senha"
+                  color="secondary"
+                  value={userPassword}
+                  onChange={e => setUserPassword(e.target.value)}
+                />
               </Grid>
             </Grid>
-          </Paper>
-        </Container>
-      </Box>
-    </ThemeProvider>
+            <Grid container>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Switch
+                    checked={manyRegisters}
+                    onChange={() => setManyRegisters(!manyRegisters)}
+                  />}
+                  label="Cadastrar Vários"
+                />
+              </FormGroup>
+            </Grid>
+            <br />
+            <Grid item xs={5} >
+              <TableContainer >
+                <Table size="medium" stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Processos</TableCell>
+                      <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right">Situação</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {processes.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell align="left">
+                          <Checkbox
+                            color="secondary"
+                            onClick={() => handleVinculatedProcesses(row.id)}
+                            disabled={row.ativo ? false : true}
+                          />
+                          {row.nome}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+            >
+              {!progress ?
+                (<><Button
+                  variant="contained"
+                  style={{
+                    background: '#E74C3C',
+                    color: "#FFFFFF"
+                  }}
+                  href="/usuarios"
+                >
+                  Cancelar
+                </Button>
+                  <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => checkFields()}>
+                    Salvar
+                  </Button></>) :
+                (<Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+                </Box>)}
+            </Grid>
+          </Grid>
+        </Paper>
+      </Container>
+    </Box>
   );
 }

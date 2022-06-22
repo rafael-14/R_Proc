@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
-  createTheme, ThemeProvider, Avatar, Button, CssBaseline,
-  TextField, Box, Typography, Container
+  Avatar, Button, TextField, Box, Typography, Container
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import api from '../../services/api';
@@ -18,13 +17,6 @@ function Copyright() {
 }
 
 export default function Login() {
-
-  const theme = createTheme({
-    palette: {
-      primary: { main: '#E8927C' },
-      secondary: { main: '#000000' }
-    }
-  })
 
   async function handleNotificationError(msg) {
     toast.error(msg, {
@@ -56,10 +48,9 @@ export default function Login() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <ToastContainer />
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -68,7 +59,7 @@ export default function Login() {
             alignItems: 'center',
           }}
         >
-          <Avatar style={{ color: '#FFFFFF', backgroundColor: "#E8927C" }}>
+          <Avatar style={{ color: "#FFFFFF", backgroundColor: "#E8927C" }}>
             <LockOutlinedIcon />
           </Avatar>
           <TextField
@@ -99,7 +90,7 @@ export default function Login() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             style={{
-              background: '#E8927C',
+              background: "#E8927C",
               color: "#FFFFFF",
             }}
             onClick={() => handleSubmit()}
@@ -109,6 +100,6 @@ export default function Login() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
-    </ThemeProvider>
+    </>
   );
 }

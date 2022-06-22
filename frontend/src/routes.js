@@ -15,7 +15,6 @@ function Rotas() {
             <Routes>
                 <Route exact path='/' element={<PrivateRoute><ListarProducao /></PrivateRoute>} />
                 <Route exact path='/login' element={<Login />} />
-
                 <Route exact path='/produtos' element={<PrivateRoute><ListarProdutos /></PrivateRoute>} />
                 <Route exact path='/cadastrar/produtos' element={<PrivateRoute><CadastrarProduto /></PrivateRoute>} />
                 <Route exact path='/processos' element={<PrivateRoute><ListarProcessos /></PrivateRoute>} />
