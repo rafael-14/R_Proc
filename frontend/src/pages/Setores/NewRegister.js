@@ -3,7 +3,7 @@ import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  Button, createTheme, Switch, FormGroup, FormControlLabel, TableCell, TableBody, Chip,
+  Button, Switch, FormGroup, FormControlLabel, TableCell, TableBody, Chip,
   Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, TableRow,
   Checkbox, CircularProgress
 } from "@mui/material";
