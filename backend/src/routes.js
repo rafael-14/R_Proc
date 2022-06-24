@@ -65,5 +65,6 @@ routes.put('/api/resume/many_productions', ProductionController.resumeManyProduc
 routes.put('/api/finish/many_productions', ProductionController.finishManyProductions);
 routes.post('/api/verify/user', ProductionController.verifyUser);
 routes.post('/api/verify/users', ProductionController.verifyUsers);
+routes.post('/api/qrcode', ProductionController.qrCode);
 
 module.exports = routes;

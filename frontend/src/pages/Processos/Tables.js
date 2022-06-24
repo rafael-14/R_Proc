@@ -3,7 +3,7 @@ import api from '../../services/api';
 import {
     Button, TextField, Autocomplete, Table, Switch,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
-    Box, Toolbar, TableContainer, createTheme, ThemeProvider
+    Box, Toolbar, TableContainer
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import { ToastContainer, toast } from 'react-toastify';

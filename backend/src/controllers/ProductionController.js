@@ -229,4 +229,18 @@ module.exports = {
     }
     return res.json({ status })
   },
+
+  async qrCode(req, res) {
+    let { listQrCode } = req.body;
+    let idProcesses = [];
+    for (let i = 0; i < listQrCode.length; i++) {
+      await connectionPG.query(`SELECT * FROM producao
+      WHERE id_produto_pedido = ${listQrCode[i]}
+      ORDER BY id DESC
+      LIMIT 1`)
+        .then(results => { idProcesses = [...idProcesses, ...results.rows] })
+    }
+    return res.json(idProcesses)
+  },
+
 };

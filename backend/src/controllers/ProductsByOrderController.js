@@ -39,5 +39,6 @@ module.exports = {
         .then(results => { insertProductsByOrder = [...insertProductsByOrder, ...results.rows] })
     }
     return res.json(insertProductsByOrder).status(200)
-  }
+  },
+  
 };

@@ -43,13 +43,6 @@ export default function Register() {
     })
   }
 
-  const theme = createTheme({
-    palette: {
-      primary: { main: '#E8927C' },
-      secondary: { main: '#000000' }
-    }
-  })
-
   let [sector, setSector] = useState("")
   let [manyRegisters, setManyRegisters] = useState(false)
 

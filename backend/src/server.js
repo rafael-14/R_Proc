@@ -38,7 +38,7 @@ QRCode.toString(x, { type: 'terminal', errorCorrectionLevel: 'H' },
     function (err, QRcode) {
         if (err) return console.log("error occurred")
         // Printing the generated code
-        console.log(QRcode)
+        //console.log(QRcode)
     })
 
 // Converting the data into base64
@@ -46,5 +46,5 @@ QRCode.toDataURL(stringdata, function (err, code) {
     if (err) return console.log("error occurred")
 
     // Printing the code
-    console.log(code)
+    //console.log(code)
 })

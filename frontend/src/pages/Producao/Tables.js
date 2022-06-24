@@ -3,12 +3,13 @@ import api from '../../services/api';
 import {
     Button, Checkbox, TableBody, Card,
     Typography, TableCell, CardHeader, CardContent, Container, Grid, TableRow, List, ListItem,
-    Box, Toolbar, CardActions, Table, TableHead, CircularProgress,
+    Box, Toolbar, CardActions, Table, TableHead, Fab,
     Dialog, DialogTitle, TextField, DialogContent, DialogContentText, DialogActions, ListItemText
 } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getIdSetor } from '../../services/auth';
+import RemoveIcon from '@mui/icons-material/Remove';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 
 function HandleDialogUserCode(props) {
@@ -49,8 +50,6 @@ function HandleDialogUserCode(props) {
 
 function HandleDialogQrCode(props) {
 
-    let [progress, setProgress] = useState(false)
-
     useEffect(() => {
         props.setQrCode("")
     }, [props.listQrCode])
@@ -63,15 +62,29 @@ function HandleDialogQrCode(props) {
             props.setQrCode("")
         }
     }
+    function handleRemoveListQrCode(position) {
+        props.listQrCode.splice(position, 1)
+        props.setListQrCode([...props.listQrCode])
+    }
+
+    function handleProduction() {
+        props.setOpen(true)
+        if (props.listQrCode.length === 1) {
+            props.setFunctionToBeExecuted(props.functionToBeExecuted + "Production")
+        } else if (props.listQrCode.length > 1) {
+            props.setFunctionToBeExecuted(props.functionToBeExecuted + "ManyProductions")
+        }
+    }
 
     return (
-        //<Dialog open={props.open} onClose={() => { props.setOpen(false); props.setCode("") }} >
         <Dialog open={props.openQrCode} onClose={() => { props.setOpenQrCode(false); props.setListQrCode([]) }} fullWidth>
             <List>
-                {props.listQrCode.map((row) => (
+                {props.listQrCode.map((row, position) => (
                     <ListItem>
                         <ListItemText primary={new String(row).substring(0, 50)} />
-                        <Button>teste</Button>
+                        <Fab size="small" style={{ backgroundColor: '#E74C3C', color: "#FFFFFF" }} onClick={() => handleRemoveListQrCode(position)}>
+                            <RemoveIcon />
+                        </Fab>
                     </ListItem>
                 ))}
             </List>
@@ -95,18 +108,21 @@ function HandleDialogQrCode(props) {
                     direction="row"
                     justifyContent="flex-end"
                 >
-                    {!progress ?
-                        (<>
-                            <Button variant="contained" style={{ background: "#E74C3C", color: "#FFFFFF" }}>
-                                Cancelar
-                            </Button>
-                            <Button variant="contained" style={{ color: "#FFFFFF", marginInlineStart: 15 }} onClick={() => setProgress(true)}>
-                                Iniciar
-                            </Button>
-                        </>) :
-                        (<Box sx={{ display: 'flex' }}>
-                            <CircularProgress />
-                        </Box>)}
+                    <Button
+                        variant="contained"
+                        style={{ background: "#E74C3C", color: "#FFFFFF" }}
+                        onClick={() => { props.setOpenQrCode(false); props.setListQrCode([]) }}
+                    >
+                        Cancelar
+                    </Button>
+                    {props.listQrCode.length > 0 ?
+                        (<Button
+                            variant="contained"
+                            style={{ color: "#FFFFFF", marginInlineStart: 15 }}
+                            onClick={() => handleProduction()}
+                        >
+                            Iniciar
+                        </Button>) : null}
                 </Grid>
             </DialogActions>
         </Dialog>
@@ -161,7 +177,10 @@ export default function Tables() {
         setProductionStatus(await api.put(`/api/start/production/${paramsID}`, id_user))
         handleNotification(paramsName, paramsOrder, "Iniciada", toast.info)
     }
-    async function handlePauseProduction(id_user) {
+    async function handlePauseProduction(id_user, responseQrCode) {
+        if (responseQrCode) {
+            paramsID = responseQrCode
+        }
         let response = await api.post(`/api/verify/user`, { paramsID, id_user })
         if (response.data.status === 200) {
             setProductionStatus(await api.put(`/api/pause/production/${paramsID}`))
@@ -170,7 +189,8 @@ export default function Tables() {
             handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
         }
     }
-    async function handleResumeProduction(id_user) {
+    async function handleResumeProduction(id_user, responseQrCode) {
+        console.log(responseQrCode)
         setProductionStatus(await api.put(`/api/resume/production/${paramsID}`, id_user))
         handleNotification(paramsName, paramsOrder, "Retomada", toast.warning)
     }
@@ -217,16 +237,16 @@ export default function Tables() {
 
     const [productionStatus, setProductionStatus] = useState(null)
     let [functionToBeExecuted, setFunctionToBeExecuted] = useState(null)
-    async function switchFunction(id_user) {
+    async function switchFunction(id_user, responseQrCode) {
         switch (functionToBeExecuted) {
-            case "handleStartProduction": handleStartProduction(id_user); break
-            case "handlePauseProduction": handlePauseProduction(id_user); break
-            case "handleResumeProduction": handleResumeProduction(id_user); break
-            case "handleFinishProduction": handleFinishProduction(id_user); break
-            case "handleStartManyProductions": handleStartManyProductions(id_user); break
-            case "handlePauseManyProductions": handlePauseManyProductions(id_user); break
-            case "handleResumeManyProductions": handleResumeManyProductions(id_user); break
-            case "handleFinishManyProductions": handleFinishManyProductions(id_user); break
+            case "handleStartProduction": handleStartProduction(id_user, responseQrCode); break
+            case "handlePauseProduction": handlePauseProduction(id_user, responseQrCode); break
+            case "handleResumeProduction": handleResumeProduction(id_user, responseQrCode); break
+            case "handleFinishProduction": handleFinishProduction(id_user, responseQrCode); break
+            case "handleStartManyProductions": handleStartManyProductions(id_user, responseQrCode); break
+            case "handlePauseManyProductions": handlePauseManyProductions(id_user, responseQrCode); break
+            case "handleResumeManyProductions": handleResumeManyProductions(id_user, responseQrCode); break
+            case "handleFinishManyProductions": handleFinishManyProductions(id_user, responseQrCode); break
         }
     }
 
@@ -321,6 +341,12 @@ export default function Tables() {
 
     let [open, setOpen] = useState(false);
     async function handleUser(data) {
+        let responseQrCode
+        if (listQrCode.length > 0) {
+            responseQrCode = await api.post(`/api/qrcode`, { listQrCode })
+            paramsIdProcess = responseQrCode.data[0].id_processo
+            responseQrCode = responseQrCode.data[0].id
+        }
         switch (functionToBeExecuted) {
             case "handleStartProduction":
             case "handlePauseProduction":
@@ -328,12 +354,15 @@ export default function Tables() {
             case "handleFinishProduction": {
                 let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
                 setOpen(false)
+                setOpenQrCode(false)
+                setListQrCode([])
+                setQrCode("")
                 setCode("")
                 if (response.data.status === 400) {
                     handleNotificationError('Usuário Não Possui Permissão!')
                 }
                 else {
-                    switchFunction({ id_user: data.id })
+                    switchFunction({ id_user: data.id }, responseQrCode)
                 }
             }
                 break;
@@ -385,6 +414,10 @@ export default function Tables() {
                     qrCode={qrCode}
                     setQrCode={setQrCode}
                     handleNotificationError={handleNotificationError}
+                    open={open}
+                    setOpen={setOpen}
+                    setFunctionToBeExecuted={setFunctionToBeExecuted}
+                    functionToBeExecuted={functionToBeExecuted}
                 />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
@@ -392,22 +425,32 @@ export default function Tables() {
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center" width="50%" style={{ background: '#E8927C', color: '#FFFFFF' }}>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justifyContent="space-between"
-                                    >
-                                        <div />
-                                        A Fazer
-                                        <QrCode2Icon
-                                            style={{ color: '#000000' }}
-                                            onClick={() => setOpenQrCode(true)}
-                                        />
-                                    </Grid>
+                                    A Fazer
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
+                            <TableRow>
+                                <TableCell>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-end"
+                                        alignItems="baseline"
+                                    >
+                                        <Button variant="contained" size="small">
+                                            <Typography color="#FFFFFF">INICIAR</Typography>
+                                            <QrCode2Icon
+                                                style={{ color: '#FFFFFF' }}
+                                                onClick={() => {
+                                                    setOpenQrCode(true);
+                                                    setFunctionToBeExecuted("handleStart")
+                                                }}
+                                            />
+                                        </Button>
+                                    </Grid>
+                                </TableCell>
+                            </TableRow>
                             {productionNotStarted.map((row) => (
                                 <TableRow key={row.id}>
                                     <TableCell align="center" width="50%">
@@ -418,19 +461,14 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={row.nome_proximo_processo ? row.nome_proximo_processo : null/*<br />*/}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox
-                                                        onClick={() => {
-                                                            handleCheckboxStartProduction(row.id);
-                                                            handleCheckboxIdProcessesStart(parseInt(row.id_processo), row.id)
-                                                        }}
-                                                    />}
+                                                    avatar={
+                                                        <Typography variant="body2" align="left" color="text.secondary">
+                                                            {row.id_pedido}
+                                                        </Typography>}
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
                                                 <CardContent sx={{ maxHeight: 65 }}>
                                                     <Box>
-                                                        <Typography variant="body2" align="left" color="text.secondary">
-                                                            {row.id_pedido}
-                                                        </Typography>
                                                         <Typography variant="body2" align="center" color="text.primary">
                                                             {row.nome_produto}
                                                         </Typography>
@@ -439,27 +477,6 @@ export default function Tables() {
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
-                                                <CardActions>
-                                                    <Grid container justifyContent="right">
-                                                        <Button
-                                                            onClick={() => {
-                                                                setOpen(true);
-                                                                setParamsID(row.id);
-                                                                setParamsName(row.nome_produto);
-                                                                setParamsOrder(row.id_pedido);
-                                                                setParamsIdProcess(row.id_processo);
-                                                                setFunctionToBeExecuted(checkboxStartProduction.length === 0 ?
-                                                                    "handleStartProduction"
-                                                                    : "handleStartManyProductions")
-                                                            }}
-                                                            variant="contained"
-                                                            size="small"
-                                                            style={{ background: checkboxStartProduction.length === 0 ? '#E8927C' : '#3498DB', color: '#FFFFFF', maxHeight: 25 }}
-                                                        >
-                                                            {checkboxStartProduction.length === 0 ? "INICIAR" : "INICIAR VÁRIOS"}
-                                                        </Button>
-                                                    </Grid>
-                                                </CardActions>
                                             </Card>
                                         </Grid>
                                     </TableCell>
@@ -480,19 +497,40 @@ export default function Tables() {
                                     width="50%"
                                     style={{ background: '#E8927C', color: '#FFFFFF' }}
                                 >
+                                    Fazendo
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>
                                     <Grid
                                         container
                                         direction="row"
                                         justifyContent="space-between"
                                     >
-                                        <QrCode2Icon style={{ color: '#000000' }} onClick={() => alert("2")} />
-                                        Fazendo
-                                        <QrCode2Icon style={{ color: '#000000' }} onClick={() => alert("2")} />
+                                        <Button variant="contained" size="small">
+                                            <QrCode2Icon
+                                                style={{ color: '#FFFFFF' }}
+                                                onClick={() => {
+                                                    setOpenQrCode(true);
+                                                    setFunctionToBeExecuted("handlePause")
+                                                }}
+                                            />
+                                            <Typography color="#FFFFFF">PAUSAR</Typography>
+                                        </Button>
+                                        <Button variant="contained" size="small">
+                                            <Typography color="#FFFFFF">FINALIZAR</Typography>
+                                            <QrCode2Icon
+                                                style={{ color: '#FFFFFF' }}
+                                                onClick={() => {
+                                                    setOpenQrCode(true);
+                                                    setFunctionToBeExecuted("handleFinish")
+                                                }} />
+                                        </Button>
                                     </Grid>
                                 </TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
                             {productionStarted.map((rowProduction) => (
                                 <TableRow key={rowProduction.id}>
                                     <TableCell align="center" width="50%">
@@ -504,20 +542,14 @@ export default function Tables() {
                                                     subheader={rowProduction.nome_proximo_processo ? rowProduction.nome_proximo_processo : null/*<br />*/}
                                                     subheaderTypographyProps={{ align: 'right', variant: "body2" }}
                                                     avatar={
-                                                        <Checkbox
-                                                            onClick={() => {
-                                                                handleCheckboxPause_FinishProduction(rowProduction.id, rowProduction.id_proximo_processo);
-                                                                handleCheckboxIdProcessesPauseFinish(parseInt(rowProduction.id_processo), rowProduction.id)
-                                                            }}
-                                                        />
+                                                        <Typography variant="body2" align="left" color="text.secondary">
+                                                            {rowProduction.id_pedido}
+                                                        </Typography>
                                                     }
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
                                                 <CardContent sx={{ maxHeight: 65 }}>
                                                     <Box>
-                                                        <Typography variant="body2" align="left" color="text.secondary">
-                                                            {rowProduction.id_pedido}
-                                                        </Typography>
                                                         <Typography variant="body2" align="center" color="text.primary">
                                                             {rowProduction.nome_produto}
                                                         </Typography>
@@ -526,45 +558,6 @@ export default function Tables() {
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
-                                                <CardActions>
-                                                    <Grid container justifyContent="space-between">
-                                                        <Button
-                                                            size="small"
-                                                            variant="contained"
-                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#E74C3C', color: '#FFFFFF', maxHeight: 25 }}
-                                                            onClick={() => {
-                                                                setOpen(true);
-                                                                setParamsID(rowProduction.id);
-                                                                setParamsName(rowProduction.nome_produto);
-                                                                setParamsOrder(rowProduction.id_pedido);
-                                                                setParamsIdProcess(rowProduction.id_processo);
-                                                                setFunctionToBeExecuted(checkboxPause_FinishProduction.length === 0 ?
-                                                                    "handlePauseProduction"
-                                                                    : "handlePauseManyProductions")
-                                                            }}
-                                                        >
-                                                            {checkboxPause_FinishProduction.length === 0 ? "PAUSAR" : "PAUSAR VÁRIOS"}
-                                                        </Button>
-                                                        <Button
-                                                            size="small"
-                                                            variant="contained"
-                                                            style={{ background: checkboxPause_FinishProduction.length === 0 ? '#E8927C' : '#08BC0C', color: '#FFFFFF', maxHeight: 25 }}
-                                                            onClick={() => {
-                                                                setOpen(true);
-                                                                setParamsID(rowProduction.id);
-                                                                setParamsIdNextProcess(rowProduction.id_proximo_processo)
-                                                                setParamsName(rowProduction.nome_produto);
-                                                                setParamsOrder(rowProduction.id_pedido);
-                                                                setParamsIdProcess(rowProduction.id_processo);
-                                                                setFunctionToBeExecuted(checkboxPause_FinishProduction.length === 0 ?
-                                                                    "handleFinishProduction"
-                                                                    : "handleFinishManyProductions")
-                                                            }}
-                                                        >
-                                                            {checkboxPause_FinishProduction.length === 0 ? "FINALIZAR" : "FINALIZAR VÁRIOS"}
-                                                        </Button>
-                                                    </Grid>
-                                                </CardActions>
                                             </Card>
                                         </Grid>
                                     </TableCell>
@@ -585,19 +578,32 @@ export default function Tables() {
                                     width="50%"
                                     style={{ background: '#E8927C', color: '#FFFFFF' }}
                                 >
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justifyContent="space-between"
-                                    >
-                                        <div />
-                                        Pausado
-                                        <QrCode2Icon style={{ color: '#000000' }} onClick={() => alert("3")} />
-                                    </Grid>
+                                    Pausado
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
+                            <TableRow>
+                                <TableCell>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-end"
+                                        alignItems="baseline"
+                                    >
+                                        <Button variant="contained" size="small">
+                                            <Typography color="#FFFFFF">RETOMAR</Typography>
+                                            <QrCode2Icon
+                                                style={{ color: '#ffffff' }}
+                                                onClick={() => {
+                                                    setOpenQrCode(true);
+                                                    setFunctionToBeExecuted("handleResume")
+                                                }}
+                                            />
+                                        </Button>
+                                    </Grid>
+                                </TableCell>
+                            </TableRow>
                             {productionPaused.map((rowProductionPaused) => (
                                 <TableRow key={rowProductionPaused.id}>
                                     <TableCell align="center" width="50%">
@@ -608,20 +614,15 @@ export default function Tables() {
                                                     titleTypographyProps={{ align: 'right' }}
                                                     subheader={rowProductionPaused.nome_proximo_processo ? rowProductionPaused.nome_proximo_processo : null/*<br />*/}
                                                     subheaderTypographyProps={{ align: 'right', }}
-                                                    avatar={<Checkbox
-                                                        onClick={() => {
-                                                            handleCheckboxResumeProduction(rowProductionPaused.id);
-                                                            handleCheckboxIdProcessesResume(parseInt(rowProductionPaused.id_processo), rowProductionPaused.id)
-                                                        }}
-                                                        size="small"
-                                                    />}
+                                                    avatar={
+                                                        <Typography variant="body2" align="left" color="text.secondary">
+                                                            {rowProductionPaused.id_pedido}
+                                                        </Typography>
+                                                    }
                                                     sx={{ backgroundColor: "#FBECE8", color: "#000000", maxHeight: 50 }}
                                                 />
                                                 <CardContent sx={{ maxHeight: 65 }}>
                                                     <Box>
-                                                        <Typography variant="body2" align="left" color="text.secondary">
-                                                            {rowProductionPaused.id_pedido}
-                                                        </Typography>
                                                         <Typography variant="body2" align="center" color="text.primary">
                                                             {rowProductionPaused.nome_produto}
                                                         </Typography>
@@ -630,27 +631,6 @@ export default function Tables() {
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
-                                                <CardActions>
-                                                    <Grid container justifyContent="right">
-                                                        <Button
-                                                            size="small"
-                                                            variant="contained"
-                                                            style={{ background: checkboxResumeProduction.length === 0 ? '#E8927C' : '#F1C40F', color: '#FFFFFF', maxHeight: 25 }}
-                                                            onClick={() => {
-                                                                setOpen(true);
-                                                                setParamsID(rowProductionPaused.id);
-                                                                setParamsName(rowProductionPaused.nome_produto);
-                                                                setParamsOrder(rowProductionPaused.id_pedido);
-                                                                setParamsIdProcess(rowProductionPaused.id_processo);
-                                                                setFunctionToBeExecuted(checkboxResumeProduction.length === 0 ?
-                                                                    "handleResumeProduction"
-                                                                    : "handleResumeManyProductions")
-                                                            }}
-                                                        >
-                                                            {checkboxResumeProduction.length === 0 ? "RETOMAR" : "RETOMAR VÁRIOS"}
-                                                        </Button>
-                                                    </Grid>
-                                                </CardActions>
                                             </Card>
                                         </Grid>
                                     </TableCell>

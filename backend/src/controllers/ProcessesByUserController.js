@@ -27,9 +27,11 @@ module.exports = {
     await connectionPG.query(`SELECT * FROM processos_por_usuario
     WHERE id_usuario = ${id} AND id_processo = ${idProcess}`)
       .then(results => { processByUser = results.rows })
+    console.log(processByUser)
     if (processByUser.length === 0) {
       status = 400
     }
+    console.log(status)
     return res.json({ status })
   },
 
@@ -45,5 +47,5 @@ module.exports = {
     }
     return res.json({ status: 200 })
   },
-
+  
 };
