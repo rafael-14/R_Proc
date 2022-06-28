@@ -66,6 +66,15 @@ function HandleDialogQrCode(props) {
         props.setListQrCode([...props.listQrCode])
     }
 
+    function handleButtonWrittin() {
+        switch(props.functionToBeExecuted) {
+            case "handleStartProduction": return "Iniciar"    
+            case "handlePauseProduction": return "Pausar"
+            case "handleResumeProduction": return "Retomar"
+            case "handleFinishProduction": return "Finalizar"
+        }
+    }
+
     return (
         <>
             <Dialog open={props.openQrCode} onClose={() => { props.setOpenQrCode(false); props.setListQrCode([]) }} fullWidth>
@@ -112,7 +121,7 @@ function HandleDialogQrCode(props) {
                                 style={{ color: "#FFFFFF", marginInlineStart: 15 }}
                                 onClick={() => props.handleQrCode()}
                             >
-                                Iniciar
+                                {handleButtonWrittin()}
                             </Button>) : null}
                     </Grid>
                 </DialogActions>
@@ -254,11 +263,9 @@ export default function Tables() {
                     setListQrCode={setListQrCode}
                     qrCode={qrCode}
                     setQrCode={setQrCode}
-                    handleNotificationError={handleNotificationError}
-                    open={open}
-                    setOpen={setOpen}
-                    responseQrCode={responseQrCode}
                     handleQrCode={handleQrCode}
+                    handleNotificationError={handleNotificationError}
+                    functionToBeExecuted={functionToBeExecuted}
                 />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
