@@ -234,7 +234,7 @@ export default function Tables() {
     let [qrCode, setQrCode] = useState("")
 
     async function handleQrCode() {
-        let response = await api.post(`/api/qrcode`, listQrCode)
+        let response = await api.post(`/api/qrcode`, {listQrCode, functionToBeExecuted})
         setResponseQrCode(response)
         if (response.data.length > 0) {
             setOpen(true)

@@ -175,11 +175,17 @@ module.exports = {
   },
 
   async qrCode(req, res) {
-    let listQrCode = req.body;
+    let { listQrCode, functionToBeExecuted } = req.body;
     let idProduction = [];
+    let situation;
     for (let i = 0; i < listQrCode.length; i++) {
+      switch (functionToBeExecuted) {
+        case "handleStartProduction": situation = "= 0"; break
+        case "handleResumeProduction": situation = "= 2"; break
+        default: situation = "IN (1, 3)"; break
+      }
       await connectionPG.query(`SELECT * FROM producao
-      WHERE id_produto_pedido = ${listQrCode[i]}
+      WHERE id_produto_pedido = ${listQrCode[i]} AND situacao ${situation}
       ORDER BY id DESC
       LIMIT 1`)
         .then(results => { idProduction = [...idProduction, ...results.rows] })
