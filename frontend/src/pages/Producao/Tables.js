@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, Checkbox, TableBody, Card,
+    Button, TableBody, Card, Box, Toolbar, Table, TableHead, Fab,
     Typography, TableCell, CardHeader, CardContent, Container, Grid, TableRow, List, ListItem,
-    Box, Toolbar, CardActions, Table, TableHead, Fab,
     Dialog, DialogTitle, TextField, DialogContent, DialogContentText, DialogActions, ListItemText
 } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,9 +16,9 @@ function HandleDialogUserCode(props) {
     async function verifyCode(value) {
         let response = await api.post(`/api/select/user_by_code`, { code: value })
         if (response.data.status === 200) {
-            props.handleUser(response.data.userByCode[0])
+            props.handleUser(response.data.userByCode[0].id)
         } else {
-            props.handleNotificationError('Código Inexistente!')
+            props.handleNotificationError("Código Inexistente!")
             props.setCode("")
         }
     }
@@ -67,65 +66,58 @@ function HandleDialogQrCode(props) {
         props.setListQrCode([...props.listQrCode])
     }
 
-    function handleProduction() {
-        props.setOpen(true)
-        if (props.listQrCode.length === 1) {
-            props.setFunctionToBeExecuted(props.functionToBeExecuted + "Production")
-        } else if (props.listQrCode.length > 1) {
-            props.setFunctionToBeExecuted(props.functionToBeExecuted + "ManyProductions")
-        }
-    }
-
     return (
-        <Dialog open={props.openQrCode} onClose={() => { props.setOpenQrCode(false); props.setListQrCode([]) }} fullWidth>
-            <List>
-                {props.listQrCode.map((row, position) => (
-                    <ListItem>
-                        <ListItemText primary={new String(row).substring(0, 50)} />
-                        <Fab size="small" style={{ backgroundColor: '#E74C3C', color: "#FFFFFF" }} onClick={() => handleRemoveListQrCode(position)}>
-                            <RemoveIcon />
-                        </Fab>
-                    </ListItem>
-                ))}
-            </List>
-            <DialogContent>
-                <DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        fullWidth
-                        label="Leia aqui o QR Code:"
-                        color="secondary"
-                        value={props.qrCode}
-                        onChange={e => props.setQrCode(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" ? handleListQrCode(e.target.value.trim()) : null}
-                    />
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="flex-end"
-                >
-                    <Button
-                        variant="contained"
-                        style={{ background: "#E74C3C", color: "#FFFFFF" }}
-                        onClick={() => { props.setOpenQrCode(false); props.setListQrCode([]) }}
+        <>
+            <Dialog open={props.openQrCode} onClose={() => { props.setOpenQrCode(false); props.setListQrCode([]) }} fullWidth>
+                <List>
+                    {props.listQrCode.map((row, position) => (
+                        <ListItem>
+                            <ListItemText primary={new String(row).substring(0, 50)} />
+                            <Fab size="small" style={{ backgroundColor: '#E74C3C', color: "#FFFFFF" }} onClick={() => handleRemoveListQrCode(position)}>
+                                <RemoveIcon />
+                            </Fab>
+                        </ListItem>
+                    ))}
+                </List>
+                <DialogContent>
+                    <DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            fullWidth
+                            label="Leia aqui o QR Code:"
+                            color="secondary"
+                            value={props.qrCode}
+                            onChange={e => props.setQrCode(e.target.value)}
+                            onKeyDown={e => e.key === "Enter" ? handleListQrCode(e.target.value.trim()) : null}
+                        />
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-end"
                     >
-                        Cancelar
-                    </Button>
-                    {props.listQrCode.length > 0 ?
-                        (<Button
+                        <Button
                             variant="contained"
-                            style={{ color: "#FFFFFF", marginInlineStart: 15 }}
-                            onClick={() => handleProduction()}
+                            style={{ background: "#E74C3C", color: "#FFFFFF" }}
+                            onClick={() => { props.setOpenQrCode(false); props.setListQrCode([]) }}
                         >
-                            Iniciar
-                        </Button>) : null}
-                </Grid>
-            </DialogActions>
-        </Dialog>
+                            Cancelar
+                        </Button>
+                        {props.listQrCode.length > 0 ?
+                            (<Button
+                                variant="contained"
+                                style={{ color: "#FFFFFF", marginInlineStart: 15 }}
+                                onClick={() => props.handleQrCode()}
+                            >
+                                Iniciar
+                            </Button>) : null}
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+        </>
     )
 }
 
@@ -145,18 +137,7 @@ export default function Tables() {
         })
     }
 
-    async function handleNotification(nome_produto, id_pedido, status, toast) {
-        toast(`Produção do Produto: ${nome_produto} do Pedido: ${id_pedido} ${status}!`, {
-            position: "top-right",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-        })
-    }
-    async function handleNotificationManyProductions(status, toast) {
+    async function handleNotificationProductions(status, toast) {
         toast(`Produções ${status}!`, {
             position: "top-right",
             autoClose: 3000,
@@ -168,87 +149,8 @@ export default function Tables() {
         })
     }
 
-    let [paramsID, setParamsID] = useState(null)
-    let [paramsName, setParamsName] = useState(null)
-    let [paramsOrder, setParamsOrder] = useState(null)
-    let [paramsIdNextProcess, setParamsIdNextProcess] = useState(null)
-    let [paramsIdProcess, setParamsIdProcess] = useState(null)
-    async function handleStartProduction(id_user) {
-        setProductionStatus(await api.put(`/api/start/production/${paramsID}`, id_user))
-        handleNotification(paramsName, paramsOrder, "Iniciada", toast.info)
-    }
-    async function handlePauseProduction(id_user, responseQrCode) {
-        if (responseQrCode) {
-            paramsID = responseQrCode
-        }
-        let response = await api.post(`/api/verify/user`, { paramsID, id_user })
-        if (response.data.status === 200) {
-            setProductionStatus(await api.put(`/api/pause/production/${paramsID}`))
-            handleNotification(paramsName, paramsOrder, "Pausada", toast.error)
-        } else {
-            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
-        }
-    }
-    async function handleResumeProduction(id_user, responseQrCode) {
-        console.log(responseQrCode)
-        setProductionStatus(await api.put(`/api/resume/production/${paramsID}`, id_user))
-        handleNotification(paramsName, paramsOrder, "Retomada", toast.warning)
-    }
-    async function handleFinishProduction(id_user) {
-        let response = await api.post(`/api/verify/user`, { paramsID, id_user })
-        if (response.data.status === 200) {
-            setProductionStatus(await api.put(`/api/finish/production/${paramsID}`, { paramsIdNextProcess }))
-            handleNotification(paramsName, paramsOrder, "Concluída", toast.success)
-        } else {
-            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
-        }
-    }
-    async function handleStartManyProductions(id_user) {
-        setProductionStatus(await api.put(`/api/start/many_productions`, { checkboxStartProduction, id_user }))
-        setCheckboxStartProduction([])
-        handleNotificationManyProductions("Iniciadas", toast.info)
-    }
-    async function handlePauseManyProductions(id_user) {
-        let response = await api.post(`/api/verify/users`, { checkboxPause_FinishProduction, id_user })
-        if (response.data.status === 200) {
-            setProductionStatus(await api.put(`/api/pause/many_productions`, { checkboxPause_FinishProduction }))
-            setCheckboxPause_FinishProduction([])
-            handleNotificationManyProductions("Pausadas", toast.error)
-        } else {
-            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
-        }
-    }
-    async function handleResumeManyProductions(id_user) {
-        setProductionStatus(await api.put(`/api/resume/many_productions`, { checkboxResumeProduction, id_user }))
-        setCheckboxResumeProduction([])
-        handleNotificationManyProductions("Retomadas", toast.warning)
-    }
-    async function handleFinishManyProductions(id_user) {
-        let response = await api.post(`/api/verify/users`, { checkboxPause_FinishProduction, id_user })
-        if (response.data.status === 200) {
-            setProductionStatus(await api.put(`/api/finish/many_productions`, { checkboxPause_FinishProduction, checkboxNextProcesses }))
-            setCheckboxPause_FinishProduction([])
-            setCheckboxNextProcesses([])
-            handleNotificationManyProductions("Concluídas", toast.success)
-        } else {
-            handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
-        }
-    }
-
     const [productionStatus, setProductionStatus] = useState(null)
     let [functionToBeExecuted, setFunctionToBeExecuted] = useState(null)
-    async function switchFunction(id_user, responseQrCode) {
-        switch (functionToBeExecuted) {
-            case "handleStartProduction": handleStartProduction(id_user, responseQrCode); break
-            case "handlePauseProduction": handlePauseProduction(id_user, responseQrCode); break
-            case "handleResumeProduction": handleResumeProduction(id_user, responseQrCode); break
-            case "handleFinishProduction": handleFinishProduction(id_user, responseQrCode); break
-            case "handleStartManyProductions": handleStartManyProductions(id_user, responseQrCode); break
-            case "handlePauseManyProductions": handlePauseManyProductions(id_user, responseQrCode); break
-            case "handleResumeManyProductions": handleResumeManyProductions(id_user, responseQrCode); break
-            case "handleFinishManyProductions": handleFinishManyProductions(id_user, responseQrCode); break
-        }
-    }
 
     let [productionNotStarted, setProductionNotStarted] = useState([])
     let [productionStarted, setProductionStarted] = useState([])
@@ -273,126 +175,65 @@ export default function Tables() {
         loadProductionPaused()
     }, [productionStatus])
 
-    let [checkboxStartProduction, setCheckboxStartProduction] = useState([])
-    function handleCheckboxStartProduction(id) {
-        let indexProduction = checkboxStartProduction.indexOf(id)
-        if (indexProduction !== -1) {
-            checkboxStartProduction.splice(indexProduction, 1)
-            setCheckboxStartProduction([...checkboxStartProduction])
-        } else {
-            setCheckboxStartProduction([...checkboxStartProduction, id])
-        }
-    }
-    let [checkboxPause_FinishProduction, setCheckboxPause_FinishProduction] = useState([])
-    let [checkboxNextProcesses, setCheckboxNextProcesses] = useState([])
-    function handleCheckboxPause_FinishProduction(id, id_proximo_processo) {
-        let indexProduction = checkboxPause_FinishProduction.indexOf(id)
-        if (indexProduction !== -1) {
-            checkboxPause_FinishProduction.splice(indexProduction, 1)
-            checkboxNextProcesses.splice(indexProduction, 1)
-            setCheckboxPause_FinishProduction([...checkboxPause_FinishProduction])
-            setCheckboxNextProcesses([...checkboxNextProcesses])
-        } else {
-            setCheckboxPause_FinishProduction([...checkboxPause_FinishProduction, id])
-            setCheckboxNextProcesses([...checkboxNextProcesses, id_proximo_processo])
-        }
-    }
-    let [checkboxResumeProduction, setCheckboxResumeProduction] = useState([])
-    function handleCheckboxResumeProduction(id) {
-        let indexProduction = checkboxResumeProduction.indexOf(id)
-        if (indexProduction !== -1) {
-            checkboxResumeProduction.splice(indexProduction, 1)
-            setCheckboxResumeProduction([...checkboxResumeProduction])
-        } else {
-            setCheckboxResumeProduction([...checkboxResumeProduction, id])
-        }
-    }
-
-    let [checkboxIdProcessesStart, setCheckboxIdProcessesStart] = useState([])
-    function handleCheckboxIdProcessesStart(idProcess, id) {
-        let index = checkboxIdProcessesStart.indexOf(checkboxIdProcessesStart.find(checkboxIdProcessesStart => checkboxIdProcessesStart.id === id))
-        if (index === -1) {
-            setCheckboxIdProcessesStart([...checkboxIdProcessesStart, { idProcess, id }])
-        } else {
-            checkboxIdProcessesStart.splice(index, 1)
-            setCheckboxIdProcessesStart([...checkboxIdProcessesStart])
-        }
-    }
-    let [checkboxIdProcessesPauseFinish, setCheckboxIdProcessesPauseFinish] = useState([])
-    function handleCheckboxIdProcessesPauseFinish(idProcess, id) {
-        let index = checkboxIdProcessesPauseFinish.indexOf(checkboxIdProcessesPauseFinish.find(checkboxIdProcessesPauseFinish => checkboxIdProcessesPauseFinish.id === id))
-        if (index === -1) {
-            setCheckboxIdProcessesPauseFinish([...checkboxIdProcessesPauseFinish, { idProcess, id }])
-        } else {
-            checkboxIdProcessesPauseFinish.splice(index, 1)
-            setCheckboxIdProcessesPauseFinish([...checkboxIdProcessesPauseFinish])
-        }
-    }
-    let [checkboxIdProcessesResume, setCheckboxIdProcessesResume] = useState([])
-    function handleCheckboxIdProcessesResume(idProcess, id) {
-        let index = checkboxIdProcessesResume.indexOf(checkboxIdProcessesResume.find(checkboxIdProcessesResume => checkboxIdProcessesResume.id === id))
-        if (index === -1) {
-            setCheckboxIdProcessesResume([...checkboxIdProcessesResume, { idProcess, id }])
-        } else {
-            checkboxIdProcessesResume.splice(index, 1)
-            setCheckboxIdProcessesResume([...checkboxIdProcessesResume])
-        }
-    }
-
+    let [responseQrCode, setResponseQrCode] = useState([])
     let [open, setOpen] = useState(false);
-    async function handleUser(data) {
-        let responseQrCode
-        if (listQrCode.length > 0) {
-            responseQrCode = await api.post(`/api/qrcode`, { listQrCode })
-            paramsIdProcess = responseQrCode.data[0].id_processo
-            responseQrCode = responseQrCode.data[0].id
+    async function handleUser(userID) {
+        let processID = responseQrCode.data.map((data) => { return parseInt(data.id_processo) })
+        let response = await api.post(`/api/verify/processes_by_user`, { userID, processID })
+        setOpen(false)
+        setOpenQrCode(false)
+        setListQrCode([])
+        setQrCode("")
+        setCode("")
+        if (response.data.status === 400) {
+            handleNotificationError("Usuário Não Possui Permissão!")
         }
-        switch (functionToBeExecuted) {
-            case "handleStartProduction":
-            case "handlePauseProduction":
-            case "handleResumeProduction":
-            case "handleFinishProduction": {
-                let response = await api.post(`/api/verify/process_by_user`, { id: data.id, idProcess: paramsIdProcess })
-                setOpen(false)
-                setOpenQrCode(false)
-                setListQrCode([])
-                setQrCode("")
-                setCode("")
-                if (response.data.status === 400) {
-                    handleNotificationError('Usuário Não Possui Permissão!')
-                }
-                else {
-                    switchFunction({ id_user: data.id }, responseQrCode)
-                }
+        else {
+            let productionID = responseQrCode.data.map((data) => { return parseInt(data.id) })
+            switch (functionToBeExecuted) {
+                case "handleStartProduction":
+                    setProductionStatus(await api.post(`/api/start/productions`, { productionID, userID }))
+                    handleNotificationProductions("Iniciadas", toast.info)
+                    break
+                case "handlePauseProduction":
+                    response = await api.post(`/api/verify/user`, { productionID, userID })
+                    if (response.data.status === 200) {
+                        setProductionStatus(await api.post(`/api/pause/productions`, { productionID }))
+                        handleNotificationProductions("Pausadas", toast.error)
+                    } else {
+                        handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
+                    } break
+                case "handleResumeProduction":
+                    setProductionStatus(await api.post(`/api/resume/productions`, { productionID, userID }))
+                    handleNotificationProductions("Retomadas", toast.warning)
+                    break
+                case "handleFinishProduction":
+                    response = await api.post(`/api/verify/user`, { productionID, userID })
+                    if (response.data.status === 200) {
+                        //setProductionStatus(await api.post(`/api/finish/productions`, { productionID, checkboxNextProcesses }))
+                        handleNotificationProductions("Concluídas", toast.success)
+                    } else {
+                        handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
+                    }
+                    break
             }
-                break;
-            case "handleStartManyProductions":
-            case "handlePauseManyProductions":
-            case "handleResumeManyProductions":
-            case "handleFinishManyProductions": {
-                let idProcesses
-                switch (functionToBeExecuted) {
-                    case "handleStartManyProductions": idProcesses = checkboxIdProcessesStart; break
-                    case "handleResumeManyProductions": idProcesses = checkboxIdProcessesResume; break
-                    default: idProcesses = checkboxIdProcessesPauseFinish; break
-                }
-                let response = await api.post(`/api/verify/processes_by_user`, { id: data.id, idProcesses })
-                setOpen(false)
-                setCode("")
-                if (response.data.status === 400) {
-                    handleNotificationError('Usuário Não Possui Permissão!')
-                }
-                else {
-                    switchFunction({ id_user: data.id })
-                }
-            }
-                break
         }
     }
 
     let [openQrCode, setOpenQrCode] = useState(false);
     let [listQrCode, setListQrCode] = useState([])
     let [qrCode, setQrCode] = useState("")
+
+    async function handleQrCode() {
+        let response = await api.post(`/api/qrcode`, listQrCode)
+        setResponseQrCode(await response)
+        if (response.data.length > 0) {
+            setOpen(true)
+            setOpenQrCode(false)
+        } else {
+            handleNotificationError("QR Code Inexistente!")
+        }
+    }
 
     return (
         <>
@@ -416,8 +257,8 @@ export default function Tables() {
                     handleNotificationError={handleNotificationError}
                     open={open}
                     setOpen={setOpen}
-                    setFunctionToBeExecuted={setFunctionToBeExecuted}
-                    functionToBeExecuted={functionToBeExecuted}
+                    responseQrCode={responseQrCode}
+                    handleQrCode={handleQrCode}
                 />
                 <ToastContainer />
                 <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
@@ -438,15 +279,16 @@ export default function Tables() {
                                         justifyContent="flex-end"
                                         alignItems="baseline"
                                     >
-                                        <Button variant="contained" size="small">
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            onClick={() => {
+                                                setOpenQrCode(true);
+                                                setFunctionToBeExecuted("handleStartProduction")
+                                            }}
+                                        >
                                             <Typography color="#FFFFFF">INICIAR</Typography>
-                                            <QrCode2Icon
-                                                style={{ color: '#FFFFFF' }}
-                                                onClick={() => {
-                                                    setOpenQrCode(true);
-                                                    setFunctionToBeExecuted("handleStart")
-                                                }}
-                                            />
+                                            <QrCode2Icon style={{ color: '#FFFFFF' }} />
                                         </Button>
                                     </Grid>
                                 </TableCell>
@@ -509,24 +351,27 @@ export default function Tables() {
                                         direction="row"
                                         justifyContent="space-between"
                                     >
-                                        <Button variant="contained" size="small">
-                                            <QrCode2Icon
-                                                style={{ color: '#FFFFFF' }}
-                                                onClick={() => {
-                                                    setOpenQrCode(true);
-                                                    setFunctionToBeExecuted("handlePause")
-                                                }}
-                                            />
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            onClick={() => {
+                                                setOpenQrCode(true);
+                                                setFunctionToBeExecuted("handlePauseProduction")
+                                            }}
+                                        >
+                                            <QrCode2Icon style={{ color: '#FFFFFF' }} />
                                             <Typography color="#FFFFFF">PAUSAR</Typography>
                                         </Button>
-                                        <Button variant="contained" size="small">
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            onClick={() => {
+                                                setOpenQrCode(true);
+                                                setFunctionToBeExecuted("handleFinishProduction")
+                                            }}
+                                        >
                                             <Typography color="#FFFFFF">FINALIZAR</Typography>
-                                            <QrCode2Icon
-                                                style={{ color: '#FFFFFF' }}
-                                                onClick={() => {
-                                                    setOpenQrCode(true);
-                                                    setFunctionToBeExecuted("handleFinish")
-                                                }} />
+                                            <QrCode2Icon style={{ color: '#FFFFFF' }} />
                                         </Button>
                                     </Grid>
                                 </TableCell>
@@ -591,15 +436,16 @@ export default function Tables() {
                                         justifyContent="flex-end"
                                         alignItems="baseline"
                                     >
-                                        <Button variant="contained" size="small">
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            onClick={() => {
+                                                setOpenQrCode(true);
+                                                setFunctionToBeExecuted("handleResumeProduction")
+                                            }}
+                                        >
                                             <Typography color="#FFFFFF">RETOMAR</Typography>
-                                            <QrCode2Icon
-                                                style={{ color: '#ffffff' }}
-                                                onClick={() => {
-                                                    setOpenQrCode(true);
-                                                    setFunctionToBeExecuted("handleResume")
-                                                }}
-                                            />
+                                            <QrCode2Icon style={{ color: '#ffffff' }} />
                                         </Button>
                                     </Grid>
                                 </TableCell>

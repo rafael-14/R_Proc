@@ -102,97 +102,50 @@ module.exports = {
     return res.json().status(200)
   },
 
-  async startProduction(req, res) {
-    let { id } = req.params;
-    let { id_user } = req.body;
+  async startProductions(req, res) {
+    let { productionID, userID } = req.body;
     let datetime = new Date
-    await connectionPG.query(`UPDATE producao SET situacao = 1 WHERE id = ${id}`)
-    await connectionPG.query(`INSERT INTO producao_tempo
-    (id_producao, inicio, id_usuario)
-    VALUES(${id}, '${datetime.toISOString()}', ${id_user})`)
-    return res.json().status(200)
-  },
-
-  async pauseProduction(req, res) {
-    let { id } = req.params;
-    let datetime = new Date
-    await connectionPG.query(`UPDATE producao SET situacao = 2 WHERE id = ${id}`)
-    await connectionPG.query(`UPDATE producao_tempo
-      SET fim = '${datetime.toISOString()}', interrupcao = true
-      WHERE id_producao = ${id}`)
-    return res.json().status(200)
-  },
-
-  async resumeProduction(req, res) {
-    let { id } = req.params;
-    let { id_user } = req.body;
-    let datetime = new Date
-    await connectionPG.query(`UPDATE producao SET situacao = 3 WHERE id = ${id}`)
-    await connectionPG.query(`INSERT INTO producao_tempo
-    (id_producao, inicio, id_usuario, interrupcao)
-    VALUES(${id}, '${datetime.toISOString()}', ${id_user}, true)`)
-    return res.json().status(200)
-  },
-
-  async finishProduction(req, res) {
-    let { paramsIdNextProcess } = req.body;
-    let { id } = req.params;
-    let datetime = new Date
-    await connectionPG.query(`UPDATE producao_tempo SET fim = '${datetime.toISOString()}' WHERE id_producao = ${id}`)
-    await connectionPG.query(`UPDATE producao SET situacao = 4 WHERE id = ${id} RETURNING *`)
-      .then(results => { productFinished = results.rows })
-    if (paramsIdNextProcess) {
-      await connectionPG.query(`INSERT INTO producao
-      (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
-      VALUES(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${paramsIdNextProcess}, ${productFinished[0].id_produto_pedido}, 0)`)
-    }
-    return res.json().status(200)
-  },
-
-  async startManyProductions(req, res) {
-    let { checkboxStartProduction, id_user } = req.body;
-    let datetime = new Date
-    for (let i = 0; i < checkboxStartProduction.length; i++) {
-      await connectionPG.query(`UPDATE producao SET situacao = 1 WHERE id = ${checkboxStartProduction[i]}`)
+    for (let i = 0; i < productionID.length; i++) {
+      await connectionPG.query(`UPDATE producao SET situacao = 1 WHERE id = ${productionID[i]}`)
       await connectionPG.query(`INSERT INTO producao_tempo
       (id_producao, inicio, id_usuario)
-      VALUES(${checkboxStartProduction[i]}, '${datetime.toISOString()}', ${id_user.id_user})`)
+      VALUES(${productionID[i]}, '${datetime.toISOString()}', ${userID})`)
     }
     return res.json().status(200)
   },
 
-  async pauseManyProductions(req, res) {
-    let { checkboxPause_FinishProduction } = req.body;
+  async pauseProductions(req, res) {
+    let { productionID } = req.body;
     let datetime = new Date
-    for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
-      await connectionPG.query(`UPDATE producao SET situacao = 2 WHERE id = ${checkboxPause_FinishProduction[i]}`)
+    for (let i = 0; i < productionID.length; i++) {
+      await connectionPG.query(`UPDATE producao SET situacao = 2 WHERE id = ${productionID[i]}`)
       await connectionPG.query(`UPDATE producao_tempo
       SET fim = '${datetime.toISOString()}', interrupcao = true
-      WHERE id_producao = ${checkboxPause_FinishProduction[i]}`)
+      WHERE id_producao = ${productionID[i]}`)
     }
     return res.json().status(200)
   },
 
-  async resumeManyProductions(req, res) {
-    let { checkboxResumeProduction, id_user } = req.body;
+  async resumeProductions(req, res) {
+    let { productionID, userID } = req.body;
     let datetime = new Date
-    for (let i = 0; i < checkboxResumeProduction.length; i++) {
-      await connectionPG.query(`UPDATE producao SET situacao = 3 WHERE id = ${checkboxResumeProduction[i]}`)
+    for (let i = 0; i < productionID.length; i++) {
+      await connectionPG.query(`UPDATE producao SET situacao = 3 WHERE id = ${productionID[i]}`)
       await connectionPG.query(`INSERT INTO producao_tempo
       (id_producao, inicio, id_usuario, interrupcao)
-      VALUES(${checkboxResumeProduction[i]}, '${datetime.toISOString()}', ${id_user.id_user}, true)`)
+      VALUES(${productionID[i]}, '${datetime.toISOString()}', ${userID}, true)`)
     }
     return res.json().status(200)
   },
 
-  async finishManyProductions(req, res) {
-    let { checkboxPause_FinishProduction, checkboxNextProcesses } = req.body;
+  async finishProductions(req, res) {
+    let { productionID, checkboxNextProcesses } = req.body;
     let datetime = new Date
-    for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
+    for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`UPDATE producao_tempo SET fim = '${datetime.toISOString()}'
-      WHERE id_producao = ${checkboxPause_FinishProduction[i]}`)
+      WHERE id_producao = ${productionID[i]}`)
       await connectionPG.query(`UPDATE producao SET situacao = 4
-      WHERE id = ${checkboxPause_FinishProduction[i]} RETURNING *`)
+      WHERE id = ${productionID[i]} RETURNING *`)
         .then(results => { productFinished = results.rows })
       if (checkboxNextProcesses[i]) {
         await connectionPG.query(`INSERT INTO producao
@@ -204,25 +157,15 @@ module.exports = {
   },
 
   async verifyUser(req, res) {
-    let { paramsID, id_user } = req.body;
-    let status = 400
-    await connectionPG.query(`SELECT * FROM producao_tempo
-    WHERE id_producao = ${paramsID} AND id_usuario = ${id_user.id_user}`)
-      .then(results => { production = results.rows })
-    if (production[0]) {
-      status = 200
-    }
-    return res.json({ status })
-  },
-
-  async verifyUsers(req, res) {
-    let { checkboxPause_FinishProduction, id_user } = req.body;
+    let { productionID, userID } = req.body;
     let status = 200
-    for (let i = 0; i < checkboxPause_FinishProduction.length; i++) {
+    for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`SELECT * FROM producao_tempo
-      WHERE id_producao = ${checkboxPause_FinishProduction[i]} AND id_usuario = ${id_user.id_user}`)
+      WHERE id_producao = ${productionID[i]}
+      ORDER BY id DESC
+      LIMIT 1`)
         .then(results => { production = results.rows })
-      if (!production[0]) {
+      if (production[0].id_usuario != userID) {
         status = 400
         break
       }
@@ -231,16 +174,16 @@ module.exports = {
   },
 
   async qrCode(req, res) {
-    let { listQrCode } = req.body;
-    let idProcesses = [];
+    let listQrCode = req.body;
+    let idProduction = [];
     for (let i = 0; i < listQrCode.length; i++) {
       await connectionPG.query(`SELECT * FROM producao
       WHERE id_produto_pedido = ${listQrCode[i]}
       ORDER BY id DESC
       LIMIT 1`)
-        .then(results => { idProcesses = [...idProcesses, ...results.rows] })
+        .then(results => { idProduction = [...idProduction, ...results.rows] })
     }
-    return res.json(idProcesses)
+    return res.json(idProduction)
   },
 
 };

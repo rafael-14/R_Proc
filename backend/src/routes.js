@@ -32,7 +32,6 @@ routes.post('/api/select/user_by_code', UserController.userByCode);
 
 routes.put('/api/select/processes_by_user/:id', ProcessesByUserController.selectProcessesByUser);
 routes.post('/api/insert/processes_by_user', ProcessesByUserController.insertProcessesByUser);
-routes.post('/api/verify/process_by_user', ProcessesByUserController.verifyProcessByUser);
 routes.post('/api/verify/processes_by_user', ProcessesByUserController.verifyProcessesByUser);
 
 routes.get('/api/select/orders', OrderController.selectAllOrders);
@@ -52,19 +51,14 @@ routes.put('/api/select/users_by_sector/:id', UsersBySectorController.selectUser
 routes.post('/api/insert/users_by_sector', UsersBySectorController.insertUsersBySector);
 
 routes.post('/api/insert/production', ProductionController.insertProduction);
-routes.put('/api/start/production/:id', ProductionController.startProduction);
-routes.put('/api/pause/production/:id', ProductionController.pauseProduction);
-routes.put('/api/resume/production/:id', ProductionController.resumeProduction);
-routes.put('/api/finish/production/:id', ProductionController.finishProduction);
 routes.post('/api/select/production_not_started', ProductionController.selectProductionNotStarted);
 routes.post('/api/select/production_started', ProductionController.selectProductionStarted);
 routes.post('/api/select/production_paused', ProductionController.selectProductionPaused);
-routes.put('/api/start/many_productions', ProductionController.startManyProductions);
-routes.put('/api/pause/many_productions', ProductionController.pauseManyProductions);
-routes.put('/api/resume/many_productions', ProductionController.resumeManyProductions);
-routes.put('/api/finish/many_productions', ProductionController.finishManyProductions);
+routes.post('/api/start/productions', ProductionController.startProductions);
+routes.post('/api/pause/productions', ProductionController.pauseProductions);
+routes.post('/api/resume/productions', ProductionController.resumeProductions);
+routes.post('/api/finish/productions', ProductionController.finishProductions);
 routes.post('/api/verify/user', ProductionController.verifyUser);
-routes.post('/api/verify/users', ProductionController.verifyUsers);
 routes.post('/api/qrcode', ProductionController.qrCode);
 
 module.exports = routes;
