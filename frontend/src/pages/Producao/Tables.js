@@ -210,7 +210,7 @@ export default function Tables() {
                 case "handleFinishProduction":
                     response = await api.post(`/api/verify/user`, { productionID, userID })
                     if (response.data.status === 200) {
-                        //setProductionStatus(await api.post(`/api/finish/productions`, { productionID, checkboxNextProcesses }))
+                        setProductionStatus(await api.post(`/api/finish/productions`, { productionID }))
                         handleNotificationProductions("Concluídas", toast.success)
                     } else {
                         handleNotificationError("Usuário Diferente do Usuário que Iniciou a Produção!")
@@ -226,7 +226,7 @@ export default function Tables() {
 
     async function handleQrCode() {
         let response = await api.post(`/api/qrcode`, listQrCode)
-        setResponseQrCode(await response)
+        setResponseQrCode(response)
         if (response.data.length > 0) {
             setOpen(true)
             setOpenQrCode(false)

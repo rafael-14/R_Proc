@@ -139,7 +139,7 @@ module.exports = {
   },
 
   async finishProductions(req, res) {
-    let { productionID, checkboxNextProcesses } = req.body;
+    let { productionID } = req.body;
     let datetime = new Date
     for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`UPDATE producao_tempo SET fim = '${datetime.toISOString()}'
@@ -147,10 +147,11 @@ module.exports = {
       await connectionPG.query(`UPDATE producao SET situacao = 4
       WHERE id = ${productionID[i]} RETURNING *`)
         .then(results => { productFinished = results.rows })
-      if (checkboxNextProcesses[i]) {
+      let dataNextProcess = await nextProcess.nextProcess(productFinished[0].id_produto, productFinished[0].id_processo)
+      if (dataNextProcess[0]) {
         await connectionPG.query(`INSERT INTO producao
         (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
-        VALUES(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${checkboxNextProcesses[i]}, ${productFinished[0].id_produto_pedido}, 0)`)
+        VALUES(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${dataNextProcess[0].id_processo}, ${productFinished[0].id_produto_pedido}, 0)`)
       }
     }
     return res.json().status(200)
@@ -164,7 +165,7 @@ module.exports = {
       WHERE id_producao = ${productionID[i]}
       ORDER BY id DESC
       LIMIT 1`)
-        .then(results => { production = results.rows })
+        .then(results => production = results.rows)
       if (production[0].id_usuario != userID) {
         status = 400
         break
