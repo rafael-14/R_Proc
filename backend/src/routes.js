@@ -34,7 +34,7 @@ routes.put('/api/select/processes_by_user/:id', ProcessesByUserController.select
 routes.post('/api/insert/processes_by_user', ProcessesByUserController.insertProcessesByUser);
 routes.post('/api/verify/processes_by_user', ProcessesByUserController.verifyProcessesByUser);
 
-routes.get('/api/select/orders', OrderController.selectAllOrders);
+routes.post('/api/select/orders', OrderController.selectAllOrders);
 routes.post('/api/insert/order', OrderController.insertOrder);
 
 routes.put('/api/select/products_by_order/:id', ProductsByOrderController.selectProductsByOrder);

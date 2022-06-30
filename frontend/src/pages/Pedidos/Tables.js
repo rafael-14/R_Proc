@@ -3,7 +3,7 @@ import api from '../../services/api';
 import {
     Button, TextField, Table, Typography, IconButton, RadioGroup, TableSortLabel,
     TableBody, TableCell, TableHead, TableRow, Container, Grid, Chip, Radio,
-    Box, Toolbar, TableContainer, Collapse, FormControlLabel
+    Box, Toolbar, TableContainer, Collapse, FormControlLabel, Pagination
 } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -81,17 +81,19 @@ export default function Tables() {
     let [searchFor, setSearchFor] = useState("orderNumber")
     let [startDate, setStartDate] = useState(null)
     let [endDate, setEndDate] = useState(null)
-    let [orderStatus, setOrderStatus] = useState(null)
+    let [orderStatus, setOrderStatus] = useState("All")
 
     let [orders, setOrders] = useState([])
     useEffect(() => {
         async function loadOrders() {
-            let response = await api.get('/api/select/orders')
+            let data = {direction}
+            let response = await api.post('/api/select/orders', data)
             setOrders(response.data)
         }
         loadOrders()
 
     }, [direction])
+    
     useEffect(() => {
         setDirection(true)
     }, [searchFor])
@@ -101,7 +103,7 @@ export default function Tables() {
         <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
             <Toolbar />
             <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                <Button onClick={() => console.log(searchFor)}>teste</Button>
+                <Button onClick={() => console.log(searchFor, orderStatus)}>teste</Button>
                 <Grid
                     container
                     direction="row"
@@ -188,23 +190,25 @@ export default function Tables() {
                         </RadioGroup>
                     </Grid>
                     <Grid>
-                        <RadioGroup row defaultValue={"All"}>
+                        <RadioGroup row defaultValue={orderStatus}>
                             <FormControlLabel
-                                id="setSearchByName"
                                 value="All"
                                 //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
+                                onClick={() => setOrderStatus("All")}
                                 control={<Radio />}
                                 label="Todos"
                             />
                             <FormControlLabel
                                 value="Concluded"
                                 //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                onClick={() => setOrderStatus("Concluded")}
                                 control={<Radio />}
                                 label="Concluídos"
                             />
                             <FormControlLabel
                                 value="InProgress"
                                 //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
+                                onClick={() => setOrderStatus("InProgress")}
                                 control={<Radio />}
                                 label="Em Andamento"
                             />
@@ -235,6 +239,15 @@ export default function Tables() {
                         </TableContainer>
                     </Grid>
                 </Grid>
+                <Pagination
+                    showFirstButton
+                    showLastButton
+                    //onChange={(_event, page) => setPage(page - 1)}
+                    //count={countEmpresa} quantidade de paginas
+                    defaultPage={1}
+                    siblingCount={0}
+                    //page={page + 1}
+                />
             </Container>
         </Box>
 

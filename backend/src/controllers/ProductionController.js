@@ -176,8 +176,7 @@ module.exports = {
 
   async qrCode(req, res) {
     let { listQrCode, functionToBeExecuted } = req.body;
-    let idProduction = [];
-    let situation;
+    let situation, idProduction = [];
     for (let i = 0; i < listQrCode.length; i++) {
       switch (functionToBeExecuted) {
         case "handleStartProduction": situation = "= 0"; break
@@ -189,7 +188,12 @@ module.exports = {
       ORDER BY id DESC
       LIMIT 1`)
         .then(results => { idProduction = [...idProduction, ...results.rows] })
+      if (idProduction[i] === undefined) {
+        idProduction = []
+        break
+      }
     }
+
     return res.json(idProduction)
   },
 

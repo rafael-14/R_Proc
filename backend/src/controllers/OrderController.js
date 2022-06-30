@@ -3,7 +3,8 @@ const lastProcess = require('../functions/lastProcess');
 
 module.exports = {
   async selectAllOrders(req, res) {
-    await connectionPG.query(`SELECT * FROM pedido ORDER BY 1`)
+    let { direction } = req.body;
+    await connectionPG.query(`SELECT * FROM pedido ORDER BY 1 ${direction ? "ASC" : "DESC"}`)
       .then(results => { allOrders = results.rows })
     //Retorna todos os pedidos
     for (let i = 0; i < allOrders.length; i++) {
