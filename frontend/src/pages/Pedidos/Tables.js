@@ -111,7 +111,7 @@ export default function Tables() {
     return (
         <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
             <Toolbar />
-            <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
+            <Container maxWidth="xg" sx={{ mt: 2 }}>
                 <Grid
                     container
                     direction="row"

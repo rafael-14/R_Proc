@@ -16,7 +16,7 @@ routes.post('/api/insert/product', ProductController.insertProduct);
 routes.put('/api/inactivate/product/:id', ProductController.inactivateProduct);
 routes.put('/api/activate/product/:id', ProductController.activateProduct);
 
-routes.get('/api/select/processes', ProcessController.selectAllProcesses);
+routes.post('/api/select/processes', ProcessController.selectAllProcesses);
 routes.post('/api/insert/process', ProcessController.insertProcess);
 routes.put('/api/inactivate/process/:id', ProcessController.inactivateProcess);
 routes.put('/api/activate/process/:id', ProcessController.activateProcess);
