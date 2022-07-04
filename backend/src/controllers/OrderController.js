@@ -3,7 +3,7 @@ const lastProcess = require('../functions/lastProcess');
 
 module.exports = {
   async selectAllOrders(req, res) {
-    let { direction, orderStatus, orderNumber, startDate, endDate } = req.body;
+    let { direction, orderStatus, orderNumber, startDate, endDate, page } = req.body;
     let dateClause
     if (startDate && endDate) {
       dateClause = `data_pedido BETWEEN '${startDate}' AND '${endDate} 23:59:59.999-03'`
@@ -14,8 +14,9 @@ module.exports = {
     }
     await connectionPG.query(`SELECT * FROM pedido
       ${orderNumber ? `WHERE id = ${orderNumber}` : ""}
-      ${orderNumber ? `AND ${dateClause}` : dateClause ? `WHERE ${dateClause}` : ""}
-      ORDER BY 1 ${direction ? "ASC" : "DESC"}`)
+      ${dateClause ? `WHERE ${dateClause}` : ""}
+      ORDER BY 1 ${direction ? "ASC" : "DESC"}
+      --LIMIT 10 OFFSET 10 * ${page - 1}`)
       .then(results => { allOrders = results.rows })
     //Retorna todos os pedidos
     for (let i = 0; i < allOrders.length; i++) {
@@ -43,7 +44,8 @@ module.exports = {
     if (orderStatus === "Concluded") {
       allOrders = allOrders.filter(allOrders => !allOrders.status)
     }
-    return res.json(allOrders)
+    let count = allOrders.length
+    return res.json({ allOrders: allOrders.splice((page - 1) * 10, page * 10), count })
   },
 
   async insertOrder(req, res) {
@@ -53,5 +55,6 @@ module.exports = {
       VALUES('${datetime.toISOString()}')
       RETURNING id`).then(results => { insertOrder = results.rows })
     return res.json(insertOrder[0]).status(200)
-  }
+  },
+
 };

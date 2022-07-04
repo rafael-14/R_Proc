@@ -82,27 +82,33 @@ export default function Tables() {
     let [startDate, setStartDate] = useState(null)
     let [endDate, setEndDate] = useState(null)
     let [orderStatus, setOrderStatus] = useState("All")
-    let [orderNumber, setOrderNumber] = useState("")
-
+    let [orderNumber, setOrderNumber] = useState(null)
+    let [page, setPage] = useState(1)
+    let [count, setCount] = useState(0)
     let [orders, setOrders] = useState([])
     useEffect(() => {
         async function loadOrders() {
-            let data = { direction, orderStatus, orderNumber, startDate, endDate }
+            let data = { direction, orderStatus, orderNumber, startDate, endDate, page }
             let response = await api.post('/api/select/orders', data)
-            setOrders(response.data)
+            setOrders(response.data.allOrders)
+            setCount(response.data.count)
         }
         loadOrders()
 
-    }, [direction, orderStatus, orderNumber, startDate, endDate])
+    }, [direction, orderStatus, orderNumber, startDate, endDate, page])
 
     useEffect(() => {
         setDirection(true)
         setStartDate(null)
         setEndDate(null)
+        setOrderNumber(null)
     }, [searchFor])
 
-    return (
+    useEffect(() => {
+        setPage(1)
+    }, [searchFor, orderStatus])
 
+    return (
         <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
             <Toolbar />
             <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
@@ -116,7 +122,6 @@ export default function Tables() {
                             color="secondary"
                             sx={{ width: 500 }}
                             value={orderNumber}
-                            //onChange={e => { requestSearch(e.target.value); setPage(0) }}
                             onChange={e => isNaN(parseInt(e.target.value)) ? setOrderNumber("") : setOrderNumber(parseInt(e.target.value))}
                             label="Pedidos"
                         />) : (<Grid>
@@ -153,7 +158,6 @@ export default function Tables() {
                         <RadioGroup row defaultValue={searchFor}>
                             <FormControlLabel
                                 value="orderNumber"
-                                //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
                                 onClick={() => { setSearchFor("orderNumber") }}
                                 control={<Radio />}
                                 label={
@@ -172,7 +176,6 @@ export default function Tables() {
                             />
                             <FormControlLabel
                                 value="orderDate"
-                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
                                 onClick={() => { setSearchFor("orderDate") }}
                                 control={<Radio />}
                                 label={
@@ -195,21 +198,18 @@ export default function Tables() {
                         <RadioGroup row defaultValue={orderStatus}>
                             <FormControlLabel
                                 value="All"
-                                //onClick={() => { setSearchBy("Name"); setStartDate(null); setEndDate(null); setPage(0) }}
                                 onClick={() => setOrderStatus("All")}
                                 control={<Radio />}
                                 label="Todos"
                             />
                             <FormControlLabel
                                 value="Concluded"
-                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
                                 onClick={() => setOrderStatus("Concluded")}
                                 control={<Radio />}
                                 label="Concluídos"
                             />
                             <FormControlLabel
                                 value="InProgress"
-                                //onClick={() => { setSearchBy("creationDate"); requestSearch(""); setPage(0) }}
                                 onClick={() => setOrderStatus("InProgress")}
                                 control={<Radio />}
                                 label="Em Andamento"
@@ -231,10 +231,7 @@ export default function Tables() {
                                 </TableHead>
                                 <TableBody>
                                     {orders.map((row) => (
-                                        <Row
-                                            key={row.id}
-                                            row={row}
-                                        />
+                                        <Row key={row.id} row={row} />
                                     ))}
                                 </TableBody>
                             </Table>
@@ -242,21 +239,21 @@ export default function Tables() {
                     </Grid>
                 </Grid>
                 <br />
-                <Grid container direction="row" justifyContent="center">
-                    <Pagination
-                        size="large"
-                        showFirstButton
-                        showLastButton
-                        //onChange={(_event, page) => setPage(page - 1)}
-                        //count={countEmpresa} quantidade de paginas
-                        defaultPage={1}
-                        siblingCount={0}
-                    //page={page + 1}
-                    />
-                </Grid>
+                {count > 10 ?
+                    <Grid container direction="row" justifyContent="center">
+                        <Pagination
+                            size="large"
+                            showFirstButton
+                            showLastButton
+                            onChange={(_event, page) => setPage(page)}
+                            count={(parseInt(count / 10) + (count % 10 !== 0 ? 1 : 0))}
+                            defaultPage={1}
+                            siblingCount={0}
+                            page={page}
+                        />
+                    </Grid> : null}
             </Container>
         </Box>
-
     );
 }
 
