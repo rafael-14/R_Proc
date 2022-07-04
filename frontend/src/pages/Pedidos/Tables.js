@@ -82,18 +82,19 @@ export default function Tables() {
     let [startDate, setStartDate] = useState(null)
     let [endDate, setEndDate] = useState(null)
     let [orderStatus, setOrderStatus] = useState("All")
+    let [orderNumber, setOrderNumber] = useState("")
 
     let [orders, setOrders] = useState([])
     useEffect(() => {
         async function loadOrders() {
-            let data = {direction}
+            let data = { direction, orderStatus, orderNumber }
             let response = await api.post('/api/select/orders', data)
             setOrders(response.data)
         }
         loadOrders()
 
-    }, [direction])
-    
+    }, [direction, orderStatus, orderNumber])
+
     useEffect(() => {
         setDirection(true)
     }, [searchFor])
@@ -103,7 +104,6 @@ export default function Tables() {
         <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
             <Toolbar />
             <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                <Button onClick={() => console.log(searchFor, orderStatus)}>teste</Button>
                 <Grid
                     container
                     direction="row"
@@ -113,8 +113,9 @@ export default function Tables() {
                         <TextField
                             color="secondary"
                             sx={{ width: 500 }}
-                            //value={nameCompanyToBeFound}
+                            value={orderNumber}
                             //onChange={e => { requestSearch(e.target.value); setPage(0) }}
+                            onChange={e => isNaN(parseInt(e.target.value)) ? setOrderNumber("") : setOrderNumber(parseInt(e.target.value))}
                             label="Pedidos"
                         />) : (<Grid>
                             <TextField
@@ -239,15 +240,19 @@ export default function Tables() {
                         </TableContainer>
                     </Grid>
                 </Grid>
-                <Pagination
-                    showFirstButton
-                    showLastButton
-                    //onChange={(_event, page) => setPage(page - 1)}
-                    //count={countEmpresa} quantidade de paginas
-                    defaultPage={1}
-                    siblingCount={0}
+                <br />
+                <Grid container direction="row" justifyContent="center">
+                    <Pagination
+                        size="large"
+                        showFirstButton
+                        showLastButton
+                        //onChange={(_event, page) => setPage(page - 1)}
+                        //count={countEmpresa} quantidade de paginas
+                        defaultPage={1}
+                        siblingCount={0}
                     //page={page + 1}
-                />
+                    />
+                </Grid>
             </Container>
         </Box>
 
