@@ -87,16 +87,18 @@ export default function Tables() {
     let [orders, setOrders] = useState([])
     useEffect(() => {
         async function loadOrders() {
-            let data = { direction, orderStatus, orderNumber }
+            let data = { direction, orderStatus, orderNumber, startDate, endDate }
             let response = await api.post('/api/select/orders', data)
             setOrders(response.data)
         }
         loadOrders()
 
-    }, [direction, orderStatus, orderNumber])
+    }, [direction, orderStatus, orderNumber, startDate, endDate])
 
     useEffect(() => {
         setDirection(true)
+        setStartDate(null)
+        setEndDate(null)
     }, [searchFor])
 
     return (
@@ -122,8 +124,8 @@ export default function Tables() {
                                 color="secondary"
                                 label="Data Início"
                                 required
-                                //value={startDate}
-                                //onChange={e => { setStartDate(e.target.value); setPage(0) }}
+                                value={startDate}
+                                onChange={e => setStartDate(e.target.value)}
                                 type="date"
                                 InputLabelProps={{
                                     shrink: true,
@@ -134,9 +136,8 @@ export default function Tables() {
                                 color="secondary"
                                 style={{ marginInlineStart: 15 }}
                                 label="Data Fim"
-                                //disabled={startDate ? false : true}
-                                //value={endDate}
-                                //onChange={e => { setEndDate(e.target.value); setPage(0) }}
+                                value={endDate}
+                                onChange={e => setEndDate(e.target.value)}
                                 type="date"
                                 InputLabelProps={{
                                     shrink: true,

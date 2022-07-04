@@ -3,9 +3,18 @@ const lastProcess = require('../functions/lastProcess');
 
 module.exports = {
   async selectAllOrders(req, res) {
-    let { direction, orderStatus, orderNumber } = req.body;
+    let { direction, orderStatus, orderNumber, startDate, endDate } = req.body;
+    let dateClause
+    if (startDate && endDate) {
+      dateClause = `data_pedido BETWEEN '${startDate}' AND '${endDate} 23:59:59.999-03'`
+    } else if (startDate && !endDate) {
+      dateClause = `data_pedido BETWEEN '${startDate}' AND CURRENT_DATE`
+    } else if (!startDate && endDate) {
+      dateClause = `data_pedido <= '${endDate} 23:59:59.999-03'`
+    }
     await connectionPG.query(`SELECT * FROM pedido
       ${orderNumber ? `WHERE id = ${orderNumber}` : ""}
+      ${orderNumber ? `AND ${dateClause}` : dateClause ? `WHERE ${dateClause}` : ""}
       ORDER BY 1 ${direction ? "ASC" : "DESC"}`)
       .then(results => { allOrders = results.rows })
     //Retorna todos os pedidos
