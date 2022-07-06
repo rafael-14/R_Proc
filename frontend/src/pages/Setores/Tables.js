@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, TextField, Autocomplete, Table, Typography, IconButton,
-    TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
+    Button, TextField, Table, Typography, IconButton,
+    TableBody, TableCell, TableHead, TableRow, Container, Grid, Pagination,
     Box, Toolbar, TableContainer, Collapse,
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
@@ -66,58 +66,76 @@ function Row(props) {
 
 export default function Tables() {
 
+    let [page, setPage] = useState(1)
+    let [count, setCount] = useState(0)
+    let [sector, setSector] = useState("")
     let [sectors, setSectors] = useState([])
     useEffect(() => {
         async function loadSectors() {
-            let response = await api.get('/api/select/sectors')
-            setSectors(response.data)
+            let data = { sector, page }
+            let response = await api.post('/api/select/sectors', data)
+            setSectors(response.data.allSectors)
+            setCount(response.data.count)
         }
         loadSectors()
-    }, [])
+    }, [page, sector])
 
     return (
         <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
             <Toolbar />
-            <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                <Paper>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="space-between"
-                    >
-                        <Autocomplete
-                            disablePortal
-                            options={sectors.map((row) => row.nome)}
-                            sx={{ width: 500 }}
-                            renderInput={(params) => <TextField color="secondary" {...params} label="Setores" />}
+            <Container maxWidth="xg" sx={{ mt: 2 }}>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="space-between"
+                >
+                    <TextField
+                        color="secondary"
+                        value={sector}
+                        onChange={e => setSector(e.target.value)}
+                        sx={{ width: 500 }}
+                        label="Setores"
+                    />
+                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/setores'>Novo</Button>
+                </Grid>
+                <br />
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <TableContainer>
+                            <Table size="medium" stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Setores</TableCell>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right"></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {sectors.map((row) => (
+                                        <Row
+                                            key={row.id}
+                                            row={row}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
+                </Grid>
+                <br />
+                {count > 10 ?
+                    <Grid container direction="row" justifyContent="center">
+                        <Pagination
+                            size="large"
+                            showFirstButton
+                            showLastButton
+                            onChange={(_event, page) => setPage(page)}
+                            count={(parseInt(count / 10) + (count % 10 !== 0 ? 1 : 0))}
+                            defaultPage={1}
+                            siblingCount={0}
+                            page={page}
                         />
-                        <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/setores'>Novo</Button>
-                    </Grid>
-                    <br />
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TableContainer>
-                                <Table size="medium" stickyHeader>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Setores</TableCell>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right"></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {sectors.map((row) => (
-                                            <Row
-                                                key={row.id}
-                                                row={row}
-                                            />
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                    </Grid>
-                </Paper>
+                    </Grid> : null}
             </Container>
         </Box>
     );

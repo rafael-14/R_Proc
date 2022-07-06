@@ -153,7 +153,7 @@ export default function Tables() {
                 <br />
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <TableContainer /*sx={{ maxHeight: 440 }}*/ >
+                        <TableContainer >
                             <Table size="medium" stickyHeader >
                                 <TableHead>
                                     <TableRow>
@@ -176,6 +176,7 @@ export default function Tables() {
                         </TableContainer>
                     </Grid>
                 </Grid>
+                <br />
                 {count > 10 ?
                     <Grid container direction="row" justifyContent="center">
                         <Pagination

@@ -40,7 +40,7 @@ routes.post('/api/insert/order', OrderController.insertOrder);
 routes.put('/api/select/products_by_order/:id', ProductsByOrderController.selectProductsByOrder);
 routes.post('/api/insert/products_by_order', ProductsByOrderController.insertProductsByOrder);
 
-routes.get('/api/select/sectors', SectorController.selectAllSectors);
+routes.post('/api/select/sectors', SectorController.selectAllSectors);
 routes.post('/api/insert/sector', SectorController.insertSector);
 
 routes.post('/api/login', SectorController.login);
