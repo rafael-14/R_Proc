@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import {
-    Button, TextField, Autocomplete, Table, Typography, IconButton,
-    TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
+    Button, TextField, Pagination, Table, Typography, IconButton,
+    TableBody, TableCell, TableHead, TableRow, Container, Grid,
     Box, Toolbar, TableContainer, Collapse
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
@@ -66,58 +66,76 @@ function Row(props) {
 
 export default function Tables() {
 
+    let [page, setPage] = useState(1)
+    let [count, setCount] = useState(0)
+    let [user, setUser] = useState("")
     let [users, setUsers] = useState([])
     useEffect(() => {
         async function loadUsers() {
-            let response = await api.get('/api/select/users')
-            setUsers(response.data)
+            let data = { user, page }
+            let response = await api.post('/api/select/users', data)
+            setUsers(response.data.allUsers)
+            setCount(response.data.count)
         }
         loadUsers()
-    }, [])
+    }, [page, user])
 
     return (
         <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
             <Toolbar />
-            <Container maxWidth="xg" sx={{ mt: 4, mb: 4 }}>
-                <Paper>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="space-between"
-                    >
-                        <Autocomplete
-                            disablePortal
-                            options={users.map((row) => row.nome)}
-                            sx={{ width: 500 }}
-                            renderInput={(params) => <TextField color="secondary" {...params} label="Usuários" />}
+            <Container maxWidth="xg" sx={{ mt: 2 }}>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="space-between"
+                >
+                    <TextField
+                        color="secondary"
+                        value={user}
+                        onChange={e => setUser(e.target.value)}
+                        sx={{ width: 500 }}
+                        label="Usuários"
+                    />
+                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
+                </Grid>
+                <br />
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <TableContainer>
+                            <Table size="medium" stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="left" width="1%" style={{ background: "#E8927C", color: "#FFFFFF" }} />
+                                        <TableCell align="left" style={{ background: "#E8927C", color: "#FFFFFF" }}>Usuários</TableCell>
+                                        <TableCell align="right" style={{ background: "#E8927C", color: "#FFFFFF" }}></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {users.map((row) => (
+                                        <Row
+                                            key={row.id}
+                                            row={row}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
+                </Grid>
+                <br />
+                {count > 10 ?
+                    <Grid container direction="row" justifyContent="center">
+                        <Pagination
+                            size="large"
+                            showFirstButton
+                            showLastButton
+                            onChange={(_event, page) => setPage(page)}
+                            count={(parseInt(count / 10) + (count % 10 !== 0 ? 1 : 0))}
+                            defaultPage={1}
+                            siblingCount={0}
+                            page={page}
                         />
-                        <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
-                    </Grid>
-                    <br />
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TableContainer>
-                                <Table size="medium" stickyHeader>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell align="left" width="1%" style={{ background: "#E8927C", color: "#FFFFFF" }} />
-                                            <TableCell align="left" style={{ background: "#E8927C", color: "#FFFFFF" }}>Usuários</TableCell>
-                                            <TableCell align="right" style={{ background: "#E8927C", color: "#FFFFFF" }}></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {users.map((row) => (
-                                            <Row
-                                                key={row.id}
-                                                row={row}
-                                            />
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                    </Grid>
-                </Paper>
+                    </Grid> : null}
             </Container>
         </Box>
     );

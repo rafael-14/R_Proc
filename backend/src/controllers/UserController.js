@@ -2,9 +2,13 @@ const connectionPG = require('../database');
 
 module.exports = {
   async selectAllUsers(req, res) {
-    await connectionPG.query(`SELECT * FROM usuario ORDER BY 1`)
-      .then(results => { allProcesses = results.rows })
-    return res.json(allProcesses)
+    let { user, page } = req.body;
+    await connectionPG.query(`SELECT * FROM usuario
+    ${user ? `WHERE nome ilike '%${user}%'` : ""}
+    ORDER BY 1`)
+      .then(results => { allUsers = results.rows })
+    let count = allUsers.length
+    return res.json({ allUsers: allUsers.splice((page - 1) * 10, page * 10), count })
   },
 
   async insertUser(req, res) {

@@ -24,7 +24,7 @@ routes.put('/api/activate/process/:id', ProcessController.activateProcess);
 routes.put('/api/select/processes_by_product/:id', ProcessesByProductController.selectProcessesByProduct);
 routes.post('/api/insert/processes_by_product', ProcessesByProductController.insertProcessesByProduct);
 
-routes.get('/api/select/users', UserController.selectAllUsers);
+routes.post('/api/select/users', UserController.selectAllUsers);
 routes.post('/api/insert/user', UserController.insertUser);
 routes.put('/api/inactivate/user/:id', UserController.inactivateUser);
 routes.put('/api/activate/user/:id', UserController.activateUser);
