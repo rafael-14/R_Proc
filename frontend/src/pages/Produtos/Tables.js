@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import api from '../../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import {
-    Button, TextField, Autocomplete, Table,
-    TableBody, TableCell, TableHead, TableRow, Container, Grid, Paper,
+    Button, TextField, Table, Pagination,
+    TableBody, TableCell, TableHead, TableRow, Container, Grid,
     Box, Toolbar, TableContainer, Collapse, Switch,
     IconButton, Typography, Chip
 } from "@mui/material";
@@ -113,61 +113,82 @@ export default function Tables() {
         handleNotification(nome, ativo ? "Inativado" : "Ativado")
     }
 
+    let [count, setCount] = useState(0)
+    let [page, setPage] = useState(1)
+    let [product, setProduct] = useState("")
     let [products, setProducts] = useState([])
     useEffect(() => {
         async function loadProducts() {
-            let response = await api.get('/api/select/products')
-            setProducts(response.data)
+            let data = { product, page }
+            let response = await api.post('/api/select/products', data)
+            setProducts(response.data.allProducts)
+            setCount(response.data.count)
         }
         loadProducts()
-    }, [productSituation])
+    }, [productSituation, product, page])
+
+    useEffect(() => {
+        setPage(1)
+    }, [product])
 
     return (
         <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
             <Toolbar />
             <ToastContainer />
-            <Container maxWidth="xg" sx={{ mt: 2, mb: 1 }}>
-                <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="space-between"
-                    >
-                        <Autocomplete
-                            disablePortal
-                            options={products.map((row) => row.nome)}
-                            sx={{ width: 500 }}
-                            renderInput={(params) => <TextField color="secondary" {...params} label="Produtos" />}
+            <Container maxWidth="xg" sx={{ mt: 2 }}>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="space-between"
+                >
+                    <TextField
+                        value={product}
+                        onChange={e => setProduct(e.target.value)}
+                        color="secondary"
+                        label="Produtos"
+                        sx={{ width: 500 }}
+                    />
+                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produtos'>Novo</Button>
+                </Grid>
+                <br />
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <TableContainer /*sx={{ maxHeight: 440 }}*/ >
+                            <Table size="medium" stickyHeader >
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="69%">Produtos</TableCell>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center" width="15%">Situação</TableCell>
+                                        <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right" width="15%" />
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {products.map((row) => (
+                                        <Row
+                                            key={row.id}
+                                            row={row}
+                                            handleSituation={handleSituation}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
+                </Grid>
+                {count > 10 ?
+                    <Grid container direction="row" justifyContent="center">
+                        <Pagination
+                            size="large"
+                            showFirstButton
+                            showLastButton
+                            onChange={(_event, page) => setPage(page)}
+                            count={(parseInt(count / 10) + (count % 10 !== 0 ? 1 : 0))}
+                            defaultPage={1}
+                            siblingCount={0}
+                            page={page}
                         />
-                        <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produtos'>Novo</Button>
-                    </Grid>
-                    <br />
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TableContainer /*sx={{ maxHeight: 440 }}*/ >
-                                <Table size="medium" stickyHeader >
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="1%" />
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left" width="69%">Produtos</TableCell>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="center" width="15%">Situação</TableCell>
-                                            <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right" width="15%" />
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {products.map((row) => (
-                                            <Row
-                                                key={row.id}
-                                                row={row}
-                                                handleSituation={handleSituation}
-                                            />
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                    </Grid>
-                </Paper>
+                    </Grid> : null}
             </Container>
         </Box>
     );

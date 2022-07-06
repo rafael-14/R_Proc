@@ -2,9 +2,13 @@ const connectionPG = require('../database');
 
 module.exports = {
   async selectAllProducts(req, res) {
-    await connectionPG.query(`SELECT * FROM produto ORDER BY 1`)
+    let { product, page } = req.body;
+    await connectionPG.query(`SELECT * FROM produto 
+    ${product ? `WHERE nome ilike '%${product}%'` : ""}
+    ORDER BY nome`)
       .then(results => { allProducts = results.rows })
-    return res.json(allProducts)
+    let count = allProducts.length
+    return res.json({ allProducts: allProducts.splice((page - 1) * 10, page * 10), count })
   },
 
   async insertProduct(req, res) {
