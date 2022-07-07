@@ -64,7 +64,7 @@ function Row(props) {
     )
 }
 
-export default function Tables() {
+export default function ListarUsuarios() {
 
     let [page, setPage] = useState(1)
     let [count, setCount] = useState(0)

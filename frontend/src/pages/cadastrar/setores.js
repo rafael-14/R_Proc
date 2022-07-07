@@ -8,7 +8,7 @@ import {
   Checkbox, CircularProgress
 } from "@mui/material";
 
-export default function Register() {
+export default function CadastrarSetores() {
 
   async function handleNotificationSuccess(sector) {
     toast.success(`Setor: ${sector} Cadastrado com Sucesso!`, {
@@ -21,7 +21,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-          (!manyRegisters ? window.location.href = "/setores" : null)
+          (!manyRegisters ? window.location.href = "/listar/setores" : null)
       },
       onOpen: () => {
         setProgress(true)
@@ -171,7 +171,7 @@ export default function Register() {
                       background: '#E74C3C',
                       color: "#FFFFFF"
                     }}
-                    href="/setores"
+                    href="/listar/setores"
                   >
                     Cancelar
                   </Button>

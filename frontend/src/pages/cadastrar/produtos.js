@@ -88,7 +88,7 @@ function NewRow(props) {
   )
 }
 
-export default function Register() {
+export default function CadastrarProdutos() {
 
   async function handleNotificationSuccess(productName) {
     toast.success(`Produto: ${productName} Cadastrado com Sucesso!`, {
@@ -101,7 +101,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-          (!manyRegisters ? window.location.href = "/produtos" : null)
+          (!manyRegisters ? window.location.href = "/listar/produtos" : null)
       },
       onOpen: () => {
         setProgress(true)
@@ -374,7 +374,7 @@ export default function Register() {
             >
               {!progress ?
                 (<>
-                  <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/produtos">
+                  <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/listar/produtos">
                     Cancelar
                   </Button>
                   <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => handleNewProduct()}>

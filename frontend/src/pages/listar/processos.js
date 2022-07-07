@@ -9,7 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Tables() {
+export default function ListarProcessos() {
 
     async function handleNotification(processName, processSituation) {
         (processSituation === "Inativado" ? toast.error : toast.success)(`Processo: ${processName} ${processSituation} com Sucesso!`, {

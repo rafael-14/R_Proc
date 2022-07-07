@@ -8,7 +8,7 @@ import {
   Checkbox, CircularProgress
 } from "@mui/material";
 
-export default function Register() {
+export default function CadastrarUsuarios() {
 
   async function handleNotificationSuccess(userName, userSurname) {
     toast.success(`Usuário: ${userName} ${userSurname} Cadastrado com Sucesso!`, {
@@ -21,7 +21,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-          (!manyRegisters ? window.location.href = "/usuarios" : null)
+          (!manyRegisters ? window.location.href = "/listar/usuarios" : null)
       },
       onOpen: () => {
         setProgress(true)
@@ -223,7 +223,7 @@ export default function Register() {
                     background: '#E74C3C',
                     color: "#FFFFFF"
                   }}
-                  href="/usuarios"
+                  href="/listar/usuarios"
                 >
                   Cancelar
                 </Button>

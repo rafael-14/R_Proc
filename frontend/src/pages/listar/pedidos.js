@@ -75,7 +75,7 @@ function Row(props) {
     )
 }
 
-export default function Tables() {
+export default function ListarPedidos() {
 
     let [direction, setDirection] = useState(true)
     let [searchFor, setSearchFor] = useState("orderNumber")

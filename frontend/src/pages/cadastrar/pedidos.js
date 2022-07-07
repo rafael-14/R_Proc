@@ -10,7 +10,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-export default function Register() {
+export default function CadastrarUsuarios() {
 
   async function handleNotificationSuccess(orderNumber) {
     toast.success(`Pedido: ${orderNumber} Efetuado com Sucesso!`, {
@@ -23,7 +23,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-          (!manyOrders ? window.location.href = "/pedidos" : setOrderProducts([]))
+          (!manyOrders ? window.location.href = "/listar/pedidos" : setOrderProducts([]))
       },
       onOpen: () => setProgress(true)
     })
@@ -242,7 +242,7 @@ export default function Register() {
             >
               {!progress ?
                 (<>
-                  <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/pedidos">
+                  <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/listar/pedidos">
                     Cancelar
                   </Button>
                   {orderProductsLength > 0 ?

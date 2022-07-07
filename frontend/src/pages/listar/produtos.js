@@ -93,7 +93,7 @@ function Row(props) {
 }
 
 
-export default function Tables() {
+export default function ListarProdutos() {
 
     async function handleNotification(productName, situation) {
         (situation === "Inativado" ? toast.error : toast.success)(`Produto: ${productName} ${situation} com Sucesso!`, {

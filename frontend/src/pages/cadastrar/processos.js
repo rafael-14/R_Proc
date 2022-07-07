@@ -7,7 +7,7 @@ import {
   Container, Grid, Paper, Box, TextField, Toolbar, CircularProgress
 } from "@mui/material";
 
-export default function Register() {
+export default function CadastrarProcessos() {
 
   async function handleNotificationSuccess(processName) {
     toast.success(`Processo: ${processName} Cadastrado com Sucesso!`, {
@@ -20,7 +20,7 @@ export default function Register() {
       progress: undefined,
       onClose: () => {
         setProgress(false)
-          (!manyRegisters ? window.location.href = "/processos" : null)
+          (!manyRegisters ? window.location.href = "/listar/processos" : null)
       },
       onOpen: () => {
         setProcessName("")
@@ -108,7 +108,7 @@ export default function Register() {
               >
                 {!progress ?
                   (<>
-                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/processos">
+                    <Button variant="contained" style={{ background: '#E74C3C', color: "#FFFFFF" }} href="/listar/processos">
                       Cancelar
                     </Button>
                     <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15, backgroundColor: "#E8927C" }} onClick={() => handleNewProcess()}>
