@@ -16,5 +16,5 @@ export function CadastrarPedidos() {
     <div>
       <Dashboard componente={NewRegister}/>
     </div>
-  );
+  )
 };
