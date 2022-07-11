@@ -20,8 +20,8 @@ app.use(routes);
 app.listen(port, function () {
     console.log(`Servidor rodando na porta ${port}`)
 });
-//********************************************************************************************
 
+/********************************************************************************************
 let data = {
     name: "Employee Name",
     age: 27,
@@ -29,10 +29,8 @@ let data = {
     id: "aisuoiqu3234738jdhf100223"
 }
 let x = "1"
-
 // Converting the data into String format
 let stringdata = JSON.stringify(x)
-
 // Print the QR code to terminal
 QRCode.toString(x, { type: 'terminal', errorCorrectionLevel: 'H' },
     function (err, QRcode) {
@@ -40,7 +38,6 @@ QRCode.toString(x, { type: 'terminal', errorCorrectionLevel: 'H' },
         // Printing the generated code
         //console.log(QRcode)
     })
-
 // Converting the data into base64
 QRCode.toDataURL(stringdata, function (err, code) {
     if (err) return console.log("error occurred")
@@ -48,3 +45,4 @@ QRCode.toDataURL(stringdata, function (err, code) {
     // Printing the code
     //console.log(code)
 })
+*/

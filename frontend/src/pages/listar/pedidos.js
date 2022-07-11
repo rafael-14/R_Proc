@@ -151,7 +151,7 @@ export default function ListarPedidos() {
                             />
                         </Grid>)}
 
-                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/fazer/pedidos'>Novo</Button>
+                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/pedidos'>Novo</Button>
                 </Grid>
                 <Grid container direction="row" justifyContent="space-between">
                     <Grid>

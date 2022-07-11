@@ -8,6 +8,7 @@ import {
 import CreateIcon from '@mui/icons-material/Create';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Link from "next/link";
 
 export default function ListarProcessos() {
 
@@ -63,7 +64,9 @@ export default function ListarProcessos() {
                         sx={{ width: 500 }}
                         label="Processos"
                     />
-                    <Button style={{ background: "#E8927C", color: "#FFFFFF", width: "10%" }} href="/cadastrar/processos">Novo</Button>
+                    <Link href="/cadastrar/processos">
+                        <Button style={{ background: "#E8927C", color: "#FFFFFF", width: "10%" }}>Novo</Button>
+                    </Link>
                 </Grid>
                 <br />
                 <Grid container spacing={3}>
@@ -73,6 +76,7 @@ export default function ListarProcessos() {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell style={{ background: "#E8927C", color: "#FFFFFF" }} align="left">Processos</TableCell>
+                                        <TableCell style={{ background: "#E8927C", color: "#FFFFFF" }} align="left">Bipagem</TableCell>
                                         <TableCell style={{ background: "#E8927C", color: "#FFFFFF" }} align="right"></TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -80,11 +84,17 @@ export default function ListarProcessos() {
                                     {processes.map((row) => (
                                         <TableRow key={row.id}>
                                             <TableCell align="left">{row.nome}</TableCell>
+                                            <TableCell align="left">
+                                                {row.bipagem === 0 ? "Nenhuma" :
+                                                    row.bipagem === 1 ? "Obrigatória" : "Informativa"}
+                                            </TableCell>
                                             <TableCell align="right" size="small" width="15%">
                                                 <abbr title="Editar">
-                                                    <Button style={{ color: "#000000" }}>
-                                                        <CreateIcon />
-                                                    </Button>
+                                                    <Link href={`/editar/processo/${row.id}`}>
+                                                        <Button style={{ color: "#000000" }}>
+                                                            <CreateIcon />
+                                                        </Button>
+                                                    </Link>
                                                 </abbr>
                                                 <abbr title={row.ativo ? "Inativar" : "Ativar"}>
                                                     <Switch
