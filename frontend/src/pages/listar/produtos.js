@@ -10,6 +10,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CreateIcon from '@mui/icons-material/Create';
+import Link from "next/link";
 
 function Row(props) {
 
@@ -148,7 +149,9 @@ export default function ListarProdutos() {
                         label="Produtos"
                         sx={{ width: 500 }}
                     />
-                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/produtos'>Novo</Button>
+                    <Link href="/cadastrar/produtos">
+                        <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }}>Novo</Button>
+                    </Link>
                 </Grid>
                 <br />
                 <Grid container spacing={3}>
