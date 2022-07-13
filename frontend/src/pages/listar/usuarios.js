@@ -8,6 +8,7 @@ import {
 import CreateIcon from '@mui/icons-material/Create';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Link from "next/link";
 
 function Row(props) {
 
@@ -96,7 +97,9 @@ export default function ListarUsuarios() {
                         sx={{ width: 500 }}
                         label="Usuários"
                     />
-                    <Button style={{ background: '#E8927C', color: '#FFFFFF', width: '10%' }} href='/cadastrar/usuarios'>Novo</Button>
+                    <Link href="/cadastrar/usuarios">
+                        <Button style={{ background: "#E8927C", color: "#FFFFFF", width: "10%" }}>Novo</Button>
+                    </Link>
                 </Grid>
                 <br />
                 <Grid container spacing={3}>

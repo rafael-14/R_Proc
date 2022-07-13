@@ -4,9 +4,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   Button, Switch, FormGroup, FormControlLabel, TableCell, TableRow, TableBody, Chip,
-  Container, Grid, Paper, Box, TextField, Toolbar, Table, TableContainer, TableHead, 
-  Checkbox, CircularProgress
+  Container, Grid, Box, TextField, Toolbar, Table, TableContainer, TableHead,
+  Checkbox, CircularProgress, Pagination
 } from "@mui/material";
+import Link from "next/link";
 
 export default function CadastrarUsuarios() {
 
@@ -29,7 +30,6 @@ export default function CadastrarUsuarios() {
       }
     })
   }
-
   async function handleNotificationError(errorMessage, fieldToBeFocused) {
     toast.error(errorMessage, {
       position: "top-right",
@@ -94,14 +94,17 @@ export default function CadastrarUsuarios() {
     }
   }
 
+  let [page, setPage] = useState(1)
+  let [count, setCount] = useState(0)
   let [processes, setProcesses] = useState([])
   useEffect(() => {
     async function loadProcesses() {
-      let response = await api.get('/api/select/processes')
-      setProcesses(response.data)
+      let response = await api.post('/api/select/processes', { page })
+      setProcesses(response.data.allProcesses)
+      setCount(response.data.count)
     }
     loadProcesses()
-  }, [])
+  }, [page])
 
   let [vinculatedProcess, setVinculatedProcess] = useState([])
   function handleVinculatedProcesses(id) {
@@ -127,115 +130,132 @@ export default function CadastrarUsuarios() {
     >
       <Toolbar />
       <ToastContainer />
-      <Container maxWidth="lg" sx={{ mt: 2 }}>
-        <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
-          <Grid >
-            <Grid container spacing={3}>
-              <Grid item xs={12} >
-                <TextField
-                  id="userName"
-                  required
-                  label="Nome"
-                  color="secondary"
-                  value={userName}
-                  onChange={e => setUserName(e.target.value)}
+      <Container maxWidth="xg" sx={{ mt: 2 }}>
+        <TextField
+          id="userName"
+          required
+          label="Nome"
+          color="secondary"
+          value={userName}
+          onChange={e => setUserName(e.target.value)}
+          style={{ width: "49%" }}
+        />
+        <TextField
+          id="userSurname"
+          required
+          style={{ marginInlineStart: "2%", width: "49%" }}
+          label="Sobrenome"
+          color="secondary"
+          value={userSurname}
+          onChange={e => setUserSurname(e.target.value)}
+        />
+        <TextField
+          id="userLogin"
+          required
+          label="Login"
+          color="secondary"
+          value={userLogin}
+          onChange={e => setUserLogin(e.target.value)}
+          style={{width: "49%", marginTop: "1%"}}
+        />
+        <TextField
+          id="userPassword"
+          required
+          style={{ marginInlineStart: "2%", width: "49%", marginTop: "1%" }}
+          label="Senha"
+          color="secondary"
+          value={userPassword}
+          onChange={e => setUserPassword(e.target.value)}
+        />
+        <Grid container>
+          <FormGroup>
+            <FormControlLabel
+              control={<Switch
+                checked={manyRegisters}
+                onChange={() => setManyRegisters(!manyRegisters)}
+              />}
+              label="Cadastrar Vários"
+            />
+          </FormGroup>
+        </Grid>
+        <br />
+        <Grid item xs={5} >
+          <TableContainer >
+            <Table size="medium" stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Processos</TableCell>
+                  <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right">Situação</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {processes.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell align="left">
+                      <Checkbox
+                        color="secondary"
+                        onClick={() => handleVinculatedProcesses(row.id)}
+                        disabled={row.ativo ? false : true}
+                      />
+                      {row.nome}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <br />
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+          >
+            <div />
+            <Grid item justifyContent="center">
+              {count > 10 ?
+                <Pagination
+                  size="large"
+                  showFirstButton
+                  showLastButton
+                  onChange={(_event, page) => setPage(page)}
+                  count={(parseInt(count / 10) + (count % 10 !== 0 ? 1 : 0))}
+                  defaultPage={1}
+                  siblingCount={0}
+                  page={page}
                 />
-                <TextField
-                  id="userSurname"
-                  required
-                  style={{ marginInlineStart: 15 }}
-                  label="Sobrenome"
-                  color="secondary"
-                  value={userSurname}
-                  onChange={e => setUserSurname(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} >
-                <TextField
-                  id="userLogin"
-                  required
-                  label="Login"
-                  color="secondary"
-                  value={userLogin}
-                  onChange={e => setUserLogin(e.target.value)}
-                />
-                <TextField
-                  id="userPassword"
-                  required
-                  style={{ marginInlineStart: 15 }}
-                  label="Senha"
-                  color="secondary"
-                  value={userPassword}
-                  onChange={e => setUserPassword(e.target.value)}
-                />
-              </Grid>
+                : null}
             </Grid>
-            <Grid container>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Switch
-                    checked={manyRegisters}
-                    onChange={() => setManyRegisters(!manyRegisters)}
-                  />}
-                  label="Cadastrar Vários"
-                />
-              </FormGroup>
-            </Grid>
-            <br />
-            <Grid item xs={5} >
-              <TableContainer >
-                <Table size="medium" stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="left">Processos</TableCell>
-                      <TableCell style={{ background: '#E8927C', color: '#FFFFFF' }} align="right">Situação</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {processes.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="left">
-                          <Checkbox
-                            color="secondary"
-                            onClick={() => handleVinculatedProcesses(row.id)}
-                            disabled={row.ativo ? false : true}
-                          />
-                          {row.nome}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Chip size="small" label={row.ativo ? "Ativa" : "Inativa"} color={row.ativo ? "success" : "error"} />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-end"
-            >
+            <Grid item>
               {!progress ?
-                (<><Button
-                  variant="contained"
-                  style={{
-                    background: '#E74C3C',
-                    color: "#FFFFFF"
-                  }}
-                  href="/listar/usuarios"
-                >
-                  Cancelar
-                </Button>
-                  <Button variant="contained" style={{ color: '#FFFFFF', marginInlineStart: 15 }} onClick={() => checkFields()}>
+                (<>
+                  <Link href="/listar/usuarios">
+                    <Button
+                      variant="contained"
+                      style={{
+                        background: '#E74C3C',
+                        color: "#FFFFFF"
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="contained"
+                    style={{ color: "#FFFFFF", marginInlineStart: 15, backgroundColor: "#E8927C" }}
+                    onClick={() => checkFields()}
+                  >
                     Salvar
-                  </Button></>) :
+                  </Button>
+                </>) :
                 (<Box sx={{ display: 'flex' }}>
                   <CircularProgress />
                 </Box>)}
             </Grid>
           </Grid>
-        </Paper>
+        </Grid>
       </Container>
     </Box>
   );
