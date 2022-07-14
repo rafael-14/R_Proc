@@ -4,7 +4,7 @@ module.exports = {
   async selectAllProducts(req, res) {
     let { product, page } = req.body;
     await connectionPG.query(`SELECT * FROM produto 
-    ${product ? `WHERE nome ilike '%${product}%'` : ""}
+    ${product ? `WHERE nome ILIKE '%${product}%'` : ""}
     ORDER BY nome`)
       .then(results => { allProducts = results.rows })
     let count = allProducts.length
@@ -34,5 +34,13 @@ module.exports = {
     await connectionPG.query(`UPDATE produto SET ativo=true, data_inativacao=null
     WHERE id = ${id}`)
     return res.json().status(200)
+  },
+
+  async findProduct(req, res) {
+    let { product } = req.body;
+    await connectionPG.query(`SELECT * FROM produto 
+    WHERE nome ILIKE '${product}'`)
+      .then(results => productFound = results.rows)
+    return res.json(productFound)
   }
 };

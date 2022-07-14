@@ -12,6 +12,7 @@ const ProductionController = require('./controllers/ProductionController');
 const routes = express.Router();
 
 routes.post('/api/select/products', ProductController.selectAllProducts);
+routes.post('/api/find/product', ProductController.findProduct);
 routes.post('/api/insert/product', ProductController.insertProduct);
 routes.put('/api/inactivate/product/:id', ProductController.inactivateProduct);
 routes.put('/api/activate/product/:id', ProductController.activateProduct);
