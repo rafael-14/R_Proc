@@ -78,7 +78,7 @@ export default function MyApp({ Component, pageProps }) {
       }
     }
     verifyToken();
-  }, [])
+  }, [Component])
 
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {

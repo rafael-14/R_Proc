@@ -67,8 +67,8 @@ function HandleDialogQrCode(props) {
     }
 
     function handleButtonWrittin() {
-        switch(props.functionToBeExecuted) {
-            case "handleStartProduction": return "Iniciar"    
+        switch (props.functionToBeExecuted) {
+            case "handleStartProduction": return "Iniciar"
             case "handlePauseProduction": return "Pausar"
             case "handleResumeProduction": return "Retomar"
             case "handleFinishProduction": return "Finalizar"
@@ -82,7 +82,11 @@ function HandleDialogQrCode(props) {
                     {props.listQrCode.map((row, position) => (
                         <ListItem>
                             <ListItemText primary={new String(row).substring(0, 50)} />
-                            <Fab size="small" style={{ backgroundColor: '#E74C3C', color: "#FFFFFF" }} onClick={() => handleRemoveListQrCode(position)}>
+                            <Fab
+                                size="small"
+                                style={{ backgroundColor: '#E74C3C', color: "#FFFFFF" }}
+                                onClick={() => handleRemoveListQrCode(position)}
+                            >
                                 <RemoveIcon />
                             </Fab>
                         </ListItem>
@@ -145,7 +149,6 @@ export default function ListarProducao() {
             progress: undefined,
         })
     }
-
     async function handleNotificationProductions(status, toast) {
         toast(`Produções ${status}!`, {
             position: "top-right",
@@ -234,7 +237,7 @@ export default function ListarProducao() {
     let [qrCode, setQrCode] = useState("")
 
     async function handleQrCode() {
-        let response = await api.post(`/api/qrcode`, {listQrCode, functionToBeExecuted})
+        let response = await api.post(`/api/qrcode`, { listQrCode, functionToBeExecuted })
         setResponseQrCode(response)
         if (response.data.length > 0) {
             setOpen(true)
@@ -391,7 +394,10 @@ export default function ListarProducao() {
                                                 <CardHeader
                                                     title={rowProduction.nome_processo}
                                                     titleTypographyProps={{ align: 'right', variant: "body2" }}
-                                                    subheader={rowProduction.nome_proximo_processo ? rowProduction.nome_proximo_processo : null/*<br />*/}
+                                                    subheader={
+                                                        rowProduction.nome_proximo_processo ?
+                                                            rowProduction.nome_proximo_processo : null/*<br />*/
+                                                    }
                                                     subheaderTypographyProps={{ align: 'right', variant: "body2" }}
                                                     avatar={
                                                         <Typography variant="body2" align="left" color="text.secondary">
@@ -465,7 +471,10 @@ export default function ListarProducao() {
                                                 <CardHeader
                                                     title={rowProductionPaused.nome_processo}
                                                     titleTypographyProps={{ align: 'right' }}
-                                                    subheader={rowProductionPaused.nome_proximo_processo ? rowProductionPaused.nome_proximo_processo : null/*<br />*/}
+                                                    subheader={
+                                                        rowProductionPaused.nome_proximo_processo ?
+                                                            rowProductionPaused.nome_proximo_processo : null/*<br />*/
+                                                    }
                                                     subheaderTypographyProps={{ align: 'right', }}
                                                     avatar={
                                                         <Typography variant="body2" align="left" color="text.secondary">
@@ -480,7 +489,10 @@ export default function ListarProducao() {
                                                             {rowProductionPaused.nome_produto}
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
-                                                            {rowProductionPaused.observacao ? rowProductionPaused.observacao : null/*<br />*/}
+                                                            {
+                                                                rowProductionPaused.observacao ?
+                                                                    rowProductionPaused.observacao : null/*<br />*/
+                                                            }
                                                         </Typography>
                                                     </Box>
                                                 </CardContent>
