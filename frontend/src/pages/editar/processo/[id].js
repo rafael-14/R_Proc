@@ -75,8 +75,7 @@ export default function CadastrarProcessos() {
             let response = await api.put(`/api/select/process/${parseInt(id)}`)
             setProcessName(response.data.nome)
             setBipType({
-                label: response.data.bipagem === 1 ? "Obrigatória" :
-                    response.data.bipagem === 2 ? "Informativa" : "Nenhuma",
+                label: response.data.bipagem === 1 ? "Obrigatória" : "Nenhuma",
                 id: response.data.bipagem
             })
         }
@@ -105,7 +104,6 @@ export default function CadastrarProcessos() {
                         onChange={(_event, newValue) => setBipType(newValue)}
                         options={[
                             { label: "Obrigatória", id: 1 },
-                            { label: "Informativa", id: 2 },
                             { label: "Nenhuma", id: 0 }
                         ]}
                         disableClearable

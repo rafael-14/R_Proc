@@ -243,8 +243,8 @@ export default function ListarPedidos() {
                     <Grid container direction="row" justifyContent="center">
                         <Pagination
                             size="large"
-                            showFirstButton
-                            showLastButton
+                            //showFirstButton
+                            //showLastButton
                             onChange={(_event, page) => setPage(page)}
                             count={(parseInt(count / 10) + (count % 10 !== 0 ? 1 : 0))}
                             defaultPage={1}

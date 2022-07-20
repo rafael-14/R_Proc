@@ -88,7 +88,6 @@ export default function CadastrarProcessos() {
             onChange={(_event, newValue) => setBipType(newValue)}
             options={[
               { label: "Obrigatória", id: 1 },
-              { label: "Informativa", id: 2 },
               { label: "Nenhuma", id: 0 }
             ]}
             disableClearable

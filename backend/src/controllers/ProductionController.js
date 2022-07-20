@@ -6,12 +6,13 @@ module.exports = {
 
   async selectProductionNotStarted(req, res) {
     let { id_setor } = req.body;
-    await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo, prod_ped.observacao
+    await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo, prod_ped.observacao, proc.bipagem
     FROM producao prodc
     JOIN produto prod ON prod.id = prodc.id_produto
     JOIN processo proc ON proc.id = prodc.id_processo
     JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
-    WHERE prodc.situacao = 0`)
+    WHERE prodc.situacao = 0
+    AND proc.bipagem = 1`)
       .then(results => { productionNotStarted = results.rows })
     for (let i = 0; i < productionNotStarted.length; i++) {
       let dataNextProcess = await nextProcess.nextProcess(productionNotStarted[i].id_produto, productionNotStarted[i].id_processo)
@@ -33,12 +34,13 @@ module.exports = {
 
   async selectProductionStarted(req, res) {
     let { id_setor } = req.body;
-    await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo,prod_ped.observacao
+    await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo,prod_ped.observacao, proc.bipagem
     FROM producao prodc
     JOIN produto prod ON prod.id = prodc.id_produto
     JOIN processo proc ON proc.id = prodc.id_processo
     JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
-    WHERE prodc.situacao IN (1, 3)`)
+    WHERE prodc.situacao IN (1, 3)
+    AND proc.bipagem = 1`)
       .then(results => { productionStarted = results.rows })
     for (let i = 0; i < productionStarted.length; i++) {
       let dataNextProcess = await nextProcess.nextProcess(productionStarted[i].id_produto, productionStarted[i].id_processo)
@@ -60,12 +62,13 @@ module.exports = {
 
   async selectProductionPaused(req, res) {
     let { id_setor } = req.body;
-    await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo, prod_ped.observacao
+    await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo, prod_ped.observacao, proc.bipagem
     FROM producao prodc
     JOIN produto prod ON prod.id = prodc.id_produto
     JOIN processo proc ON proc.id = prodc.id_processo
     JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
-    WHERE prodc.situacao = 2`)
+    WHERE prodc.situacao = 2
+    AND proc.bipagem = 1`)
       .then(results => { productionPaused = results.rows })
     for (let i = 0; i < productionPaused.length; i++) {
       let dataNextProcess = await nextProcess.nextProcess(productionPaused[i].id_produto, productionPaused[i].id_processo)
