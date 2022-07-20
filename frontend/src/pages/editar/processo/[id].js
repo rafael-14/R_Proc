@@ -37,7 +37,7 @@ export default function CadastrarProcessos() {
     async function handleNotificationError(errorMessage, fieldToBeFocused) {
         toast.error(errorMessage, {
             position: "top-right",
-            autoClose: 2000,
+            autoClose: 6000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
@@ -49,17 +49,19 @@ export default function CadastrarProcessos() {
 
     let [processName, setProcessName] = useState("")
 
-    async function handleNewProcess() {
+    async function handleEditProcess() {
         processName = processName.trim()
         if (processName !== "") {
             let data = { processName, bipType: bipType.id }
             try {
                 let response = await api.put(`/api/update/process/${parseInt(id)}`, data)
+                console.log(response.status)
                 if (response.status === 200) {
                     handleNotificationSuccess(processName)
                 }
             } catch (e) {
-                handleNotificationError("Erro ao Editar Processo!")
+                handleNotificationError(`Há Produtos em Produção Cujo Processo: ${processName} está em Andamento. 
+                    Favor Concluir a Produção Para Efetuar a Alteração!`)
             }
         } else {
             handleNotificationError("Preencha o Nome do Processo Corretamente!", "processName")
@@ -123,7 +125,7 @@ export default function CadastrarProcessos() {
                             <Button
                                 variant="contained"
                                 style={{ color: '#FFFFFF', marginInlineStart: 15, backgroundColor: "#E8927C" }}
-                                onClick={() => handleNewProcess()}
+                                onClick={() => handleEditProcess()}
                             >
                                 Salvar
                             </Button>

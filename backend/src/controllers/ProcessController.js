@@ -47,6 +47,11 @@ module.exports = {
   async updateProcess(req, res) {
     let { id } = req.params;
     let { processName, bipType } = req.body;
+    await connectionPG.query(`SELECT * FROM producao
+    WHERE id_processo = ${id}
+    AND situacao != 4`)
+      .then(results => processInProduction = results.rowCount)
+    if (processInProduction > 0) return res.status(401).json()
     await connectionPG.query(`UPDATE processo
     SET nome='${processName}', bipagem=${bipType}
     WHERE id = ${id}`)
