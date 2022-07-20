@@ -85,8 +85,7 @@ export default function ListarProcessos() {
                                         <TableRow key={row.id}>
                                             <TableCell align="left">{row.nome}</TableCell>
                                             <TableCell align="left">
-                                                {row.bipagem === 0 ? "Nenhuma" :
-                                                    row.bipagem === 1 ? "Obrigatória" : "Informativa"}
+                                                {row.bipagem === 0 ? "Nenhuma" : "Obrigatória"}
                                             </TableCell>
                                             <TableCell align="right" size="small" width="15%">
                                                 <abbr title="Editar">
