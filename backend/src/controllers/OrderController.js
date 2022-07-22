@@ -15,8 +15,7 @@ module.exports = {
     await connectionPG.query(`SELECT * FROM pedido
       ${orderNumber ? `WHERE id = ${orderNumber}` : ""}
       ${dateClause ? `WHERE ${dateClause}` : ""}
-      ORDER BY 1 ${direction ? "ASC" : "DESC"}
-      --LIMIT 10 OFFSET 10 * ${page - 1}`)
+      ORDER BY 1 ${direction ? "ASC" : "DESC"}`)
       .then(results => { allOrders = results.rows })
     //Retorna todos os pedidos
     for (let i = 0; i < allOrders.length; i++) {

@@ -14,7 +14,25 @@ module.exports = {
                 AND sequencia = ${nextProcess[i].sequencia + 1}`)
                 .then(results => { nextProcess = results.rows })
         }
-        
         return nextProcess
-    }
+    },
+
+    async nextProcessToDo(productID, processID) {
+        await connectionPG.query(`SELECT * FROM processos_por_produto proc_prod
+            JOIN processo proc ON proc.id = proc_prod.id_processo
+            WHERE id_produto = ${productID}
+            AND id_processo = ${processID}`)
+            .then(results => { nextProcess = results.rows })
+        for (let i = 0; i < nextProcess.length; i++) {
+            await connectionPG.query(`SELECT * FROM processos_por_produto proc_prod
+                JOIN processo proc ON proc.id = proc_prod.id_processo
+                WHERE id_produto = ${productID}
+                AND sequencia > ${nextProcess[i].sequencia}
+                AND bipagem = 1
+                ORDER BY sequencia
+                LIMIT 1`)
+                .then(results => { nextProcess = results.rows })
+        }
+        return nextProcess
+    },
 }

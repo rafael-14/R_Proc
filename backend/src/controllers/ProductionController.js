@@ -7,12 +7,12 @@ module.exports = {
   async selectProductionNotStarted(req, res) {
     let { id_setor } = req.body;
     await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo, prod_ped.observacao, proc.bipagem
-    FROM producao prodc
-    JOIN produto prod ON prod.id = prodc.id_produto
-    JOIN processo proc ON proc.id = prodc.id_processo
-    JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
-    WHERE prodc.situacao = 0
-    AND proc.bipagem = 1`)
+      FROM producao prodc
+      JOIN produto prod ON prod.id = prodc.id_produto
+      JOIN processo proc ON proc.id = prodc.id_processo
+      JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
+      WHERE prodc.situacao = 0
+      AND proc.bipagem = 1`)
       .then(results => { productionNotStarted = results.rows })
     for (let i = 0; i < productionNotStarted.length; i++) {
       let dataNextProcess = await nextProcess.nextProcess(productionNotStarted[i].id_produto, productionNotStarted[i].id_processo)
@@ -35,12 +35,12 @@ module.exports = {
   async selectProductionStarted(req, res) {
     let { id_setor } = req.body;
     await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo,prod_ped.observacao, proc.bipagem
-    FROM producao prodc
-    JOIN produto prod ON prod.id = prodc.id_produto
-    JOIN processo proc ON proc.id = prodc.id_processo
-    JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
-    WHERE prodc.situacao IN (1, 3)
-    AND proc.bipagem = 1`)
+      FROM producao prodc
+      JOIN produto prod ON prod.id = prodc.id_produto
+      JOIN processo proc ON proc.id = prodc.id_processo
+      JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
+      WHERE prodc.situacao IN (1, 3)
+      AND proc.bipagem = 1`)
       .then(results => { productionStarted = results.rows })
     for (let i = 0; i < productionStarted.length; i++) {
       let dataNextProcess = await nextProcess.nextProcess(productionStarted[i].id_produto, productionStarted[i].id_processo)
@@ -63,12 +63,12 @@ module.exports = {
   async selectProductionPaused(req, res) {
     let { id_setor } = req.body;
     await connectionPG.query(`SELECT prodc.*, prod.nome AS nome_produto, proc.nome AS nome_processo, prod_ped.observacao, proc.bipagem
-    FROM producao prodc
-    JOIN produto prod ON prod.id = prodc.id_produto
-    JOIN processo proc ON proc.id = prodc.id_processo
-    JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
-    WHERE prodc.situacao = 2
-    AND proc.bipagem = 1`)
+      FROM producao prodc
+      JOIN produto prod ON prod.id = prodc.id_produto
+      JOIN processo proc ON proc.id = prodc.id_processo
+      JOIN produtos_por_pedido prod_ped ON prod_ped.id = prodc.id_produto_pedido
+      WHERE prodc.situacao = 2
+      AND proc.bipagem = 1`)
       .then(results => { productionPaused = results.rows })
     for (let i = 0; i < productionPaused.length; i++) {
       let dataNextProcess = await nextProcess.nextProcess(productionPaused[i].id_produto, productionPaused[i].id_processo)
@@ -92,14 +92,17 @@ module.exports = {
     let { orderID, orderProducts } = req.body;
     for (let i = 0; i < orderProducts.length; i++) {
       for (let j = 0; j < orderProducts[i].productQuantity; j++) {
-        await connectionPG.query(`SELECT * FROM processos_por_produto
-        WHERE id_produto = ${orderProducts[i].id}
-        ORDER BY sequencia
-        LIMIT 1`)
+        await connectionPG.query(`SELECT proc_prod.id_processo
+          FROM processos_por_produto proc_prod
+          JOIN processo proc ON proc.id = proc_prod.id_processo
+          WHERE proc_prod.id_produto = ${orderProducts[i].id}
+          AND proc.bipagem = 1
+          ORDER BY proc_prod.sequencia
+          LIMIT 1`)
           .then(results => processID = results.rows)
         await connectionPG.query(`INSERT INTO producao
-      (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
-      VALUES(${orderID}, ${orderProducts[i].id}, ${processID[0].id_processo}, ${orderProducts[i].id_produto_pedido}, 0)`)
+        (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
+        VALUES(${orderID}, ${orderProducts[i].id}, ${processID[0].id_processo}, ${orderProducts[i].id_produto_pedido}, 0)`)
       }
     }
     return res.json().status(200)
@@ -111,8 +114,8 @@ module.exports = {
     for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`UPDATE producao SET situacao = 1 WHERE id = ${productionID[i]}`)
       await connectionPG.query(`INSERT INTO producao_tempo
-      (id_producao, inicio, id_usuario)
-      VALUES(${productionID[i]}, '${datetime.toISOString()}', ${userID})`)
+        (id_producao, inicio, id_usuario)
+        VALUES(${productionID[i]}, '${datetime.toISOString()}', ${userID})`)
     }
     return res.json().status(200)
   },
@@ -123,8 +126,8 @@ module.exports = {
     for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`UPDATE producao SET situacao = 2 WHERE id = ${productionID[i]}`)
       await connectionPG.query(`UPDATE producao_tempo
-      SET fim = '${datetime.toISOString()}', interrupcao = true
-      WHERE id_producao = ${productionID[i]}`)
+        SET fim = '${datetime.toISOString()}', interrupcao = true
+        WHERE id_producao = ${productionID[i]}`)
     }
     return res.json().status(200)
   },
@@ -135,8 +138,8 @@ module.exports = {
     for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`UPDATE producao SET situacao = 3 WHERE id = ${productionID[i]}`)
       await connectionPG.query(`INSERT INTO producao_tempo
-      (id_producao, inicio, id_usuario, interrupcao)
-      VALUES(${productionID[i]}, '${datetime.toISOString()}', ${userID}, true)`)
+        (id_producao, inicio, id_usuario, interrupcao)
+        VALUES(${productionID[i]}, '${datetime.toISOString()}', ${userID}, true)`)
     }
     return res.json().status(200)
   },
@@ -146,15 +149,19 @@ module.exports = {
     let datetime = new Date
     for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`UPDATE producao_tempo SET fim = '${datetime.toISOString()}'
-      WHERE id_producao = ${productionID[i]}`)
+        WHERE id_producao = ${productionID[i]}`)
       await connectionPG.query(`UPDATE producao SET situacao = 4
-      WHERE id = ${productionID[i]} RETURNING *`)
+        WHERE id = ${productionID[i]} RETURNING *`)
         .then(results => { productFinished = results.rows })
-      let dataNextProcess = await nextProcess.nextProcess(productFinished[0].id_produto, productFinished[0].id_processo)
+      let dataNextProcess = await nextProcess.nextProcessToDo(productFinished[0].id_produto, productFinished[0].id_processo)
       if (dataNextProcess[0]) {
         await connectionPG.query(`INSERT INTO producao
-        (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
-        VALUES(${productFinished[0].id_pedido}, ${productFinished[0].id_produto}, ${dataNextProcess[0].id_processo}, ${productFinished[0].id_produto_pedido}, 0)`)
+          (id_pedido, id_produto, id_processo, id_produto_pedido, situacao)
+          VALUES(${productFinished[0].id_pedido},
+            ${productFinished[0].id_produto},
+            ${dataNextProcess[0].id_processo},
+            ${productFinished[0].id_produto_pedido},
+            0)`)
       }
     }
     return res.json().status(200)
@@ -165,9 +172,9 @@ module.exports = {
     let status = 200
     for (let i = 0; i < productionID.length; i++) {
       await connectionPG.query(`SELECT * FROM producao_tempo
-      WHERE id_producao = ${productionID[i]}
-      ORDER BY id DESC
-      LIMIT 1`)
+        WHERE id_producao = ${productionID[i]}
+        ORDER BY id DESC
+        LIMIT 1`)
         .then(results => production = results.rows)
       if (production[0].id_usuario != userID) {
         status = 400
@@ -187,16 +194,15 @@ module.exports = {
         default: situation = "IN (1, 3)"; break
       }
       await connectionPG.query(`SELECT * FROM producao
-      WHERE id_produto_pedido = ${listQrCode[i]} AND situacao ${situation}
-      ORDER BY id DESC
-      LIMIT 1`)
+        WHERE id_produto_pedido = ${listQrCode[i]} AND situacao ${situation}
+        ORDER BY id DESC
+        LIMIT 1`)
         .then(results => { idProduction = [...idProduction, ...results.rows] })
       if (idProduction[i] === undefined) {
         idProduction = []
         break
       }
     }
-
     return res.json(idProduction)
   },
 
