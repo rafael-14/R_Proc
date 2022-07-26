@@ -5,10 +5,12 @@ module.exports = {
     let { product, page } = req.body;
     await connectionPG.query(`SELECT * FROM produto 
     ${product ? `WHERE nome ILIKE '%${product}%'` : ""}
-    ORDER BY nome`)
+    ORDER BY nome
+    LIMIT 10 OFFSET 10 * ${page - 1}`)
       .then(results => { allProducts = results.rows })
-    let count = allProducts.length
-    return res.json({ allProducts: allProducts.splice((page - 1) * 10, page * 10), count })
+    await connectionPG.query(`SELECT COUNT(id) FROM produto`)
+      .then(results => count = results.rows[0].count)
+    return res.json({ allProducts, count })
   },
 
   async insertProduct(req, res) {

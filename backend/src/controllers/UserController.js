@@ -5,10 +5,12 @@ module.exports = {
     let { user, page } = req.body;
     await connectionPG.query(`SELECT * FROM usuario
     ${user ? `WHERE nome ilike '%${user}%'` : ""}
-    ORDER BY 1`)
+    ORDER BY 1
+    LIMIT 10 OFFSET 10 * ${page - 1}`)
       .then(results => { allUsers = results.rows })
-    let count = allUsers.length
-    return res.json({ allUsers: allUsers.splice((page - 1) * 10, page * 10), count })
+    await connectionPG.query(`SELECT COUNT(id) FROM usuario`)
+      .then(results => count = results.rows[0].count)
+    return res.json({ allUsers, count })
   },
 
   async insertUser(req, res) {

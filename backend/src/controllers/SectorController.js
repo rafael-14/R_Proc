@@ -4,13 +4,15 @@ const secret = "mysecret"
 
 module.exports = {
   async selectAllSectors(req, res) {
-    let {sector, page} = req.body;
+    let { sector, page } = req.body;
     await connectionPG.query(`SELECT * FROM setor
-    ${sector ? `WHERE nome ilike '%${sector}%'` : ""}
-    ORDER BY nome`)
+    ${sector ? `WHERE nome ILIKE '%${sector}%'` : ""}
+    ORDER BY nome
+    LIMIT 10 OFFSET 10 * ${page - 1}`)
       .then(results => { allSectors = results.rows })
-      let count = allSectors.length
-      return res.json({ allSectors: allSectors.splice((page - 1) * 10, page * 10), count })
+    await connectionPG.query(`SELECT COUNT(id) FROM setor`)
+      .then(results => count = results.rows[0].count)
+    return res.json({ allSectors, count })
   },
 
   async insertSector(req, res) {

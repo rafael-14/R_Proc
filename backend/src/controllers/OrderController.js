@@ -15,7 +15,8 @@ module.exports = {
     await connectionPG.query(`SELECT * FROM pedido
       ${orderNumber ? `WHERE id = ${orderNumber}` : ""}
       ${dateClause ? `WHERE ${dateClause}` : ""}
-      ORDER BY 1 ${direction ? "ASC" : "DESC"}`)
+      ORDER BY 1 ${direction ? "ASC" : "DESC"}
+      LIMIT 10 OFFSET 10 * ${page - 1}`)
       .then(results => { allOrders = results.rows })
     //Retorna todos os pedidos
     for (let i = 0; i < allOrders.length; i++) {
@@ -43,8 +44,9 @@ module.exports = {
     if (orderStatus === "Concluded") {
       allOrders = allOrders.filter(allOrders => !allOrders.status)
     }
-    let count = allOrders.length
-    return res.json({ allOrders: allOrders.splice((page - 1) * 10, page * 10), count })
+    await connectionPG.query(`SELECT COUNT(id) FROM pedido`)
+      .then(results => count = results.rows[0].count)
+    return res.json({ allOrders, count })
   },
 
   async insertOrder(req, res) {

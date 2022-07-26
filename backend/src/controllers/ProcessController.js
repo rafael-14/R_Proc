@@ -5,10 +5,12 @@ module.exports = {
     let { page, process } = req.body;
     await connectionPG.query(`SELECT * FROM processo
     ${process ? `WHERE nome ILIKE '%${process}%'` : ""}
-    ORDER BY 2`)
+    ORDER BY 2
+    LIMIT 10 OFFSET 10 * ${page - 1}`)
       .then(results => { allProcesses = results.rows })
-    let count = allProcesses.length
-    return res.json({ allProcesses: allProcesses.splice((page - 1) * 10, page * 10), count })
+    await connectionPG.query(`SELECT COUNT(id) FROM processo`)
+      .then(results => count = results.rows[0].count)
+    return res.json({ allProcesses, count })
   },
 
   async insertProcess(req, res) {
